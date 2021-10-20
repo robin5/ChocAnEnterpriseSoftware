@@ -1,10 +1,11 @@
-// **********************************************************************************
+﻿// **********************************************************************************
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ErrorViewModel.cs
+// * File: Provider.cs
 // *
-// * Description: View model for shared Error view.
+// * Description: The Provider class defines an entity which describes a ChocAn
+// *              provider.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +31,18 @@
 // * 
 // **********************************************************************************
 
-namespace DataCenterConsole.Models
-{
-    public class ErrorViewModel
-    {
-        public string RequestId { get; set; }
+using System;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+namespace ChocAn.ProviderService
+{
+    public class Provider
+    {
+        public Guid Id { get; set; }
+        public int Number { get; set; }
+        public string Name { get; set; }
+        public string StreetAddress { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
     }
 }

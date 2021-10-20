@@ -2,9 +2,10 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: HomeController.cs
+// * File: IMemberService.cs
 // *
-// * Description: Implements the Home controller for the DataCenterConsole app.
+// * Description: IMemberService defines an interface for storing Member objects
+// *              in a database
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,53 +31,49 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.MemberService;
-using DataCenterConsole.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace DataCenterConsole.Controllers
+namespace ChocAn.MemberService
 {
-    public class HomeController : Controller
+    /// <summary>
+    /// Represents repository pattern for Member entities
+    /// </summary>
+    public interface IMemberService
     {
-        private readonly ILogger<HomeController> logger;
-        private readonly IMemberService memberService;
+        /// <summary>
+        /// Adds a Member entity to the database
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        Task<Member> AddAsync(Member member);
 
-        public HomeController(ILogger<HomeController> logger, IMemberService memberService)
-        {
-            this.logger = logger;
-            this.memberService = memberService;
-        }
+        /// <summary>
+        /// Retrieves a Member entity from the database
+        /// </summary>
+        /// <param name="id">ID of Member entity to retrieve</param>
+        /// <returns></returns>
+        Task<Member> GetMemberAsync(Guid id);
 
-        public async Task<IActionResult> Index()
-        {
-            List<Member> listMembers = new List<Member>();
+        /// <summary>
+        /// Updates a Member entity in the database
+        /// </summary>
+        /// <param name="memberChanges">Changes to be applied to Member entity</param>
+        /// <returns></returns>
+        Task<Member> UpdateAsync(Member memberChanges);
 
-            await foreach(Member member in memberService.GetAllMembersAsync())
-            {
-                listMembers.Add(member);
-            }
+        /// <summary>
+        /// Deletes Member entity from the database
+        /// </summary>
+        /// <param name="id">ID of member to deleted</param>
+        /// <returns></returns>
+        Task<Member> DeleteAsync(Guid id);
 
-            var vm = new HomeIndexViewModel
-            {
-                Members = listMembers
-            };
-
-            return View(vm);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        /// <summary>
+        /// Retrieves all Member entities in the database
+        /// </summary>
+        /// <returns>An enumerator that provides asynchronous iteration over all Member Entities in the database</returns>
+        IAsyncEnumerable<Member> GetAllMembersAsync();
     }
 }

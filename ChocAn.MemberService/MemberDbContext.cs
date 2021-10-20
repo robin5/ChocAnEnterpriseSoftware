@@ -1,10 +1,10 @@
-// **********************************************************************************
+﻿// **********************************************************************************
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ErrorViewModel.cs
+// * File: Member.cs
 // *
-// * Description: View model for shared Error view.
+// * Description: The MemberDbContext class defines a DbContext for Member entities
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +30,27 @@
 // * 
 // **********************************************************************************
 
-namespace DataCenterConsole.Models
-{
-    public class ErrorViewModel
-    {
-        public string RequestId { get; set; }
+using Microsoft.EntityFrameworkCore;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+namespace ChocAn.MemberService
+{
+    /// <summary>
+    /// A MemberDbContext instance represents a session with the database and can be used to
+    /// query and save instances of Member entities. 
+    /// </summary>
+    public class MemberDbContext : DbContext
+    {
+        /// <summary>
+        /// Initializes a new instance of the MemberDbContext class
+        /// </summary>
+        /// <param name="options">The options to be used by the DbContext</param>
+        public MemberDbContext(DbContextOptions<MemberDbContext> options)
+            : base(options)
+        {
+        }
+        /// <summary>
+        /// Provides access to Member entities in the database
+        /// </summary>
+        public DbSet<Member> Members { get; set; }
     }
 }

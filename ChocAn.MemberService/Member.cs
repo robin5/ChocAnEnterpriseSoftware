@@ -1,10 +1,10 @@
-// **********************************************************************************
+﻿// **********************************************************************************
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ErrorViewModel.cs
+// * File: Member.cs
 // *
-// * Description: View model for shared Error view.
+// * Description: The Member class defines an entity which describes a ChocAn member
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +30,22 @@
 // * 
 // **********************************************************************************
 
-namespace DataCenterConsole.Models
-{
-    public class ErrorViewModel
-    {
-        public string RequestId { get; set; }
+using System;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+namespace ChocAn.MemberService
+{
+    /// <summary>
+    /// Represents a ChocAn member
+    /// </summary>
+    public class Member
+    {
+        public Guid Id { get; set; }
+        public decimal Number { get; set; }
+        public string Name { get; set; }
+        public string StreetAddress { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public decimal ZipCode { get; set; }
+        public string Status { get; set; }
     }
 }

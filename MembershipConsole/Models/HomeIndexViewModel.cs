@@ -1,10 +1,10 @@
-// **********************************************************************************
+﻿// **********************************************************************************
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ErrorViewModel.cs
+// * File: HomeIndexViewModel.cs
 // *
-// * Description: View model for shared Error view.
+// * Description: View model for Home controller's Index view.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +30,13 @@
 // * 
 // **********************************************************************************
 
+using System.Collections.Generic;
+using ChocAn.MemberService;
+
 namespace DataCenterConsole.Models
 {
-    public class ErrorViewModel
+    public class HomeIndexViewModel
     {
-        public string RequestId { get; set; }
-
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public IEnumerable<Member> Members { get; set; }
     }
 }
