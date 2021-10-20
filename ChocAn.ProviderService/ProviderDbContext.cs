@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Provider.cs
+// * File: ProviderDbContext.cs
 // *
-// * Description: The Provider class defines an entity which describes a ChocAn
-// *              provider.
+// * Description: The ProviderDbContext class defines a DbContext for Provider entities
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -31,21 +30,27 @@
 // * 
 // **********************************************************************************
 
-using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.ProviderService
 {
     /// <summary>
-    /// Represents a ChocAn provider
+    /// A ProviderDbContext instance represents a session with the database and can be used to
+    /// query and save instances of Provider entities. 
     /// </summary>
-    public class Provider
+    public class ProviderDbContext : DbContext
     {
-        public Guid Id { get; set; }
-        public decimal Number { get; set; }
-        public string Name { get; set; }
-        public string StreetAddress { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public decimal ZipCode { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the ProviderDbContext class
+        /// </summary>
+        /// <param name="options">The options to be used by the DbContext</param>
+        public ProviderDbContext(DbContextOptions<ProviderDbContext> options)
+            : base(options)
+        {
+        }
+        /// <summary>
+        /// Provides access to Provider entities in the database
+        /// </summary>
+        public DbSet<Provider> Providers { get; set; }
     }
 }

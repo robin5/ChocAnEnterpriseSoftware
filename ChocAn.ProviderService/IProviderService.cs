@@ -2,10 +2,10 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Provider.cs
+// * File: IProviderService.cs
 // *
-// * Description: The Provider class defines an entity which describes a ChocAn
-// *              provider.
+// * Description: IProviderService defines an interface for storing Provider objects
+// *              in a database
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -32,20 +32,48 @@
 // **********************************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ChocAn.ProviderService
 {
     /// <summary>
-    /// Represents a ChocAn provider
+    /// Represents repository pattern for Provider entities
     /// </summary>
-    public class Provider
+    public interface IProviderService
     {
-        public Guid Id { get; set; }
-        public decimal Number { get; set; }
-        public string Name { get; set; }
-        public string StreetAddress { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public decimal ZipCode { get; set; }
+        /// <summary>
+        /// Adds a Provider entity to the database
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        Task<Provider> AddAsync(Provider provider);
+
+        /// <summary>
+        /// Retrieves a Provider entity from the database
+        /// </summary>
+        /// <param name="id">ID of Provider entity to retrieve</param>
+        /// <returns></returns>
+        Task<Provider> GetProviderAsync(Guid id);
+
+        /// <summary>
+        /// Updates a Provider entity in the database
+        /// </summary>
+        /// <param name="providerChanges">Changes to be applied to Provider entity</param>
+        /// <returns></returns>
+        Task<Provider> UpdateAsync(Provider providerChanges);
+
+        /// <summary>
+        /// Deletes Provider entity from the database
+        /// </summary>
+        /// <param name="id">ID of provider to deleted</param>
+        /// <returns></returns>
+        Task<Provider> DeleteAsync(Guid id);
+
+        /// <summary>
+        /// Retrieves all Provider entities in the database
+        /// </summary>
+        /// <returns>An enumerator that provides asynchronous iteration over all Provider Entities in the database</returns>
+        IAsyncEnumerable<Provider> GetAllProvidersAsync();
     }
 }
