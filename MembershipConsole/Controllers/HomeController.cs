@@ -30,13 +30,15 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.MemberService;
-using DataCenterConsole.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using ChocAn.MemberService;
+using ChocAn.ProviderService;
+using ChocAn.ProviderServiceService;
+using DataCenterConsole.Models;
 
 namespace DataCenterConsole.Controllers
 {
@@ -44,25 +46,45 @@ namespace DataCenterConsole.Controllers
     {
         private readonly ILogger<HomeController> logger;
         private readonly IMemberService memberService;
+        private readonly IProviderService providerService;
+        private readonly IProviderServiceService providerServiceService;
 
-        public HomeController(ILogger<HomeController> logger, IMemberService memberService)
+        public HomeController(ILogger<HomeController> logger, 
+            IMemberService memberService,
+            IProviderService providerService,
+            IProviderServiceService providerServiceService)
         {
             this.logger = logger;
             this.memberService = memberService;
+            this.providerService = providerService;
+            this.providerServiceService = providerServiceService;
         }
 
         public async Task<IActionResult> Index()
         {
             List<Member> listMembers = new List<Member>();
-
-            await foreach(Member member in memberService.GetAllMembersAsync())
+            await foreach (Member member in memberService.GetAllMembersAsync())
             {
                 listMembers.Add(member);
             }
 
+            List<Provider> listProviders = new List<Provider>();
+            await foreach (Provider provider in providerService.GetAllProvidersAsync())
+            {
+                listProviders.Add(provider);
+            }
+
+            List<ProviderService> listProviderServices = new List<ProviderService>();
+            await foreach (ProviderService providerService in providerServiceService.GetAllAsync())
+            {
+                listProviderServices.Add(providerService);
+            }
+
             var vm = new HomeIndexViewModel
             {
-                Members = listMembers
+                Members = listMembers,
+                Providers = listProviders,
+                ProviderServices = listProviderServices,
             };
 
             return View(vm);

@@ -35,8 +35,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ChocAn.MemberService;
 using Microsoft.EntityFrameworkCore;
+using ChocAn.MemberService;
+using ChocAn.ProviderService;
+using ChocAn.ProviderServiceService;
 
 namespace DataCenterConsole
 {
@@ -54,10 +56,18 @@ namespace DataCenterConsole
         {
             services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("MemberDbConnection")));
+            
+            services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
+                Configuration.GetConnectionString("MemberDbConnection")));
+            
+            services.AddDbContextPool<ProviderServiceDbContext>(options => options.UseSqlServer(
+                Configuration.GetConnectionString("MemberDbConnection")));
 
             services.AddControllersWithViews();
 
             services.AddScoped<IMemberService, DefaultMemberService>();
+            services.AddScoped<IProviderService, DefaultProviderService>();
+            services.AddScoped<IProviderServiceService, DefaultProviderServiceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

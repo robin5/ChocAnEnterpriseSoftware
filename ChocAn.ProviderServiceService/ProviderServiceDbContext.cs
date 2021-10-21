@@ -2,9 +2,10 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: HomeIndexViewModel.cs
+// * File: ProviderService.cs
 // *
-// * Description: View model for Home controller's Index view.
+// * Description: The ProviderServiceDbContext class defines a DbContext for 
+// *              ProviderService entities
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,17 +31,27 @@
 // * 
 // **********************************************************************************
 
-using System.Collections.Generic;
-using ChocAn.MemberService;
-using ChocAn.ProviderService;
-using ChocAn.ProviderServiceService;
+using Microsoft.EntityFrameworkCore;
 
-namespace DataCenterConsole.Models
+namespace ChocAn.ProviderServiceService
 {
-    public class HomeIndexViewModel
+    /// <summary>
+    /// A ProviderServiceDbContext instance represents a session with the database and can be used to
+    /// query and save instances of ProviderService entities. 
+    /// </summary>
+    public class ProviderServiceDbContext : DbContext
     {
-        public IEnumerable<Member> Members { get; set; }
-        public IEnumerable<Provider> Providers { get; set; }
-        public IEnumerable<ProviderService> ProviderServices { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the ProviderServiceDbContext class
+        /// </summary>
+        /// <param name="options">The options to be used by the DbContext</param>
+        public ProviderServiceDbContext(DbContextOptions<ProviderServiceDbContext> options)
+            : base(options)
+        {
+        }
+        /// <summary>
+        /// Provides access to ProviderService entities in the database
+        /// </summary>
+        public DbSet<ProviderService> ProviderServices { get; set; }
     }
 }

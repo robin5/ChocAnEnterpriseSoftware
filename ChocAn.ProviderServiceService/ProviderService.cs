@@ -2,9 +2,10 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: HomeIndexViewModel.cs
+// * File: ProviderService.cs
 // *
-// * Description: View model for Home controller's Index view.
+// * Description: The ProviderService class defines an entity which describes a Service 
+// *              given by a Provider
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,17 +31,18 @@
 // * 
 // **********************************************************************************
 
-using System.Collections.Generic;
-using ChocAn.MemberService;
-using ChocAn.ProviderService;
-using ChocAn.ProviderServiceService;
+using System;
 
-namespace DataCenterConsole.Models
+namespace ChocAn.ProviderServiceService
 {
-    public class HomeIndexViewModel
+    /// <summary>
+    /// Represents a ChocAn member
+    /// </summary>
+    public class ProviderService
     {
-        public IEnumerable<Member> Members { get; set; }
-        public IEnumerable<Provider> Providers { get; set; }
-        public IEnumerable<ProviderService> ProviderServices { get; set; }
+        public Guid Id { get; set; }
+        public decimal Code { get; set; }
+        public string Name { get; set; }
+        public decimal Cost { get; set; }
     }
 }
