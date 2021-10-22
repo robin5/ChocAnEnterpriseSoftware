@@ -29,9 +29,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MemberService.Test",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderService.Test", "ChocAn.ProviderService.Test\ChocAn.ProviderService.Test.csproj", "{F0A7D984-EEF2-4CE0-B39E-E7F428416173}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.ProviderServiceService", "ChocAn.ProviderServiceService\ChocAn.ProviderServiceService.csproj", "{3CC83CBE-DBFB-48B1-91BC-0F39E28091BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceService", "ChocAn.ProviderServiceService\ChocAn.ProviderServiceService.csproj", "{3CC83CBE-DBFB-48B1-91BC-0F39E28091BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.ProviderServiceService.Test", "ChocAn.ProviderServiceService.Test\ChocAn.ProviderServiceService.Test.csproj", "{B1FD8E5E-C753-4AF5-934C-A1706FFAB1FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceService.Test", "ChocAn.ProviderServiceService.Test\ChocAn.ProviderServiceService.Test.csproj", "{B1FD8E5E-C753-4AF5-934C-A1706FFAB1FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.TransactionService", "ChocAn.TransactionService\ChocAn.TransactionService.csproj", "{86043A8A-AC60-4F8C-9893-608F8B0AF117}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.TransactionService.Test", "ChocAn.TransactionService.Test\ChocAn.TransactionService.Test.csproj", "{27CAA37F-2D57-441E-9162-5F5F4C3E6685}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +103,14 @@ Global
 		{B1FD8E5E-C753-4AF5-934C-A1706FFAB1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1FD8E5E-C753-4AF5-934C-A1706FFAB1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1FD8E5E-C753-4AF5-934C-A1706FFAB1FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86043A8A-AC60-4F8C-9893-608F8B0AF117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86043A8A-AC60-4F8C-9893-608F8B0AF117}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86043A8A-AC60-4F8C-9893-608F8B0AF117}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86043A8A-AC60-4F8C-9893-608F8B0AF117}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27CAA37F-2D57-441E-9162-5F5F4C3E6685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27CAA37F-2D57-441E-9162-5F5F4C3E6685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27CAA37F-2D57-441E-9162-5F5F4C3E6685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27CAA37F-2D57-441E-9162-5F5F4C3E6685}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
