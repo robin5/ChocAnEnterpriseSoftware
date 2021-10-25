@@ -57,6 +57,13 @@ namespace ChocAn.ProviderServiceService
         Task<ProviderService> GetAsync(Guid id);
 
         /// <summary>
+        /// Retrieves a ProviderService entity from the database by service code
+        /// </summary>
+        /// <param name="code">Code of ProviderService entity to retrieve</param>
+        /// <returns></returns>
+        Task<ProviderService> GetByCodeAsync(decimal code);
+
+        /// <summary>
         /// Updates a ProviderService entity in the database
         /// </summary>
         /// <param name="memberChanges">Changes to be applied to ProviderService entity</param>

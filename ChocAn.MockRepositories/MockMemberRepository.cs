@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Transaction.cs
+// * File: MockProviderRepository.cs
 // *
-// * Description: The Transaction class defines an entity which describes a 
-// * transaction between a ChocAn member and a ChocAn provider 
+// * Description: Mocks the MemberService class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -29,23 +28,47 @@
 // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // *   THE SOFTWARE.
 // * 
-// **********************************************************************************
+// **********************************************************************************using System;
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ChocAn.MemberService;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.MockRepositories
 {
-    /// <summary>
-    /// Represents a  transaction between a ChocAn member and a ChocAn provider
-    /// </summary>
-    public class Transaction
+    public class MockMemberRepository : IMemberService
     {
-        public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
-        public Guid MemberId { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public decimal ServiceCode { get; set; }
-        public string ServiceComment { get; set; }
-        public DateTime TransactionDateTime { get; set; }
+        private List<Member> members = new List<Member>();
+        public Task<Member> AddAsync(Member member)
+        {
+            members.Add(member);
+            return Task.FromResult(member);
+        }
+
+        public Task<Member> DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncEnumerable<Member> GetAllMembersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Member> GetMemberAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Member> GetMemberByNumberAsync(decimal number)
+        {
+            return Task.FromResult(members.Find(s => s.Number == number));
+        }
+
+        public Task<Member> UpdateAsync(Member memberChanges)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

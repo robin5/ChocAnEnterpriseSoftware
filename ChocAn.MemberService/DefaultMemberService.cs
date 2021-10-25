@@ -34,6 +34,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.MemberService
 {
@@ -73,6 +75,16 @@ namespace ChocAn.MemberService
         public async Task<Member> GetMemberAsync(Guid id)
         {
             return await context.Members.FindAsync(id);
+        }
+
+        /// <summary>
+        /// Retrieves a Member entity from the database by member number
+        /// </summary>
+        /// <param name="id">ID of Member entity to retrieve</param>
+        /// <returns></returns>
+        public async Task<Member> GetMemberByNumberAsync(decimal number)
+        {
+            return await context.Members.Where(p => p.Number == number).FirstOrDefaultAsync<Member>();
         }
 
         /// <summary>

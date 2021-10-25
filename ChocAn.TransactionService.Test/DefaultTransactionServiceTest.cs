@@ -47,36 +47,36 @@ namespace ChocAn.TransactionService.Test
         // Note: All constants need be unique
         private const string NON_EXISTENT_MEMBER_ID = "5bd1ffc8-9047-4219-b9a2-ae2e25db8118";
 
-        private const string VALID0_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca57e";
-        private const string VALID0_PROVIDER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca57f";
-        private const string VALID0_MEMBER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca57a";
-        private static readonly DateTime VALID0_SERVICE_DATETIME = new DateTime(2021, 1, 1);
-        private const decimal VALID0_SERVICE_CODE = 999999;
-        private const string VALID0_SERVICE_COMMENT = "1234567890123456789012345";
-        private static readonly DateTime VALID0_TRANSACTION_DATETIME = new DateTime(2021, 1, 2);
+        private const string T0_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca57e";
+        private const string T0_PROVIDER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca57f";
+        private const string T0_MEMBER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca57a";
+        private static readonly DateTime T0_SERVICE_DATETIME = new DateTime(2021, 1, 1);
+        private const decimal T0_SERVICE_CODE = 999999;
+        private const string T0_SERVICE_COMMENT = "1234567890123456789012345";
+        private static readonly DateTime T0_TRANSACTION_DATETIME = new DateTime(2021, 1, 2);
 
-        private const string VALID1_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca58e";
-        private const string VALID1_PROVIDER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca58f";
-        private const string VALID1_MEMBER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca58a";
-        private static readonly DateTime VALID1_SERVICE_DATETIME = new DateTime(2021, 1, 3);
-        private const decimal VALID1_SERVICE_CODE = 1;
-        private const string VALID1_SERVICE_COMMENT = "1234567890123456789012345";
-        private static readonly DateTime VALID1_TRANSACTION_DATETIME = new DateTime(2021, 1, 4);
+        private const string T1_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca58e";
+        private const string T1_PROVIDER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca58f";
+        private const string T1_MEMBER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca58a";
+        private static readonly DateTime T1_SERVICE_DATETIME = new DateTime(2021, 1, 3);
+        private const decimal T1_SERVICE_CODE = 1;
+        private const string T1_SERVICE_COMMENT = "1234567890123456789012345";
+        private static readonly DateTime T1_TRANSACTION_DATETIME = new DateTime(2021, 1, 4);
 
-        private const string VALID2_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca59e";
-        private const string VALID2_PROVIDER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca59f";
-        private const string VALID2_MEMBER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca59a";
-        private static readonly DateTime VALID2_SERVICE_DATETIME = new DateTime(2021, 1, 5);
-        private const decimal VALID2_SERVICE_CODE = 2;
-        private const string VALID2_SERVICE_COMMENT = "1234567890123456789012345";
-        private static readonly DateTime VALID2_TRANSACTION_DATETIME = new DateTime(2021, 1, 6);
+        private const string T2_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca59e";
+        private const string T2_PROVIDER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca59f";
+        private const string T2_MEMBER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca59a";
+        private static readonly DateTime T2_SERVICE_DATETIME = new DateTime(2021, 1, 5);
+        private const decimal T2_SERVICE_CODE = 2;
+        private const string T2_SERVICE_COMMENT = "1234567890123456789012345";
+        private static readonly DateTime T2_TRANSACTION_DATETIME = new DateTime(2021, 1, 6);
 
-        private const string VALID_UPDATE_PROVIDER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca60f";
-        private const string VALID_UPDATE_MEMBER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca60a";
-        private static readonly DateTime VALID_UPDATE_SERVICE_DATETIME = new DateTime(2021, 1, 7);
-        private const decimal VALID_UPDATE_SERVICE_CODE = 3;
-        private const string VALID_UPDATE_SERVICE_COMMENT = "1234567890123456789012345";
-        private static readonly DateTime VALID_UPDATE_TRANSACTION_DATETIME = new DateTime(2021, 1, 8);
+        private const string T_UPDATE_PROVIDER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca60f";
+        private const string T_UPDATE_MEMBER_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca60a";
+        private static readonly DateTime T_UPDATE_SERVICE_DATETIME = new DateTime(2021, 1, 7);
+        private const decimal T_UPDATE_SERVICE_CODE = 3;
+        private const string T_UPDATE_SERVICE_COMMENT = "1234567890123456789012345";
+        private static readonly DateTime T_UPDATE_TRANSACTION_DATETIME = new DateTime(2021, 1, 8);
         #endregion
 
         /// <summary>
@@ -104,13 +104,13 @@ namespace ChocAn.TransactionService.Test
                 // Arrange
                 var transaction = new Transaction
                 {
-                    Id = new Guid(VALID0_ID),
-                    ProviderId = new Guid(VALID0_PROVIDER_ID),
-                    MemberId = new Guid(VALID0_MEMBER_ID),
-                    ServiceDateTime = VALID0_SERVICE_DATETIME,
-                    ServiceCode = VALID0_SERVICE_CODE,
-                    ServiceComment = VALID0_SERVICE_COMMENT,
-                    TransactionDateTime = VALID0_TRANSACTION_DATETIME
+                    Id = new Guid(T0_ID),
+                    ProviderId = new Guid(T0_PROVIDER_ID),
+                    MemberId = new Guid(T0_MEMBER_ID),
+                    ServiceDate = T0_SERVICE_DATETIME,
+                    ServiceCode = T0_SERVICE_CODE,
+                    ServiceComment = T0_SERVICE_COMMENT,
+                    TransactionDateTime = T0_TRANSACTION_DATETIME
                 };
 
                 context.Add<Transaction>(transaction);
@@ -130,33 +130,33 @@ namespace ChocAn.TransactionService.Test
                 // Arrange
                 context.Add<Transaction>(new Transaction
                 {
-                    Id = new Guid(VALID0_ID),
-                    ProviderId = new Guid(VALID0_PROVIDER_ID),
-                    MemberId = new Guid(VALID0_MEMBER_ID),
-                    ServiceDateTime = VALID0_SERVICE_DATETIME,
-                    ServiceCode = VALID0_SERVICE_CODE,
-                    ServiceComment = VALID0_SERVICE_COMMENT,
-                    TransactionDateTime = VALID0_TRANSACTION_DATETIME
+                    Id = new Guid(T0_ID),
+                    ProviderId = new Guid(T0_PROVIDER_ID),
+                    MemberId = new Guid(T0_MEMBER_ID),
+                    ServiceDate = T0_SERVICE_DATETIME,
+                    ServiceCode = T0_SERVICE_CODE,
+                    ServiceComment = T0_SERVICE_COMMENT,
+                    TransactionDateTime = T0_TRANSACTION_DATETIME
                 });
                 context.Add<Transaction>(new Transaction
                 {
-                    Id = new Guid(VALID1_ID),
-                    ProviderId = new Guid(VALID1_PROVIDER_ID),
-                    MemberId = new Guid(VALID1_MEMBER_ID),
-                    ServiceDateTime = VALID1_SERVICE_DATETIME,
-                    ServiceCode = VALID1_SERVICE_CODE,
-                    ServiceComment = VALID1_SERVICE_COMMENT,
-                    TransactionDateTime = VALID1_TRANSACTION_DATETIME
+                    Id = new Guid(T1_ID),
+                    ProviderId = new Guid(T1_PROVIDER_ID),
+                    MemberId = new Guid(T1_MEMBER_ID),
+                    ServiceDate = T1_SERVICE_DATETIME,
+                    ServiceCode = T1_SERVICE_CODE,
+                    ServiceComment = T1_SERVICE_COMMENT,
+                    TransactionDateTime = T1_TRANSACTION_DATETIME
                 });
                 context.Add<Transaction>(new Transaction
                 {
-                    Id = new Guid(VALID2_ID),
-                    ProviderId = new Guid(VALID2_PROVIDER_ID),
-                    MemberId = new Guid(VALID2_MEMBER_ID),
-                    ServiceDateTime = VALID2_SERVICE_DATETIME,
-                    ServiceCode = VALID2_SERVICE_CODE,
-                    ServiceComment = VALID2_SERVICE_COMMENT,
-                    TransactionDateTime = VALID2_TRANSACTION_DATETIME
+                    Id = new Guid(T2_ID),
+                    ProviderId = new Guid(T2_PROVIDER_ID),
+                    MemberId = new Guid(T2_MEMBER_ID),
+                    ServiceDate = T2_SERVICE_DATETIME,
+                    ServiceCode = T2_SERVICE_CODE,
+                    ServiceComment = T2_SERVICE_COMMENT,
+                    TransactionDateTime = T2_TRANSACTION_DATETIME
                 });
 
                 await context.SaveChangesAsync();
@@ -170,17 +170,19 @@ namespace ChocAn.TransactionService.Test
         public async Task ValidateAddAsync()
         {
             // Arrange
-            Guid validId = new Guid(VALID0_ID);
+            DateTime beforeTransactionTime = DateTime.Now;
+
+            Guid validId = new Guid(T0_ID);
 
             var transaction = new Transaction
             {
                 Id = validId,
-                ProviderId = new Guid(VALID0_PROVIDER_ID),
-                MemberId = new Guid(VALID0_MEMBER_ID),
-                ServiceDateTime = VALID0_SERVICE_DATETIME,
-                ServiceCode = VALID0_SERVICE_CODE,
-                ServiceComment = VALID0_SERVICE_COMMENT,
-                TransactionDateTime = VALID0_TRANSACTION_DATETIME
+                ProviderId = new Guid(T0_PROVIDER_ID),
+                MemberId = new Guid(T0_MEMBER_ID),
+                ServiceDate = T0_SERVICE_DATETIME,
+                ServiceCode = T0_SERVICE_CODE,
+                ServiceComment = T0_SERVICE_COMMENT,
+                // Note: TransactionDateTime is set by database
             };
 
             // Act
@@ -197,12 +199,12 @@ namespace ChocAn.TransactionService.Test
 
                 Assert.NotNull(result);
                 Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID0_PROVIDER_ID, result.ProviderId.ToString());
-                Assert.Equal(VALID0_MEMBER_ID, result.MemberId.ToString());
-                Assert.Equal(VALID0_SERVICE_DATETIME, result.ServiceDateTime);
-                Assert.Equal(VALID0_SERVICE_CODE, result.ServiceCode);
-                Assert.Equal(VALID0_SERVICE_COMMENT, result.ServiceComment);
-                Assert.Equal(VALID0_TRANSACTION_DATETIME, result.TransactionDateTime);
+                Assert.Equal(T0_PROVIDER_ID, result.ProviderId.ToString());
+                Assert.Equal(T0_MEMBER_ID, result.MemberId.ToString());
+                Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
+                Assert.Equal(T0_SERVICE_CODE, result.ServiceCode);
+                Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
+                Assert.True(beforeTransactionTime <= result.TransactionDateTime);
             }
         }
 
@@ -215,7 +217,7 @@ namespace ChocAn.TransactionService.Test
         {
             // Arrange
             await DefaultTransactionServiceTest.InsertValidTransactionIntoTestDatabase("Get");
-            var validId = new Guid(VALID0_ID);
+            var validId = new Guid(T0_ID);
 
             using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("Get"))
             {
@@ -226,12 +228,12 @@ namespace ChocAn.TransactionService.Test
                 // Assert
                 Assert.NotNull(result);
                 Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID0_PROVIDER_ID, result.ProviderId.ToString());
-                Assert.Equal(VALID0_MEMBER_ID, result.MemberId.ToString());
-                Assert.Equal(VALID0_SERVICE_DATETIME, result.ServiceDateTime);
-                Assert.Equal(VALID0_SERVICE_CODE, result.ServiceCode);
-                Assert.Equal(VALID0_SERVICE_COMMENT, result.ServiceComment);
-                Assert.Equal(VALID0_TRANSACTION_DATETIME, result.TransactionDateTime);
+                Assert.Equal(T0_PROVIDER_ID, result.ProviderId.ToString());
+                Assert.Equal(T0_MEMBER_ID, result.MemberId.ToString());
+                Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
+                Assert.Equal(T0_SERVICE_CODE, result.ServiceCode);
+                Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
+                Assert.Equal(T0_TRANSACTION_DATETIME, result.TransactionDateTime);
             }
         }
 
@@ -267,17 +269,17 @@ namespace ChocAn.TransactionService.Test
             // Arrange
             await DefaultTransactionServiceTest.InsertValidTransactionIntoTestDatabase("Update");
 
-            var validId = new Guid(VALID0_ID);
+            var validId = new Guid(T0_ID);
 
             var transactionChanges = new Transaction
             {
                 Id = validId,
-                ProviderId = new Guid(VALID_UPDATE_PROVIDER_ID),
-                MemberId = new Guid(VALID_UPDATE_MEMBER_ID),
-                ServiceDateTime = VALID_UPDATE_SERVICE_DATETIME,
-                ServiceCode = VALID_UPDATE_SERVICE_CODE,
-                ServiceComment = VALID_UPDATE_SERVICE_COMMENT,
-                TransactionDateTime = VALID_UPDATE_TRANSACTION_DATETIME
+                ProviderId = new Guid(T_UPDATE_PROVIDER_ID),
+                MemberId = new Guid(T_UPDATE_MEMBER_ID),
+                ServiceDate = T_UPDATE_SERVICE_DATETIME,
+                ServiceCode = T_UPDATE_SERVICE_CODE,
+                ServiceComment = T_UPDATE_SERVICE_COMMENT,
+                TransactionDateTime = T_UPDATE_TRANSACTION_DATETIME
             };
 
             using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("Update"))
@@ -290,23 +292,23 @@ namespace ChocAn.TransactionService.Test
                 // Validate return value of function call
                 Assert.NotNull(result);
                 Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID_UPDATE_PROVIDER_ID, result.ProviderId.ToString());
-                Assert.Equal(VALID_UPDATE_MEMBER_ID, result.MemberId.ToString());
-                Assert.Equal(VALID_UPDATE_SERVICE_DATETIME, result.ServiceDateTime);
-                Assert.Equal(VALID_UPDATE_SERVICE_CODE, result.ServiceCode);
-                Assert.Equal(VALID_UPDATE_SERVICE_COMMENT, result.ServiceComment);
-                Assert.Equal(VALID_UPDATE_TRANSACTION_DATETIME, result.TransactionDateTime);
+                Assert.Equal(T_UPDATE_PROVIDER_ID, result.ProviderId.ToString());
+                Assert.Equal(T_UPDATE_MEMBER_ID, result.MemberId.ToString());
+                Assert.Equal(T_UPDATE_SERVICE_DATETIME, result.ServiceDate);
+                Assert.Equal(T_UPDATE_SERVICE_CODE, result.ServiceCode);
+                Assert.Equal(T_UPDATE_SERVICE_COMMENT, result.ServiceComment);
+                Assert.Equal(T_UPDATE_TRANSACTION_DATETIME, result.TransactionDateTime);
 
                 // Validate transaction was updated in the database
                 var transaction = await context.Transactions.FindAsync(validId);
                 Assert.NotNull(transaction);
                 Assert.Equal(validId, transaction.Id);
-                Assert.Equal(VALID_UPDATE_PROVIDER_ID, transaction.ProviderId.ToString());
-                Assert.Equal(VALID_UPDATE_MEMBER_ID, transaction.MemberId.ToString());
-                Assert.Equal(VALID_UPDATE_SERVICE_DATETIME, transaction.ServiceDateTime);
-                Assert.Equal(VALID_UPDATE_SERVICE_CODE, transaction.ServiceCode);
-                Assert.Equal(VALID_UPDATE_SERVICE_COMMENT, transaction.ServiceComment);
-                Assert.Equal(VALID_UPDATE_TRANSACTION_DATETIME, transaction.TransactionDateTime);
+                Assert.Equal(T_UPDATE_PROVIDER_ID, transaction.ProviderId.ToString());
+                Assert.Equal(T_UPDATE_MEMBER_ID, transaction.MemberId.ToString());
+                Assert.Equal(T_UPDATE_SERVICE_DATETIME, transaction.ServiceDate);
+                Assert.Equal(T_UPDATE_SERVICE_CODE, transaction.ServiceCode);
+                Assert.Equal(T_UPDATE_SERVICE_COMMENT, transaction.ServiceComment);
+                Assert.Equal(T_UPDATE_TRANSACTION_DATETIME, transaction.TransactionDateTime);
             }
         }
 
@@ -324,17 +326,17 @@ namespace ChocAn.TransactionService.Test
             {
                 // Act
                 var defaultTransactionService = new DefaultTransactionService(context);
-                var result = await defaultTransactionService.DeleteAsync(new Guid(VALID0_ID));
+                var result = await defaultTransactionService.DeleteAsync(new Guid(T0_ID));
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id.ToString());
-                Assert.Equal(VALID0_PROVIDER_ID, result.ProviderId.ToString());
-                Assert.Equal(VALID0_MEMBER_ID, result.MemberId.ToString());
-                Assert.Equal(VALID0_SERVICE_DATETIME, result.ServiceDateTime);
-                Assert.Equal(VALID0_SERVICE_CODE, result.ServiceCode);
-                Assert.Equal(VALID0_SERVICE_COMMENT, result.ServiceComment);
-                Assert.Equal(VALID0_TRANSACTION_DATETIME, result.TransactionDateTime);
+                Assert.Equal(T0_ID, result.Id.ToString());
+                Assert.Equal(T0_PROVIDER_ID, result.ProviderId.ToString());
+                Assert.Equal(T0_MEMBER_ID, result.MemberId.ToString());
+                Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
+                Assert.Equal(T0_SERVICE_CODE, result.ServiceCode);
+                Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
+                Assert.Equal(T0_TRANSACTION_DATETIME, result.TransactionDateTime);
 
                 Assert.Equal(0, await context.Transactions.CountAsync());
             }
@@ -362,35 +364,35 @@ namespace ChocAn.TransactionService.Test
                 // Assert
                 await foreach (Transaction transaction in defaultTransactionService.GetAllAsync())
                 {
-                    if (VALID0_ID == transaction.Id.ToString())
+                    if (T0_ID == transaction.Id.ToString())
                     {
                         transaction0Found = true;
-                        Assert.Equal(VALID0_PROVIDER_ID, transaction.ProviderId.ToString());
-                        Assert.Equal(VALID0_MEMBER_ID, transaction.MemberId.ToString());
-                        Assert.Equal(VALID0_SERVICE_DATETIME, transaction.ServiceDateTime);
-                        Assert.Equal(VALID0_SERVICE_CODE, transaction.ServiceCode);
-                        Assert.Equal(VALID0_SERVICE_COMMENT, transaction.ServiceComment);
-                        Assert.Equal(VALID0_TRANSACTION_DATETIME, transaction.TransactionDateTime);
+                        Assert.Equal(T0_PROVIDER_ID, transaction.ProviderId.ToString());
+                        Assert.Equal(T0_MEMBER_ID, transaction.MemberId.ToString());
+                        Assert.Equal(T0_SERVICE_DATETIME, transaction.ServiceDate);
+                        Assert.Equal(T0_SERVICE_CODE, transaction.ServiceCode);
+                        Assert.Equal(T0_SERVICE_COMMENT, transaction.ServiceComment);
+                        Assert.Equal(T0_TRANSACTION_DATETIME, transaction.TransactionDateTime);
                     }
-                    else if (VALID1_ID == transaction.Id.ToString())
+                    else if (T1_ID == transaction.Id.ToString())
                     {
                         transaction1Found = true;
-                        Assert.Equal(VALID1_PROVIDER_ID, transaction.ProviderId.ToString());
-                        Assert.Equal(VALID1_MEMBER_ID, transaction.MemberId.ToString());
-                        Assert.Equal(VALID1_SERVICE_DATETIME, transaction.ServiceDateTime);
-                        Assert.Equal(VALID1_SERVICE_CODE, transaction.ServiceCode);
-                        Assert.Equal(VALID1_SERVICE_COMMENT, transaction.ServiceComment);
-                        Assert.Equal(VALID1_TRANSACTION_DATETIME, transaction.TransactionDateTime);
+                        Assert.Equal(T1_PROVIDER_ID, transaction.ProviderId.ToString());
+                        Assert.Equal(T1_MEMBER_ID, transaction.MemberId.ToString());
+                        Assert.Equal(T1_SERVICE_DATETIME, transaction.ServiceDate);
+                        Assert.Equal(T1_SERVICE_CODE, transaction.ServiceCode);
+                        Assert.Equal(T1_SERVICE_COMMENT, transaction.ServiceComment);
+                        Assert.Equal(T1_TRANSACTION_DATETIME, transaction.TransactionDateTime);
                     }
-                    else if (VALID2_ID == transaction.Id.ToString())
+                    else if (T2_ID == transaction.Id.ToString())
                     {
                         transaction2Found = true;
-                        Assert.Equal(VALID2_PROVIDER_ID, transaction.ProviderId.ToString());
-                        Assert.Equal(VALID2_MEMBER_ID, transaction.MemberId.ToString());
-                        Assert.Equal(VALID2_SERVICE_DATETIME, transaction.ServiceDateTime);
-                        Assert.Equal(VALID2_SERVICE_CODE, transaction.ServiceCode);
-                        Assert.Equal(VALID2_SERVICE_COMMENT, transaction.ServiceComment);
-                        Assert.Equal(VALID2_TRANSACTION_DATETIME, transaction.TransactionDateTime);
+                        Assert.Equal(T2_PROVIDER_ID, transaction.ProviderId.ToString());
+                        Assert.Equal(T2_MEMBER_ID, transaction.MemberId.ToString());
+                        Assert.Equal(T2_SERVICE_DATETIME, transaction.ServiceDate);
+                        Assert.Equal(T2_SERVICE_CODE, transaction.ServiceCode);
+                        Assert.Equal(T2_SERVICE_COMMENT, transaction.ServiceComment);
+                        Assert.Equal(T2_TRANSACTION_DATETIME, transaction.TransactionDateTime);
                     }
                 }
 

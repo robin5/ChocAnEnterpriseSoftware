@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Transaction.cs
+// * File: MockProviderRepository.cs
 // *
-// * Description: The Transaction class defines an entity which describes a 
-// * transaction between a ChocAn member and a ChocAn provider 
+// * Description: Mocks the ProviderService class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -29,23 +28,47 @@
 // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // *   THE SOFTWARE.
 // * 
-// **********************************************************************************
+// **********************************************************************************using System;
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ChocAn.ProviderService;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.MockRepositories
 {
-    /// <summary>
-    /// Represents a  transaction between a ChocAn member and a ChocAn provider
-    /// </summary>
-    public class Transaction
+    public class MockProviderRepository : IProviderService
     {
-        public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
-        public Guid MemberId { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public decimal ServiceCode { get; set; }
-        public string ServiceComment { get; set; }
-        public DateTime TransactionDateTime { get; set; }
+        private List<Provider> providers = new List<Provider>();
+        public Task<Provider> AddAsync(Provider provider)
+        {
+            providers.Add(provider);
+            return Task.FromResult(provider);
+        }
+
+        public Task<Provider> DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncEnumerable<Provider> GetAllProvidersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Provider> GetProviderAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Provider> GetProviderByNumberAsync(decimal number)
+        {
+            return Task.FromResult(providers.Find(s => s.Number == number));
+        }
+
+        public Task<Provider> UpdateAsync(Provider providerChanges)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

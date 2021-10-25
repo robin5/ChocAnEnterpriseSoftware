@@ -57,6 +57,13 @@ namespace ChocAn.MemberService
         Task<Member> GetMemberAsync(Guid id);
 
         /// <summary>
+        /// Retrieves a Member entity from the database by member number
+        /// </summary>
+        /// <param name="id">ID of Member entity to retrieve</param>
+        /// <returns></returns>
+        Task<Member> GetMemberByNumberAsync(decimal number);
+
+        /// <summary>
         /// Updates a Member entity in the database
         /// </summary>
         /// <param name="memberChanges">Changes to be applied to Member entity</param>

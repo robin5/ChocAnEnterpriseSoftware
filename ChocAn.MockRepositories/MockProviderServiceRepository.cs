@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Transaction.cs
+// * File: MockProviderRepository.cs
 // *
-// * Description: The Transaction class defines an entity which describes a 
-// * transaction between a ChocAn member and a ChocAn provider 
+// * Description: Mocks the ProviderServiceService class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -29,23 +28,19 @@
 // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // *   THE SOFTWARE.
 // * 
-// **********************************************************************************
+// **********************************************************************************using System;
 
-using System;
+using System.Threading.Tasks;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.MockRepositories
 {
-    /// <summary>
-    /// Represents a  transaction between a ChocAn member and a ChocAn provider
-    /// </summary>
-    public class Transaction
+    public class MockProviderServiceRepository :
+        MockRepository<ProviderServiceService.ProviderService>,
+        ProviderServiceService.IProviderServiceService
     {
-        public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
-        public Guid MemberId { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public decimal ServiceCode { get; set; }
-        public string ServiceComment { get; set; }
-        public DateTime TransactionDateTime { get; set; }
+        public Task<ProviderServiceService.ProviderService> GetByCodeAsync(decimal code)
+        {
+            return Task.FromResult(base.items.Find(s => s.Code == code));
+        }
     }
 }

@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Transaction.cs
+// * File: HomeController.cs
 // *
-// * Description: The Transaction class defines an entity which describes a 
-// * transaction between a ChocAn member and a ChocAn provider 
+// * Description: Implements the Home controller for the MockProviderTerminal
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -29,23 +28,33 @@
 // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // *   THE SOFTWARE.
 // * 
-// **********************************************************************************
+// **********************************************************************************using System;
 
-using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using ChocAn.MockProviderTerminal.Models;
+using System.Diagnostics;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.MockProviderTerminal.Controllers
 {
-    /// <summary>
-    /// Represents a  transaction between a ChocAn member and a ChocAn provider
-    /// </summary>
-    public class Transaction
+    public class HomeController : Controller
     {
-        public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
-        public Guid MemberId { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public decimal ServiceCode { get; set; }
-        public string ServiceComment { get; set; }
-        public DateTime TransactionDateTime { get; set; }
+        private readonly ILogger<HomeController> logger;
+
+        public HomeController(ILogger<HomeController> logger)
+        {
+            this.logger = logger;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

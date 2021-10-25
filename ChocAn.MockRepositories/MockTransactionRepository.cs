@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Transaction.cs
+// * File: MockTransactionRepository.cs
 // *
-// * Description: The Transaction class defines an entity which describes a 
-// * transaction between a ChocAn member and a ChocAn provider 
+// * Description: mocks the TransactionService class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -29,23 +28,15 @@
 // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // *   THE SOFTWARE.
 // * 
-// **********************************************************************************
+// **********************************************************************************using System;
 
-using System;
+using ChocAn.TransactionService;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.MockRepositories
 {
-    /// <summary>
-    /// Represents a  transaction between a ChocAn member and a ChocAn provider
-    /// </summary>
-    public class Transaction
+    public class MockTransactionRepository :
+        MockRepository<Transaction>,
+        ITransactionService
     {
-        public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
-        public Guid MemberId { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public decimal ServiceCode { get; set; }
-        public string ServiceComment { get; set; }
-        public DateTime TransactionDateTime { get; set; }
     }
 }

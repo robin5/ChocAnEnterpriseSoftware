@@ -60,6 +60,9 @@ namespace ChocAn.TransactionService
         /// <returns></returns>
         public async Task<Transaction> AddAsync(Transaction transaction)
         {
+            //transaction.Id = Guid.NewGuid();
+            transaction.TransactionDateTime = DateTime.Now;
+
             await context.Transactions.AddAsync(transaction);
             context.SaveChanges();
             return transaction;

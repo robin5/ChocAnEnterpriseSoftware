@@ -57,6 +57,13 @@ namespace ChocAn.ProviderService
         Task<Provider> GetProviderAsync(Guid id);
 
         /// <summary>
+        /// Retrieves a Provider entity from the database by provider number
+        /// </summary>
+        /// <param name="id">ID of Provider entity to retrieve</param>
+        /// <returns></returns>
+        Task<Provider> GetProviderByNumberAsync(decimal number);
+
+        /// <summary>
         /// Updates a Provider entity in the database
         /// </summary>
         /// <param name="providerChanges">Changes to be applied to Provider entity</param>

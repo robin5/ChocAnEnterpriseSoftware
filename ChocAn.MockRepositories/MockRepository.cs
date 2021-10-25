@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Transaction.cs
+// * File: MockRepository.cs
 // *
-// * Description: The Transaction class defines an entity which describes a 
-// * transaction between a ChocAn member and a ChocAn provider 
+// * Description: Mocks a generic repoitory class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -29,23 +28,57 @@
 // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // *   THE SOFTWARE.
 // * 
-// **********************************************************************************
+// **********************************************************************************using System;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.MockRepositories
 {
-    /// <summary>
-    /// Represents a  transaction between a ChocAn member and a ChocAn provider
-    /// </summary>
-    public class Transaction
+    public class MockRepository<T>
     {
-        public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
-        public Guid MemberId { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public decimal ServiceCode { get; set; }
-        public string ServiceComment { get; set; }
-        public DateTime TransactionDateTime { get; set; }
+        protected List<T> items = new List<T>();
+
+        public Task<T> AddAsync(T item)
+        {
+            items.Add(item);
+            return Task.FromResult(item);
+        }
+
+        public Task<T> DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async IAsyncEnumerable<T> GetAllAsync()
+        {
+            var enumerator = items.AsEnumerable().GetEnumerator();
+            T item;
+
+            enumerator.MoveNext();
+            while (null != (item = enumerator.Current))
+            {
+                yield return item;
+                //await Task.Delay(1);
+                await Task.FromResult(enumerator.MoveNext());
+            }
+
+
+
+            // return Task.FromResult(items.AsEnumerable<T>());
+        }
+
+        public Task<T> GetAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> UpdateAsync(T memberChanges)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

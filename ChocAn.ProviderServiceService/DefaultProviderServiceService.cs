@@ -34,6 +34,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.ProviderServiceService
 {
@@ -73,6 +75,16 @@ namespace ChocAn.ProviderServiceService
         public async Task<ProviderService> GetAsync(Guid id)
         {
             return await context.ProviderServices.FindAsync(id);
+        }
+
+        /// <summary>
+        /// Retrieves a ProviderService entity from the database by service code
+        /// </summary>
+        /// <param name="code">Code of ProviderService entity to retrieve</param>
+        /// <returns></returns>
+        public async Task<ProviderService> GetByCodeAsync(decimal code)
+        {
+            return await context.ProviderServices.Where(p => p.Code == code).FirstOrDefaultAsync<ProviderService>();
         }
 
         /// <summary>

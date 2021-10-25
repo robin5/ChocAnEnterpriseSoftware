@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProviderTerminal.API", "ProviderTerminal.API\ProviderTerminal.API.csproj", "{D8E5A86D-3444-461A-84A2-DC14AA420156}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProviderTerminal", "ProviderTerminal\ProviderTerminal.csproj", "{642C88AA-70C3-46D9-B0C7-7DF77100C9BD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceDirectory", "ServiceDirectory\ServiceDirectory.csproj", "{8DDD8671-42CB-4B72-8988-C9F4D2F684C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProviderServices", "ProviderServices\ProviderServices.csproj", "{F6B83F09-9A08-4F0F-90C8-515908E5C6B6}"
@@ -33,9 +29,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceServi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceService.Test", "ChocAn.ProviderServiceService.Test\ChocAn.ProviderServiceService.Test.csproj", "{B1FD8E5E-C753-4AF5-934C-A1706FFAB1FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.TransactionService", "ChocAn.TransactionService\ChocAn.TransactionService.csproj", "{86043A8A-AC60-4F8C-9893-608F8B0AF117}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionService", "ChocAn.TransactionService\ChocAn.TransactionService.csproj", "{86043A8A-AC60-4F8C-9893-608F8B0AF117}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.TransactionService.Test", "ChocAn.TransactionService.Test\ChocAn.TransactionService.Test.csproj", "{27CAA37F-2D57-441E-9162-5F5F4C3E6685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionService.Test", "ChocAn.TransactionService.Test\ChocAn.TransactionService.Test.csproj", "{27CAA37F-2D57-441E-9162-5F5F4C3E6685}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderTerminal.Api", "ChocAn.ProviderTerminal.API\ChocAn.ProviderTerminal.Api.csproj", "{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MockProviderTerminal", "ChocAn.MockProviderTerminal\ChocAn.MockProviderTerminal.csproj", "{79E0E71B-84EA-438C-824A-5C5226A65761}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderTerminal.Api.Test", "ChocAn.ProviderTerminal.Api.Test\ChocAn.ProviderTerminal.Api.Test.csproj", "{4817A60C-AFDE-4FD1-A0E9-716374D8000B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.MockRepositories", "ChocAn.MockRepositories\ChocAn.MockRepositories.csproj", "{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +47,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D8E5A86D-3444-461A-84A2-DC14AA420156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8E5A86D-3444-461A-84A2-DC14AA420156}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8E5A86D-3444-461A-84A2-DC14AA420156}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8E5A86D-3444-461A-84A2-DC14AA420156}.Release|Any CPU.Build.0 = Release|Any CPU
-		{642C88AA-70C3-46D9-B0C7-7DF77100C9BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{642C88AA-70C3-46D9-B0C7-7DF77100C9BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{642C88AA-70C3-46D9-B0C7-7DF77100C9BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{642C88AA-70C3-46D9-B0C7-7DF77100C9BD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DDD8671-42CB-4B72-8988-C9F4D2F684C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DDD8671-42CB-4B72-8988-C9F4D2F684C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DDD8671-42CB-4B72-8988-C9F4D2F684C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -111,6 +107,22 @@ Global
 		{27CAA37F-2D57-441E-9162-5F5F4C3E6685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27CAA37F-2D57-441E-9162-5F5F4C3E6685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27CAA37F-2D57-441E-9162-5F5F4C3E6685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79E0E71B-84EA-438C-824A-5C5226A65761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79E0E71B-84EA-438C-824A-5C5226A65761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79E0E71B-84EA-438C-824A-5C5226A65761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79E0E71B-84EA-438C-824A-5C5226A65761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4817A60C-AFDE-4FD1-A0E9-716374D8000B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4817A60C-AFDE-4FD1-A0E9-716374D8000B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4817A60C-AFDE-4FD1-A0E9-716374D8000B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4817A60C-AFDE-4FD1-A0E9-716374D8000B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
