@@ -37,10 +37,10 @@ using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using ChocAn.ProviderTerminal.Api.Controllers;
 using ChocAn.ProviderTerminal.Api.Resources;
-using ChocAn.ProviderService;
-using ChocAn.MemberService;
-using ChocAn.ProviderServiceService;
-using ChocAn.TransactionService;
+using ChocAn.ProviderRepository;
+using ChocAn.MemberRepository;
+using ChocAn.ProviderServiceRepository;
+using ChocAn.TransactionRepository;
 using ChocAn.MockRepositories;
 
 namespace ChocAn.ProviderTerminal.Api.Test
@@ -65,37 +65,11 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
         #endregion
 
-        #region MOQ version
-        /*
-        [Fact]
-        public async Task ValidateTerminalProvider_ExistingProvider_MOQVersion()
-        {
-            // Arrange
-            const decimal providerNumber = 42;
-
-            var providerService = new Mock<IProviderService>();
-            providerService
-                .Setup(x => x.GetProviderByNumberAsync(providerNumber))
-                .Returns(Task.FromResult(new Provider { Number = providerNumber }));
-
-            // Act
-            var controller = new TerminalController(null, providerService.Object, null, null, null);
-            var result = await controller.TerminalProvider(providerNumber);
-
-            // Assert
-
-            var objectResult = Assert.IsType<OkObjectResult>(result);
-            var resource = Assert.IsType<ProviderResource>(objectResult.Value);
-            Assert.Equal(providerNumber, resource.Number);
-        }
-        */
-        #endregion
-
         [Fact]
         public async Task ValidateTerminalProvider_ExistingProvider()
         {
             // Arrange
-            var providerService = new ChocAn.MockRepositories.MockProviderRepository();
+            var providerService = new MockProviderRepository();
 
             await providerService.AddAsync(new Provider
             {
@@ -171,7 +145,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
             // Arrange
             var providerServiceService = new MockProviderServiceRepository();
 
-            await providerServiceService.AddAsync(new ProviderServiceService.ProviderService
+            await providerServiceService.AddAsync(new ProviderService
             {
                 Id = PROVIDER_ID,
                 Code = PROVIDER_SERVICE_CODE,
@@ -229,7 +203,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Init mocked ProviderServiceService
             var providerServiceService = new MockProviderServiceRepository();
-            await providerServiceService.AddAsync(new ProviderServiceService.ProviderService
+            await providerServiceService.AddAsync(new ProviderService
             {
                 Id = PROVIDER_SERVICE_ID,
                 Code = PROVIDER_SERVICE_CODE,

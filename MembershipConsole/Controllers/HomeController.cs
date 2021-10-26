@@ -35,9 +35,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ChocAn.MemberService;
-using ChocAn.ProviderService;
-using ChocAn.ProviderServiceService;
+using ChocAn.MemberRepository;
+using ChocAn.ProviderRepository;
+using ChocAn.ProviderServiceRepository;
 using DataCenterConsole.Models;
 
 namespace DataCenterConsole.Controllers
@@ -45,14 +45,14 @@ namespace DataCenterConsole.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> logger;
-        private readonly IMemberService memberService;
-        private readonly IProviderService providerService;
-        private readonly IProviderServiceService providerServiceService;
+        private readonly IMemberRepository memberService;
+        private readonly IProviderRepository providerService;
+        private readonly IProviderServiceRepository providerServiceService;
 
         public HomeController(ILogger<HomeController> logger, 
-            IMemberService memberService,
-            IProviderService providerService,
-            IProviderServiceService providerServiceService)
+            IMemberRepository memberService,
+            IProviderRepository providerService,
+            IProviderServiceRepository providerServiceService)
         {
             this.logger = logger;
             this.memberService = memberService;
@@ -63,13 +63,13 @@ namespace DataCenterConsole.Controllers
         public async Task<IActionResult> Index()
         {
             List<Member> listMembers = new List<Member>();
-            await foreach (Member member in memberService.GetAllMembersAsync())
+            await foreach (Member member in memberService.GetAllAsync())
             {
                 listMembers.Add(member);
             }
 
             List<Provider> listProviders = new List<Provider>();
-            await foreach (Provider provider in providerService.GetAllProvidersAsync())
+            await foreach (Provider provider in providerService.GetAllAsync())
             {
                 listProviders.Add(provider);
             }

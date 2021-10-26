@@ -4,7 +4,7 @@
 // *
 // * File: ProviderDbContext.cs
 // *
-// * Description: The ProviderDbContext class defines a DbContext for Provider entities
+// * Description: Defines a DbContext for Provider entities
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -32,7 +32,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.ProviderService
+namespace ChocAn.ProviderRepository
 {
     /// <summary>
     /// A ProviderDbContext instance represents a session with the database and can be used to

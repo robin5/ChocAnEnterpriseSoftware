@@ -33,7 +33,7 @@
 
 using System;
 
-namespace ChocAn.ProviderService
+namespace ChocAn.ProviderRepository
 {
     /// <summary>
     /// Represents a ChocAn provider

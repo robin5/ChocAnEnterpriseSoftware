@@ -31,9 +31,9 @@
 // **********************************************************************************
 
 using System.Collections.Generic;
-using ChocAn.MemberService;
-using ChocAn.ProviderService;
-using ChocAn.ProviderServiceService;
+using ChocAn.MemberRepository;
+using ChocAn.ProviderRepository;
+using ChocAn.ProviderServiceRepository;
 
 namespace DataCenterConsole.Models
 {

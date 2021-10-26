@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: DefaultMemberServiceTest.cs
+// * File: DefaultMemberRepositoryTest.cs
 // *
-// * Description: Tests for DefaultMemberService class
+// * Description: Defines tests for DefaultMemberRepository class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -35,12 +35,12 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ChocAn.MemberService.Test
+namespace ChocAn.MemberRepository.Test
 {
     /// <summary>
-    /// Tests for DefaultMemberService class
+    /// Tests for DefaultMemberRepository class
     /// </summary>
-    public class DefaultMemberServiceTest
+    public class DefaultMemberRepositoryTest
     {
         #region Useful Constants
 
@@ -103,7 +103,7 @@ namespace ChocAn.MemberService.Test
         /// <returns></returns>
         private static async Task InsertValidMemberIntoTestDatabase(string name)
         {
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext(name))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext(name))
             {
                 // Arrange
                 var member = new Member
@@ -130,7 +130,7 @@ namespace ChocAn.MemberService.Test
         /// <returns></returns>
         private static async Task Insert3ValidMembersIntoTestDatabase(string name)
         {
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext(name))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext(name))
             {
                 // Arrange
                 context.Add<Member>(new Member
@@ -193,14 +193,14 @@ namespace ChocAn.MemberService.Test
             };
 
             // Act
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext("Add"))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Add"))
             {
-                var defaultMemberService = new DefaultMemberService(context);
+                var defaultMemberService = new DefaultMemberRepository(context);
                 var result = await defaultMemberService.AddAsync(member);
             }
 
             // Assert
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext("Add"))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Add"))
             {
                 var result = context.Find<Member>(validId);
 
@@ -224,14 +224,14 @@ namespace ChocAn.MemberService.Test
         public async Task ValidateGetMemberAsync()
         {
             // Arrange
-            await DefaultMemberServiceTest.InsertValidMemberIntoTestDatabase("Get");
+            await DefaultMemberRepositoryTest.InsertValidMemberIntoTestDatabase("Get");
             var validId = new Guid(VALID0_ID);
 
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext("Get"))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Get"))
             {
                 // Act
-                var defaultMemberService = new DefaultMemberService(context);
-                var result = await defaultMemberService.GetMemberAsync(validId);
+                var defaultMemberService = new DefaultMemberRepository(context);
+                var result = await defaultMemberService.GetAsync(validId);
 
                 // Assert
                 Assert.NotNull(result);
@@ -254,14 +254,14 @@ namespace ChocAn.MemberService.Test
         public async Task ValidateGetMemberAsyncNonExistentMember()
         {
             // Arrange
-            await DefaultMemberServiceTest.InsertValidMemberIntoTestDatabase("ValidateGetMemberAsyncNonExistentMember");
+            await DefaultMemberRepositoryTest.InsertValidMemberIntoTestDatabase("ValidateGetMemberAsyncNonExistentMember");
             var nonExistentMemberId = new Guid(NON_EXISTENT_MEMBER_ID);
 
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext("ValidateGetMemberAsyncNonExistentMember"))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("ValidateGetMemberAsyncNonExistentMember"))
             {
                 // Act
-                var defaultMemberService = new DefaultMemberService(context);
-                var result = await defaultMemberService.GetMemberAsync(nonExistentMemberId);
+                var defaultMemberService = new DefaultMemberRepository(context);
+                var result = await defaultMemberService.GetAsync(nonExistentMemberId);
 
                 // Assert
                 Assert.Null(result);
@@ -276,7 +276,7 @@ namespace ChocAn.MemberService.Test
         public async Task ValidateUpdateAsync()
         {
             // Arrange
-            await DefaultMemberServiceTest.InsertValidMemberIntoTestDatabase("Update");
+            await DefaultMemberRepositoryTest.InsertValidMemberIntoTestDatabase("Update");
 
             var validId = new Guid(VALID0_ID);
 
@@ -292,10 +292,10 @@ namespace ChocAn.MemberService.Test
                 Status = VALID_UPDATE_STATUS
             };
 
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext("Update"))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Update"))
             {
                 // Act
-                var defaultMemberService = new DefaultMemberService(context);
+                var defaultMemberService = new DefaultMemberRepository(context);
                 var result = await defaultMemberService.UpdateAsync(memberChanges);
 
                 // Assert
@@ -332,12 +332,12 @@ namespace ChocAn.MemberService.Test
         public async Task ValidateDeleteAsync()
         {
             // Arrange
-            await DefaultMemberServiceTest.InsertValidMemberIntoTestDatabase("Delete");
+            await DefaultMemberRepositoryTest.InsertValidMemberIntoTestDatabase("Delete");
 
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext("Delete"))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Delete"))
             {
                 // Act
-                var defaultMemberService = new DefaultMemberService(context);
+                var defaultMemberService = new DefaultMemberRepository(context);
                 var result = await defaultMemberService.DeleteAsync(new Guid(VALID0_ID));
 
                 // Assert
@@ -363,19 +363,19 @@ namespace ChocAn.MemberService.Test
         public async Task ValidateGetAllMembersAsync()
         {
             // Arrange
-            await DefaultMemberServiceTest.Insert3ValidMembersIntoTestDatabase("GetAllMembersAsync");
+            await DefaultMemberRepositoryTest.Insert3ValidMembersIntoTestDatabase("GetAllMembersAsync");
 
             bool member0Found = false;
             bool member1Found = false;
             bool member2Found = false;
 
-            using (MemberDbContext context = DefaultMemberServiceTest.GetContext("GetAllMembersAsync"))
+            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("GetAllMembersAsync"))
             {
                 // Act
-                var defaultMemberService = new DefaultMemberService(context);
+                var defaultMemberService = new DefaultMemberRepository(context);
 
                 // Assert
-                await foreach (Member member in defaultMemberService.GetAllMembersAsync())
+                await foreach (Member member in defaultMemberService.GetAllAsync())
                 {
                     if (VALID0_ID == member.Id.ToString())
                     {

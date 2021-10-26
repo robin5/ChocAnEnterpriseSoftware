@@ -4,8 +4,7 @@
 // *
 // * File: ProviderService.cs
 // *
-// * Description: The ProviderService class defines an entity which describes a Service 
-// *              given by a Provider
+// * Description: Defines an entity which describes a service given by a Provider
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -33,7 +32,7 @@
 
 using System;
 
-namespace ChocAn.ProviderServiceService
+namespace ChocAn.ProviderServiceRepository
 {
     /// <summary>
     /// Represents a ChocAn member

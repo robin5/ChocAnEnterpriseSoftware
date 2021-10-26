@@ -33,11 +33,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChocAn.ProviderService;
+using ChocAn.ProviderRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockProviderRepository : IProviderService
+    public class MockProviderRepository : IProviderRepository
     {
         private List<Provider> providers = new List<Provider>();
         public Task<Provider> AddAsync(Provider provider)
@@ -51,17 +51,17 @@ namespace ChocAn.MockRepositories
             throw new NotImplementedException();
         }
 
-        public IAsyncEnumerable<Provider> GetAllProvidersAsync()
+        public IAsyncEnumerable<Provider> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Provider> GetProviderAsync(Guid id)
+        public Task<Provider> GetAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Provider> GetProviderByNumberAsync(decimal number)
+        public Task<Provider> GetByNumberAsync(decimal number)
         {
             return Task.FromResult(providers.Find(s => s.Number == number));
         }

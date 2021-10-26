@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ITransactionService.cs
+// * File: IMemberRepository.cs
 // *
-// * Description: ITransactionService defines an interface for storing Transaction objects
-// *              in a database
+// * Description: Defines an interface for storing Member entities in a database
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -35,45 +34,52 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.MemberRepository
 {
     /// <summary>
-    /// Represents repository pattern for Transaction entities
+    /// Represents repository pattern for Member entities
     /// </summary>
-    public interface ITransactionService
+    public interface IMemberRepository
     {
         /// <summary>
-        /// Adds a Transaction entity to the database
+        /// Adds a Member entity to the database
         /// </summary>
-        /// <param name="transaction"></param>
+        /// <param name="member"></param>
         /// <returns></returns>
-        Task<Transaction> AddAsync(Transaction transaction);
+        Task<Member> AddAsync(Member member);
 
         /// <summary>
-        /// Retrieves a Transaction entity from the database
+        /// Retrieves a Member entity from the database
         /// </summary>
-        /// <param name="id">ID of Transaction entity to retrieve</param>
+        /// <param name="id">ID of Member entity to retrieve</param>
         /// <returns></returns>
-        Task<Transaction> GetAsync(Guid id);
+        Task<Member> GetAsync(Guid id);
 
         /// <summary>
-        /// Updates a Transaction entity in the database
+        /// Retrieves a Member entity from the database by member number
         /// </summary>
-        /// <param name="transactionChanges">Changes to be applied to Transaction entity</param>
+        /// <param name="id">ID of Member entity to retrieve</param>
         /// <returns></returns>
-        Task<Transaction> UpdateAsync(Transaction transactionChanges);
+        Task<Member> GetByNumberAsync(decimal number);
 
         /// <summary>
-        /// Deletes Transaction entity from the database
+        /// Updates a Member entity in the database
         /// </summary>
-        /// <param name="id">ID of transaction to deleted</param>
+        /// <param name="memberChanges">Changes to be applied to Member entity</param>
         /// <returns></returns>
-        Task<Transaction> DeleteAsync(Guid id);
+        Task<Member> UpdateAsync(Member memberChanges);
 
         /// <summary>
-        /// Retrieves all Transaction entities in the database
+        /// Deletes Member entity from the database
         /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all Transaction Entities in the database</returns>
-        IAsyncEnumerable<Transaction> GetAllAsync();
+        /// <param name="id">ID of member to deleted</param>
+        /// <returns></returns>
+        Task<Member> DeleteAsync(Guid id);
+
+        /// <summary>
+        /// Retrieves all Member entities in the database
+        /// </summary>
+        /// <returns>An enumerator that provides asynchronous iteration over all Member Entities in the database</returns>
+        IAsyncEnumerable<Member> GetAllAsync();
     }
 }

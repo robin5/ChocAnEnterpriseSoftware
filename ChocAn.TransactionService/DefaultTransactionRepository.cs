@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: DefaultTransactionService.cs
+// * File: DefaultTransactionRepository.cs
 // *
-// * Description: The DefaultTransactionService class provides access to Transaction items
-// *              stored in a database context
+// * Description: Provides access to Transaction items stored in a database context
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -35,12 +34,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.TransactionRepository
 {
     /// <summary>
     /// Implements repository pattern for Transaction entities
     /// </summary>
-    public class DefaultTransactionService : ITransactionService
+    public class DefaultTransactionRepository : ITransactionRepository
     {
         private readonly TransactionDbContext context;
 
@@ -48,7 +47,7 @@ namespace ChocAn.TransactionService
         ///  Constructor for TransactionDbContext
         /// </summary>
         /// <param name="context">DbContext of underlying database</param>
-        public DefaultTransactionService(TransactionDbContext context)
+        public DefaultTransactionRepository(TransactionDbContext context)
         {
             this.context = context;
         }

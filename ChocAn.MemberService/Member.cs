@@ -4,7 +4,7 @@
 // *
 // * File: Member.cs
 // *
-// * Description: The Member class defines an entity which describes a ChocAn member
+// * Description: Defines an entity which describes a ChocAn member
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -32,7 +32,7 @@
 
 using System;
 
-namespace ChocAn.MemberService
+namespace ChocAn.MemberRepository
 {
     /// <summary>
     /// Represents a ChocAn member

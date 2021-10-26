@@ -30,13 +30,13 @@
 // * 
 // **********************************************************************************using System;
 
-using ChocAn.TransactionService;
+using ChocAn.TransactionRepository;
 
 namespace ChocAn.MockRepositories
 {
     public class MockTransactionRepository :
         MockRepository<Transaction>,
-        ITransactionService
+        ITransactionRepository
     {
     }
 }

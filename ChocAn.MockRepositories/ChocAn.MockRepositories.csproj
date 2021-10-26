@@ -1,14 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChocAn.MemberService\ChocAn.MemberService.csproj" />
-    <ProjectReference Include="..\ChocAn.ProviderServiceService\ChocAn.ProviderServiceService.csproj" />
-    <ProjectReference Include="..\ChocAn.ProviderService\ChocAn.ProviderService.csproj" />
-    <ProjectReference Include="..\ChocAn.TransactionService\ChocAn.TransactionService.csproj" />
+    <ProjectReference Include="..\ChocAn.MemberService\ChocAn.MemberRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.ProviderServiceService\ChocAn.ProviderServiceRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.ProviderService\ChocAn.ProviderRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.TransactionService\ChocAn.TransactionRepository.csproj" />
   </ItemGroup>
 
 </Project>

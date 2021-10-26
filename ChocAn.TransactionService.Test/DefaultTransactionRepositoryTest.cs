@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: DefaultTransactionServiceTest.cs
+// * File: DefaultTransactionRepositoryTest.cs
 // *
-// * Description: Tests for DefaultTransactionService class
+// * Description: Tests for DefaultTransactionRepository class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -35,12 +35,12 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ChocAn.TransactionService.Test
+namespace ChocAn.TransactionRepository.Test
 {
     /// <summary>
-    /// Tests for DefaultTransactionService class
+    /// Tests for DefaultTransactionRepository class
     /// </summary>
-    public class DefaultTransactionServiceTest
+    public class DefaultTransactionRepositoryTest
     {
         #region Useful Constants
 
@@ -99,7 +99,7 @@ namespace ChocAn.TransactionService.Test
         /// <returns></returns>
         private static async Task InsertValidTransactionIntoTestDatabase(string name)
         {
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext(name))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext(name))
             {
                 // Arrange
                 var transaction = new Transaction
@@ -125,7 +125,7 @@ namespace ChocAn.TransactionService.Test
         /// <returns></returns>
         private static async Task Insert3ValidTransactionsIntoTestDatabase(string name)
         {
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext(name))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext(name))
             {
                 // Arrange
                 context.Add<Transaction>(new Transaction
@@ -186,14 +186,14 @@ namespace ChocAn.TransactionService.Test
             };
 
             // Act
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("Add"))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext("Add"))
             {
-                var defaultTransactionService = new DefaultTransactionService(context);
+                var defaultTransactionService = new DefaultTransactionRepository(context);
                 var result = await defaultTransactionService.AddAsync(transaction);
             }
 
             // Assert
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("Add"))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext("Add"))
             {
                 var result = context.Find<Transaction>(validId);
 
@@ -216,13 +216,13 @@ namespace ChocAn.TransactionService.Test
         public async Task ValidateGetTransactionAsync()
         {
             // Arrange
-            await DefaultTransactionServiceTest.InsertValidTransactionIntoTestDatabase("Get");
+            await DefaultTransactionRepositoryTest.InsertValidTransactionIntoTestDatabase("Get");
             var validId = new Guid(T0_ID);
 
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("Get"))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext("Get"))
             {
                 // Act
-                var defaultTransactionService = new DefaultTransactionService(context);
+                var defaultTransactionService = new DefaultTransactionRepository(context);
                 var result = await defaultTransactionService.GetAsync(validId);
 
                 // Assert
@@ -245,13 +245,13 @@ namespace ChocAn.TransactionService.Test
         public async Task ValidateGetTransactionAsyncNonExistentTransaction()
         {
             // Arrange
-            await DefaultTransactionServiceTest.InsertValidTransactionIntoTestDatabase("ValidateGetTransactionAsyncNonExistentTransaction");
+            await DefaultTransactionRepositoryTest.InsertValidTransactionIntoTestDatabase("ValidateGetTransactionAsyncNonExistentTransaction");
             var nonExistentTransactionId = new Guid(NON_EXISTENT_MEMBER_ID);
 
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("ValidateGetTransactionAsyncNonExistentTransaction"))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext("ValidateGetTransactionAsyncNonExistentTransaction"))
             {
                 // Act
-                var defaultTransactionService = new DefaultTransactionService(context);
+                var defaultTransactionService = new DefaultTransactionRepository(context);
                 var result = await defaultTransactionService.GetAsync(nonExistentTransactionId);
 
                 // Assert
@@ -267,7 +267,7 @@ namespace ChocAn.TransactionService.Test
         public async Task ValidateUpdateAsync()
         {
             // Arrange
-            await DefaultTransactionServiceTest.InsertValidTransactionIntoTestDatabase("Update");
+            await DefaultTransactionRepositoryTest.InsertValidTransactionIntoTestDatabase("Update");
 
             var validId = new Guid(T0_ID);
 
@@ -282,10 +282,10 @@ namespace ChocAn.TransactionService.Test
                 TransactionDateTime = T_UPDATE_TRANSACTION_DATETIME
             };
 
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("Update"))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext("Update"))
             {
                 // Act
-                var defaultTransactionService = new DefaultTransactionService(context);
+                var defaultTransactionService = new DefaultTransactionRepository(context);
                 var result = await defaultTransactionService.UpdateAsync(transactionChanges);
 
                 // Assert
@@ -320,12 +320,12 @@ namespace ChocAn.TransactionService.Test
         public async Task ValidateDeleteAsync()
         {
             // Arrange
-            await DefaultTransactionServiceTest.InsertValidTransactionIntoTestDatabase("Delete");
+            await DefaultTransactionRepositoryTest.InsertValidTransactionIntoTestDatabase("Delete");
 
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("Delete"))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext("Delete"))
             {
                 // Act
-                var defaultTransactionService = new DefaultTransactionService(context);
+                var defaultTransactionService = new DefaultTransactionRepository(context);
                 var result = await defaultTransactionService.DeleteAsync(new Guid(T0_ID));
 
                 // Assert
@@ -350,16 +350,16 @@ namespace ChocAn.TransactionService.Test
         public async Task ValidateGetAllTransactionsAsync()
         {
             // Arrange
-            await DefaultTransactionServiceTest.Insert3ValidTransactionsIntoTestDatabase("GetAllTransactionsAsync");
+            await DefaultTransactionRepositoryTest.Insert3ValidTransactionsIntoTestDatabase("GetAllTransactionsAsync");
 
             bool transaction0Found = false;
             bool transaction1Found = false;
             bool transaction2Found = false;
 
-            using (TransactionDbContext context = DefaultTransactionServiceTest.GetContext("GetAllTransactionsAsync"))
+            using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext("GetAllTransactionsAsync"))
             {
                 // Act
-                var defaultTransactionService = new DefaultTransactionService(context);
+                var defaultTransactionService = new DefaultTransactionRepository(context);
 
                 // Assert
                 await foreach (Transaction transaction in defaultTransactionService.GetAllAsync())

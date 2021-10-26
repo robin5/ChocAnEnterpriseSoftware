@@ -38,10 +38,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using ChocAn.MemberService;
-using ChocAn.ProviderService;
-using ChocAn.ProviderServiceService;
-using ChocAn.TransactionService;
+using ChocAn.MemberRepository;
+using ChocAn.ProviderRepository;
+using ChocAn.ProviderServiceRepository;
+using ChocAn.TransactionRepository;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.ProviderTerminal.Api.Filters;
 
@@ -76,10 +76,10 @@ namespace ChocAn.ProviderTerminal.Api
             services.AddDbContextPool<TransactionDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IMemberService, DefaultMemberService>();
-            services.AddScoped<IProviderService, DefaultProviderService>();
-            services.AddScoped<IProviderServiceService, DefaultProviderServiceService>();
-            services.AddScoped<ITransactionService, DefaultTransactionService>();
+            services.AddScoped<IMemberRepository, DefaultMemberRepository>();
+            services.AddScoped<IProviderRepository, DefaultProviderRepository>();
+            services.AddScoped<IProviderServiceRepository, DefaultProviderServiceRepository>();
+            services.AddScoped<ITransactionRepository, DefaultTransactionRepository>();
 
             // Add API versioning services
             services.AddApiVersioning(options =>

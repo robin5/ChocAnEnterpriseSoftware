@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChocAn.TransactionService\ChocAn.TransactionService.csproj" />
+    <ProjectReference Include="..\ChocAn.MemberService\ChocAn.MemberRepository.csproj" />
   </ItemGroup>
 
 </Project>

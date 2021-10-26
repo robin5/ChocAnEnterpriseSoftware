@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChocAn.MemberService\ChocAn.MemberService.csproj" />
-    <ProjectReference Include="..\ChocAn.ProviderServiceService\ChocAn.ProviderServiceService.csproj" />
-    <ProjectReference Include="..\ChocAn.ProviderService\ChocAn.ProviderService.csproj" />
+    <ProjectReference Include="..\ChocAn.MemberService\ChocAn.MemberRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.ProviderServiceService\ChocAn.ProviderServiceRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.ProviderService\ChocAn.ProviderRepository.csproj" />
   </ItemGroup>
 
 </Project>

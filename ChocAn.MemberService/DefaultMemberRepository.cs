@@ -2,10 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: DefaultProviderServiceService.cs
+// * File: DefaultMemberRepository.cs
 // *
-// * Description: The DefaultProviderServiceService class provides access to ProviderService items
-// *              stored in a database context
+// * Description: Provides access to Member entities stored in a database context
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -37,93 +36,93 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.ProviderServiceService
+namespace ChocAn.MemberRepository
 {
     /// <summary>
-    /// Implements repository pattern for ProviderService entities
+    /// Implements repository pattern for Member entities
     /// </summary>
-    public class DefaultProviderServiceService : IProviderServiceService
+    public class DefaultMemberRepository : IMemberRepository
     {
-        private readonly ProviderServiceDbContext context;
+        private readonly MemberDbContext context;
 
         /// <summary>
-        ///  Constructor for ProviderServiceDbContext
+        ///  Constructor for MemberDbContext
         /// </summary>
         /// <param name="context">DbContext of underlying database</param>
-        public DefaultProviderServiceService(ProviderServiceDbContext context)
+        public DefaultMemberRepository(MemberDbContext context)
         {
             this.context = context;
         }
 
         /// <summary>
-        /// Adds a ProviderService entity to the database
+        /// Adds a Member entity to the database
         /// </summary>
         /// <param name="member"></param>
         /// <returns></returns>
-        public async Task<ProviderService> AddAsync(ProviderService member)
+        public async Task<Member> AddAsync(Member member)
         {
-            await context.ProviderServices.AddAsync(member);
+            await context.Members.AddAsync(member);
             context.SaveChanges();
             return member;
         }
 
         /// <summary>
-        /// Retrieves a ProviderService entity from the database
+        /// Retrieves a Member entity from the database
         /// </summary>
-        /// <param name="id">ID of ProviderService entity to retrieve</param>
+        /// <param name="id">ID of Member entity to retrieve</param>
         /// <returns></returns>
-        public async Task<ProviderService> GetAsync(Guid id)
+        public async Task<Member> GetAsync(Guid id)
         {
-            return await context.ProviderServices.FindAsync(id);
+            return await context.Members.FindAsync(id);
         }
 
         /// <summary>
-        /// Retrieves a ProviderService entity from the database by service code
+        /// Retrieves a Member entity from the database by member number
         /// </summary>
-        /// <param name="code">Code of ProviderService entity to retrieve</param>
+        /// <param name="id">ID of Member entity to retrieve</param>
         /// <returns></returns>
-        public async Task<ProviderService> GetByCodeAsync(decimal code)
+        public async Task<Member> GetByNumberAsync(decimal number)
         {
-            return await context.ProviderServices.Where(p => p.Code == code).FirstOrDefaultAsync<ProviderService>();
+            return await context.Members.Where(p => p.Number == number).FirstOrDefaultAsync<Member>();
         }
 
         /// <summary>
-        /// Updates a ProviderService entity in the database
+        /// Updates a Member entity in the database
         /// </summary>
-        /// <param name="memberChanges">Changes to be applied to ProviderService entity</param>
+        /// <param name="memberChanges">Changes to be applied to Member entity</param>
         /// <returns></returns>
-        public async Task<ProviderService> UpdateAsync(ProviderService memberChanges)
+        public async Task<Member> UpdateAsync(Member memberChanges)
         {
-            var member = context.ProviderServices.Attach(memberChanges);
+            var member = context.Members.Attach(memberChanges);
             member.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             await context.SaveChangesAsync();
             return memberChanges;
         }
 
         /// <summary>
-        /// Deletes ProviderService entity from the database
+        /// Deletes Member entity from the database
         /// </summary>
         /// <param name="id">ID of member to deleted</param>
         /// <returns></returns>
-        public async Task<ProviderService> DeleteAsync(Guid id)
+        public async Task<Member> DeleteAsync(Guid id)
         {
-            var member = await context.ProviderServices.FindAsync(id);
-            if (null != member)
+            var member = await context.Members.FindAsync(id);
+            if(null != member)
             {
-                context.ProviderServices.Remove(member);
+                context.Members.Remove(member);
                 await context.SaveChangesAsync();
             }
             return member;
         }
 
         /// <summary>
-        /// Retrieves all ProviderService entities in the database
+        /// Retrieves all Member entities in the database
         /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all ProviderService Entities in the database</returns>
-        public async IAsyncEnumerable<ProviderService> GetAllAsync()
+        /// <returns>An enumerator that provides asynchronous iteration over all Member Entities in the database</returns>
+        public async IAsyncEnumerable<Member> GetAllAsync()
         {
-            var enumerator = context.ProviderServices.AsAsyncEnumerable().GetAsyncEnumerator();
-            ProviderService member;
+            var enumerator = context.Members.AsAsyncEnumerable().GetAsyncEnumerator();
+            Member member;
 
             await enumerator.MoveNextAsync();
             while (null != (member = enumerator.Current))

@@ -5,21 +5,21 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataCenterConsole", "MembershipConsole\DataCenterConsole.csproj", "{94D5015E-8766-4F7A-99B6-D1394053520C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MemberService", "ChocAn.MemberService\ChocAn.MemberService.csproj", "{88162685-0B7D-491E-8CDC-5F2D22625CFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MemberRepository", "ChocAn.MemberService\ChocAn.MemberRepository.csproj", "{88162685-0B7D-491E-8CDC-5F2D22625CFE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderService", "ChocAn.ProviderService\ChocAn.ProviderService.csproj", "{12471814-0B45-458F-A144-757B7CEE9835}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderRepository", "ChocAn.ProviderService\ChocAn.ProviderRepository.csproj", "{12471814-0B45-458F-A144-757B7CEE9835}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MemberService.Test", "ChocAn.MemberService.Test\ChocAn.MemberService.Test.csproj", "{FBE8FBE3-F2AB-48AC-B655-78F2A00544FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MemberRepository.Test", "ChocAn.MemberService.Test\ChocAn.MemberRepository.Test.csproj", "{FBE8FBE3-F2AB-48AC-B655-78F2A00544FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderService.Test", "ChocAn.ProviderService.Test\ChocAn.ProviderService.Test.csproj", "{F0A7D984-EEF2-4CE0-B39E-E7F428416173}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderRepository.Test", "ChocAn.ProviderService.Test\ChocAn.ProviderRepository.Test.csproj", "{F0A7D984-EEF2-4CE0-B39E-E7F428416173}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceService", "ChocAn.ProviderServiceService\ChocAn.ProviderServiceService.csproj", "{3CC83CBE-DBFB-48B1-91BC-0F39E28091BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceRepository", "ChocAn.ProviderServiceService\ChocAn.ProviderServiceRepository.csproj", "{3CC83CBE-DBFB-48B1-91BC-0F39E28091BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceService.Test", "ChocAn.ProviderServiceService.Test\ChocAn.ProviderServiceService.Test.csproj", "{B1FD8E5E-C753-4AF5-934C-A1706FFAB1FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceRepository.Test", "ChocAn.ProviderServiceService.Test\ChocAn.ProviderServiceRepository.Test.csproj", "{B1FD8E5E-C753-4AF5-934C-A1706FFAB1FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionService", "ChocAn.TransactionService\ChocAn.TransactionService.csproj", "{86043A8A-AC60-4F8C-9893-608F8B0AF117}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionRepository", "ChocAn.TransactionService\ChocAn.TransactionRepository.csproj", "{86043A8A-AC60-4F8C-9893-608F8B0AF117}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionService.Test", "ChocAn.TransactionService.Test\ChocAn.TransactionService.Test.csproj", "{27CAA37F-2D57-441E-9162-5F5F4C3E6685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionRepository.Test", "ChocAn.TransactionService.Test\ChocAn.TransactionRepository.Test.csproj", "{27CAA37F-2D57-441E-9162-5F5F4C3E6685}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderTerminal.Api", "ChocAn.ProviderTerminal.API\ChocAn.ProviderTerminal.Api.csproj", "{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}"
 EndProject

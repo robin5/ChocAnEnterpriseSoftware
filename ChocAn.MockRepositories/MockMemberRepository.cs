@@ -33,11 +33,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChocAn.MemberService;
+using ChocAn.MemberRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockMemberRepository : IMemberService
+    public class MockMemberRepository : IMemberRepository
     {
         private List<Member> members = new List<Member>();
         public Task<Member> AddAsync(Member member)
@@ -51,17 +51,17 @@ namespace ChocAn.MockRepositories
             throw new NotImplementedException();
         }
 
-        public IAsyncEnumerable<Member> GetAllMembersAsync()
+        public IAsyncEnumerable<Member> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Member> GetMemberAsync(Guid id)
+        public Task<Member> GetAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Member> GetMemberByNumberAsync(decimal number)
+        public Task<Member> GetByNumberAsync(decimal number)
         {
             return Task.FromResult(members.Find(s => s.Number == number));
         }

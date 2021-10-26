@@ -33,10 +33,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ChocAn.MemberService;
-using ChocAn.ProviderService;
-using ChocAn.ProviderServiceService;
-using ChocAn.TransactionService;
+using ChocAn.MemberRepository;
+using ChocAn.ProviderRepository;
+using ChocAn.ProviderServiceRepository;
+using ChocAn.TransactionRepository;
 using ChocAn.ProviderTerminal.Api.Resources;
 
 namespace ChocAn.ProviderTerminal.Api.Controllers
@@ -47,16 +47,16 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
     public class TerminalController : ControllerBase
     {
         private readonly ILogger<TerminalController> logger;
-        private readonly IProviderService providerService;
-        private readonly IMemberService memberService;
-        private readonly IProviderServiceService providerServiceService;
-        private readonly ITransactionService transactionService;
+        private readonly IProviderRepository providerService;
+        private readonly IMemberRepository memberService;
+        private readonly IProviderServiceRepository providerServiceService;
+        private readonly ITransactionRepository transactionService;
         public TerminalController(
             ILogger<TerminalController> logger,
-            IProviderService providerService,
-            IMemberService memberService,
-            IProviderServiceService providerServiceService,
-            ITransactionService transactionService)
+            IProviderRepository providerService,
+            IMemberRepository memberService,
+            IProviderServiceRepository providerServiceService,
+            ITransactionRepository transactionService)
         {
             this.logger = logger;
             this.providerService = providerService;
@@ -76,7 +76,7 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> TerminalProvider(decimal number)
         {
-            var provider = await providerService.GetProviderByNumberAsync(number);
+            var provider = await providerService.GetByNumberAsync(number);
             if (null == provider)
             {
                 return NotFound();
@@ -98,7 +98,7 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> TerminalMember(decimal number)
         {
-            var member = await memberService.GetMemberByNumberAsync(number);
+            var member = await memberService.GetByNumberAsync(number);
             if (null == member)
             {
                 return NotFound();
@@ -142,8 +142,8 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> Transaction([FromBody] TransactionResource terminalTransaction)
         {
-            var provider = await providerService.GetProviderByNumberAsync(terminalTransaction.ProviderNumber);
-            var member = await memberService.GetMemberByNumberAsync(terminalTransaction.MemberNumber);
+            var provider = await providerService.GetByNumberAsync(terminalTransaction.ProviderNumber);
+            var member = await memberService.GetByNumberAsync(terminalTransaction.MemberNumber);
 
             if ((null == provider) || (null == member))
             {

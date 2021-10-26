@@ -4,7 +4,8 @@
 // *
 // * File: Transaction.cs
 // *
-// * Description: The TransactionDbContext class defines a DbContext for Transaction entities
+// * Description: The TransactionDbContext class defines a DbContext for Transaction 
+// *              entities
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -32,7 +33,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.TransactionRepository
 {
     /// <summary>
     /// A TransactionDbContext instance represents a session with the database and can be used to

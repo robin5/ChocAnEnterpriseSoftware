@@ -36,9 +36,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using ChocAn.MemberService;
-using ChocAn.ProviderService;
-using ChocAn.ProviderServiceService;
+using ChocAn.MemberRepository;
+using ChocAn.ProviderRepository;
+using ChocAn.ProviderServiceRepository;
 
 namespace DataCenterConsole
 {
@@ -65,9 +65,9 @@ namespace DataCenterConsole
 
             services.AddControllersWithViews();
 
-            services.AddScoped<IMemberService, DefaultMemberService>();
-            services.AddScoped<IProviderService, DefaultProviderService>();
-            services.AddScoped<IProviderServiceService, DefaultProviderServiceService>();
+            services.AddScoped<IMemberRepository, DefaultMemberRepository>();
+            services.AddScoped<IProviderRepository, DefaultProviderRepository>();
+            services.AddScoped<IProviderServiceRepository, DefaultProviderServiceRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

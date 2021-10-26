@@ -4,7 +4,7 @@
 // *
 // * File: Member.cs
 // *
-// * Description: The MemberDbContext class defines a DbContext for Member entities
+// * Description: Defines a DbContext for Member entities
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -32,7 +32,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.MemberService
+namespace ChocAn.MemberRepository
 {
     /// <summary>
     /// A MemberDbContext instance represents a session with the database and can be used to

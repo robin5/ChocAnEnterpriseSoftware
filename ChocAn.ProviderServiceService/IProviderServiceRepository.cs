@@ -2,10 +2,10 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: IProviderService.cs
+// * File: IProviderServiceRepository.cs
 // *
-// * Description: IProviderService defines an interface for storing Provider objects
-// *              in a database
+// * Description: Defines an interface for storing ProviderService objects in a 
+// *              database
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -35,52 +35,52 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ChocAn.ProviderService
+namespace ChocAn.ProviderServiceRepository
 {
     /// <summary>
-    /// Represents repository pattern for Provider entities
+    /// Represents repository pattern for ProviderService entities
     /// </summary>
-    public interface IProviderService
+    public interface IProviderServiceRepository
     {
         /// <summary>
-        /// Adds a Provider entity to the database
+        /// Adds a ProviderService entity to the database
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="member"></param>
         /// <returns></returns>
-        Task<Provider> AddAsync(Provider provider);
+        Task<ProviderService> AddAsync(ProviderService member);
 
         /// <summary>
-        /// Retrieves a Provider entity from the database
+        /// Retrieves a ProviderService entity from the database
         /// </summary>
-        /// <param name="id">ID of Provider entity to retrieve</param>
+        /// <param name="id">ID of ProviderService entity to retrieve</param>
         /// <returns></returns>
-        Task<Provider> GetProviderAsync(Guid id);
+        Task<ProviderService> GetAsync(Guid id);
 
         /// <summary>
-        /// Retrieves a Provider entity from the database by provider number
+        /// Retrieves a ProviderService entity from the database by service code
         /// </summary>
-        /// <param name="id">ID of Provider entity to retrieve</param>
+        /// <param name="code">Code of ProviderService entity to retrieve</param>
         /// <returns></returns>
-        Task<Provider> GetProviderByNumberAsync(decimal number);
+        Task<ProviderService> GetByCodeAsync(decimal code);
 
         /// <summary>
-        /// Updates a Provider entity in the database
+        /// Updates a ProviderService entity in the database
         /// </summary>
-        /// <param name="providerChanges">Changes to be applied to Provider entity</param>
+        /// <param name="memberChanges">Changes to be applied to ProviderService entity</param>
         /// <returns></returns>
-        Task<Provider> UpdateAsync(Provider providerChanges);
+        Task<ProviderService> UpdateAsync(ProviderService memberChanges);
 
         /// <summary>
-        /// Deletes Provider entity from the database
+        /// Deletes ProviderService entity from the database
         /// </summary>
-        /// <param name="id">ID of provider to deleted</param>
+        /// <param name="id">ID of member to deleted</param>
         /// <returns></returns>
-        Task<Provider> DeleteAsync(Guid id);
+        Task<ProviderService> DeleteAsync(Guid id);
 
         /// <summary>
-        /// Retrieves all Provider entities in the database
+        /// Retrieves all ProviderService entities in the database
         /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all Provider Entities in the database</returns>
-        IAsyncEnumerable<Provider> GetAllProvidersAsync();
+        /// <returns>An enumerator that provides asynchronous iteration over all ProviderService Entities in the database</returns>
+        IAsyncEnumerable<ProviderService> GetAllAsync();
     }
 }

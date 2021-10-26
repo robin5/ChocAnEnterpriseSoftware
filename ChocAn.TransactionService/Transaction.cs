@@ -5,7 +5,7 @@
 // * File: Transaction.cs
 // *
 // * Description: The Transaction class defines an entity which describes a 
-// * transaction between a ChocAn member and a ChocAn provider 
+// *              transaction between a ChocAn member and a ChocAn provider 
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -33,7 +33,7 @@
 
 using System;
 
-namespace ChocAn.TransactionService
+namespace ChocAn.TransactionRepository
 {
     /// <summary>
     /// Represents a  transaction between a ChocAn member and a ChocAn provider
