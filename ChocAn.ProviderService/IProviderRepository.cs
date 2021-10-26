@@ -80,6 +80,6 @@ namespace ChocAn.ProviderRepository
         /// Retrieves all Provider entities in the database
         /// </summary>
         /// <returns>An enumerator that provides asynchronous iteration over all Provider Entities in the database</returns>
-        IAsyncEnumerable<Provider> GetAllAsync();
+        IAsyncEnumerable<Provider> GetAllProvidersAsync();
     }
 }

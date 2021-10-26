@@ -119,7 +119,7 @@ namespace ChocAn.ProviderRepository
         /// Retrieves all Provider entities in the database
         /// </summary>
         /// <returns>An enumerator that provides asynchronous iteration over all Provider Entities in the database</returns>
-        public async IAsyncEnumerable<Provider> GetAllAsync()
+        public async IAsyncEnumerable<Provider> GetAllProvidersAsync()
         {
             var enumerator = context.Providers.AsAsyncEnumerable().GetAsyncEnumerator();
             Provider provider;

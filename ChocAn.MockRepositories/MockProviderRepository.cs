@@ -51,7 +51,7 @@ namespace ChocAn.MockRepositories
             throw new NotImplementedException();
         }
 
-        public IAsyncEnumerable<Provider> GetAllAsync()
+        public IAsyncEnumerable<Provider> GetAllProvidersAsync()
         {
             throw new NotImplementedException();
         }
