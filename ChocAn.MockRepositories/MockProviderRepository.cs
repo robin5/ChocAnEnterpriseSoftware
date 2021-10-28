@@ -30,45 +30,16 @@
 // * 
 // **********************************************************************************using System;
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChocAn.ProviderRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockProviderRepository : IProviderRepository
+    public class MockProviderRepository : MockRepository<Provider>, IProviderRepository
     {
-        private List<Provider> providers = new List<Provider>();
-        public Task<Provider> AddAsync(Provider provider)
-        {
-            providers.Add(provider);
-            return Task.FromResult(provider);
-        }
-
-        public Task<Provider> DeleteAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAsyncEnumerable<Provider> GetAllProvidersAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Provider> GetAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Provider> GetByNumberAsync(decimal number)
         {
-            return Task.FromResult(providers.Find(s => s.Number == number));
-        }
-
-        public Task<Provider> UpdateAsync(Provider providerChanges)
-        {
-            throw new NotImplementedException();
+            return Task.FromResult(base.items.Find(s => s.Number == number));
         }
     }
 }

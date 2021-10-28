@@ -30,49 +30,15 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChocAn.GenericRepository;
 
 namespace ChocAn.TransactionRepository
 {
     /// <summary>
-    /// Represents repository pattern for Transaction entities
+    /// Defines repository pattern for Transaction entities
     /// </summary>
-    public interface ITransactionRepository
+    public interface ITransactionRepository : IGenericRepository<Transaction>
     {
-        /// <summary>
-        /// Adds a Transaction entity to the database
-        /// </summary>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        Task<Transaction> AddAsync(Transaction transaction);
-
-        /// <summary>
-        /// Retrieves a Transaction entity from the database
-        /// </summary>
-        /// <param name="id">ID of Transaction entity to retrieve</param>
-        /// <returns></returns>
-        Task<Transaction> GetAsync(Guid id);
-
-        /// <summary>
-        /// Updates a Transaction entity in the database
-        /// </summary>
-        /// <param name="transactionChanges">Changes to be applied to Transaction entity</param>
-        /// <returns></returns>
-        Task<Transaction> UpdateAsync(Transaction transactionChanges);
-
-        /// <summary>
-        /// Deletes Transaction entity from the database
-        /// </summary>
-        /// <param name="id">ID of transaction to deleted</param>
-        /// <returns></returns>
-        Task<Transaction> DeleteAsync(Guid id);
-
-        /// <summary>
-        /// Retrieves all Transaction entities in the database
-        /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all Transaction Entities in the database</returns>
-        IAsyncEnumerable<Transaction> GetAllAsync();
     }
 }

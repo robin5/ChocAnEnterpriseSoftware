@@ -69,7 +69,7 @@ namespace DataCenterConsole.Controllers
             }
 
             List<Provider> listProviders = new List<Provider>();
-            await foreach (Provider provider in providerService.GetAllProvidersAsync())
+            await foreach (Provider provider in providerService.GetAllAsync())
             {
                 listProviders.Add(provider);
             }

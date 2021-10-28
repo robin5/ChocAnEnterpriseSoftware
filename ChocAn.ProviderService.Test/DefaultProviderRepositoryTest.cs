@@ -364,7 +364,7 @@ namespace ChocAn.ProviderRepository.Test
                 var defaultProviderService = new DefaultProviderRepository(context);
 
                 // Assert
-                await foreach (Provider provider in defaultProviderService.GetAllProvidersAsync())
+                await foreach (Provider provider in defaultProviderService.GetAllAsync())
                 {
                     if (VALID0_ID == provider.Id.ToString())
                     {

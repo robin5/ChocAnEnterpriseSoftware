@@ -48,6 +48,7 @@ namespace ChocAn.MemberRepository
             : base(options)
         {
         }
+
         /// <summary>
         /// Provides access to Member entities in the database
         /// </summary>

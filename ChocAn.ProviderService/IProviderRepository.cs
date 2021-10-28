@@ -30,56 +30,21 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChocAn.GenericRepository;
 
 namespace ChocAn.ProviderRepository
 {
     /// <summary>
-    /// Represents repository pattern for Provider entities
+    /// Defines repository pattern for Provider entities
     /// </summary>
-    public interface IProviderRepository
+    public interface IProviderRepository : IGenericRepository<Provider>
     {
         /// <summary>
-        /// Adds a Provider entity to the database
+        /// Retrieves a Provider entity from the database by member number
         /// </summary>
-        /// <param name="provider"></param>
-        /// <returns></returns>
-        Task<Provider> AddAsync(Provider provider);
-
-        /// <summary>
-        /// Retrieves a Provider entity from the database
-        /// </summary>
-        /// <param name="id">ID of Provider entity to retrieve</param>
-        /// <returns></returns>
-        Task<Provider> GetAsync(Guid id);
-
-        /// <summary>
-        /// Retrieves a Provider entity from the database by provider number
-        /// </summary>
-        /// <param name="id">ID of Provider entity to retrieve</param>
+        /// <param name="number">Provider ID number of entity to retrieve</param>
         /// <returns></returns>
         Task<Provider> GetByNumberAsync(decimal number);
-
-        /// <summary>
-        /// Updates a Provider entity in the database
-        /// </summary>
-        /// <param name="providerChanges">Changes to be applied to Provider entity</param>
-        /// <returns></returns>
-        Task<Provider> UpdateAsync(Provider providerChanges);
-
-        /// <summary>
-        /// Deletes Provider entity from the database
-        /// </summary>
-        /// <param name="id">ID of provider to deleted</param>
-        /// <returns></returns>
-        Task<Provider> DeleteAsync(Guid id);
-
-        /// <summary>
-        /// Retrieves all Provider entities in the database
-        /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all Provider Entities in the database</returns>
-        IAsyncEnumerable<Provider> GetAllProvidersAsync();
     }
 }

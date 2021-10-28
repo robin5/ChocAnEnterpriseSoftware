@@ -30,56 +30,21 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChocAn.GenericRepository;
 
 namespace ChocAn.MemberRepository
 {
     /// <summary>
-    /// Represents repository pattern for Member entities
+    /// Defines repository pattern for Member entities
     /// </summary>
-    public interface IMemberRepository
+    public interface IMemberRepository : IGenericRepository<Member>
     {
-        /// <summary>
-        /// Adds a Member entity to the database
-        /// </summary>
-        /// <param name="member"></param>
-        /// <returns></returns>
-        Task<Member> AddAsync(Member member);
-
-        /// <summary>
-        /// Retrieves a Member entity from the database
-        /// </summary>
-        /// <param name="id">ID of Member entity to retrieve</param>
-        /// <returns></returns>
-        Task<Member> GetAsync(Guid id);
-
         /// <summary>
         /// Retrieves a Member entity from the database by member number
         /// </summary>
-        /// <param name="id">ID of Member entity to retrieve</param>
+        /// <param name="number">Member ID number of entity to retrieve</param>
         /// <returns></returns>
         Task<Member> GetByNumberAsync(decimal number);
-
-        /// <summary>
-        /// Updates a Member entity in the database
-        /// </summary>
-        /// <param name="memberChanges">Changes to be applied to Member entity</param>
-        /// <returns></returns>
-        Task<Member> UpdateAsync(Member memberChanges);
-
-        /// <summary>
-        /// Deletes Member entity from the database
-        /// </summary>
-        /// <param name="id">ID of member to deleted</param>
-        /// <returns></returns>
-        Task<Member> DeleteAsync(Guid id);
-
-        /// <summary>
-        /// Retrieves all Member entities in the database
-        /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all Member Entities in the database</returns>
-        IAsyncEnumerable<Member> GetAllAsync();
     }
 }

@@ -30,45 +30,16 @@
 // * 
 // **********************************************************************************using System;
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChocAn.MemberRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockMemberRepository : IMemberRepository
+    public class MockMemberRepository : MockRepository<Member>, IMemberRepository
     {
-        private List<Member> members = new List<Member>();
-        public Task<Member> AddAsync(Member member)
-        {
-            members.Add(member);
-            return Task.FromResult(member);
-        }
-
-        public Task<Member> DeleteAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IAsyncEnumerable<Member> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Member> GetAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Member> GetByNumberAsync(decimal number)
         {
-            return Task.FromResult(members.Find(s => s.Number == number));
-        }
-
-        public Task<Member> UpdateAsync(Member memberChanges)
-        {
-            throw new NotImplementedException();
+            return Task.FromResult(base.items.Find(s => s.Number == number));
         }
     }
 }

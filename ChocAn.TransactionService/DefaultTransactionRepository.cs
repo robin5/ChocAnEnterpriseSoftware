@@ -31,7 +31,7 @@
 // **********************************************************************************
 
 using System;
-using System.Collections.Generic;
+using ChocAn.GenericRepository;
 using System.Threading.Tasks;
 
 namespace ChocAn.TransactionRepository
@@ -39,88 +39,27 @@ namespace ChocAn.TransactionRepository
     /// <summary>
     /// Implements repository pattern for Transaction entities
     /// </summary>
-    public class DefaultTransactionRepository : ITransactionRepository
+    public class DefaultTransactionRepository : GenericRepository<Transaction>, ITransactionRepository
     {
-        private readonly TransactionDbContext context;
-
         /// <summary>
-        ///  Constructor for TransactionDbContext
+        ///  Constructor for DefaultTransactionRepository
         /// </summary>
         /// <param name="context">DbContext of underlying database</param>
         public DefaultTransactionRepository(TransactionDbContext context)
+            : base(context)
         {
-            this.context = context;
         }
-
         /// <summary>
-        /// Adds a Transaction entity to the database
+        /// Adds entity to the database and sets TransactionDateTime to now
         /// </summary>
-        /// <param name="transaction"></param>
+        /// <param name="obj"></param>
         /// <returns></returns>
-        public async Task<Transaction> AddAsync(Transaction transaction)
+        override public async Task<Transaction> AddAsync(Transaction obj)
         {
-            //transaction.Id = Guid.NewGuid();
-            transaction.TransactionDateTime = DateTime.Now;
-
-            await context.Transactions.AddAsync(transaction);
+            obj.TransactionDateTime = DateTime.Now;
+            await dbSet.AddAsync(obj);
             context.SaveChanges();
-            return transaction;
-        }
-
-        /// <summary>
-        /// Retrieves a Transaction entity from the database
-        /// </summary>
-        /// <param name="id">ID of Transaction entity to retrieve</param>
-        /// <returns></returns>
-        public async Task<Transaction> GetAsync(Guid id)
-        {
-            return await context.Transactions.FindAsync(id);
-        }
-
-        /// <summary>
-        /// Updates a Transaction entity in the database
-        /// </summary>
-        /// <param name="transactionChanges">Changes to be applied to Transaction entity</param>
-        /// <returns></returns>
-        public async Task<Transaction> UpdateAsync(Transaction transactionChanges)
-        {
-            var transaction = context.Transactions.Attach(transactionChanges);
-            transaction.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await context.SaveChangesAsync();
-            return transactionChanges;
-        }
-
-        /// <summary>
-        /// Deletes Transaction entity from the database
-        /// </summary>
-        /// <param name="id">ID of transaction to deleted</param>
-        /// <returns></returns>
-        public async Task<Transaction> DeleteAsync(Guid id)
-        {
-            var transaction = await context.Transactions.FindAsync(id);
-            if (null != transaction)
-            {
-                context.Transactions.Remove(transaction);
-                await context.SaveChangesAsync();
-            }
-            return transaction;
-        }
-
-        /// <summary>
-        /// Retrieves all Transaction entities in the database
-        /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all Transaction Entities in the database</returns>
-        public async IAsyncEnumerable<Transaction> GetAllAsync()
-        {
-            var enumerator = context.Transactions.AsAsyncEnumerable().GetAsyncEnumerator();
-            Transaction transaction;
-
-            await enumerator.MoveNextAsync();
-            while (null != (transaction = enumerator.Current))
-            {
-                yield return transaction;
-                await enumerator.MoveNextAsync();
-            }
+            return obj;
         }
     }
 }

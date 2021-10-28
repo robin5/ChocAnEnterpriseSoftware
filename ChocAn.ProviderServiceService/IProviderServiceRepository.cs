@@ -31,56 +31,21 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChocAn.GenericRepository;
 
 namespace ChocAn.ProviderServiceRepository
 {
     /// <summary>
-    /// Represents repository pattern for ProviderService entities
+    /// Defines repository pattern for ProviderService entities
     /// </summary>
-    public interface IProviderServiceRepository
+    public interface IProviderServiceRepository : IGenericRepository<ProviderService>
     {
         /// <summary>
-        /// Adds a ProviderService entity to the database
+        /// Retrieves a ProviderService entity from the database by member number
         /// </summary>
-        /// <param name="member"></param>
+        /// <param name="number">ProviderService ID number of entity to retrieve</param>
         /// <returns></returns>
-        Task<ProviderService> AddAsync(ProviderService member);
-
-        /// <summary>
-        /// Retrieves a ProviderService entity from the database
-        /// </summary>
-        /// <param name="id">ID of ProviderService entity to retrieve</param>
-        /// <returns></returns>
-        Task<ProviderService> GetAsync(Guid id);
-
-        /// <summary>
-        /// Retrieves a ProviderService entity from the database by service code
-        /// </summary>
-        /// <param name="code">Code of ProviderService entity to retrieve</param>
-        /// <returns></returns>
-        Task<ProviderService> GetByCodeAsync(decimal code);
-
-        /// <summary>
-        /// Updates a ProviderService entity in the database
-        /// </summary>
-        /// <param name="memberChanges">Changes to be applied to ProviderService entity</param>
-        /// <returns></returns>
-        Task<ProviderService> UpdateAsync(ProviderService memberChanges);
-
-        /// <summary>
-        /// Deletes ProviderService entity from the database
-        /// </summary>
-        /// <param name="id">ID of member to deleted</param>
-        /// <returns></returns>
-        Task<ProviderService> DeleteAsync(Guid id);
-
-        /// <summary>
-        /// Retrieves all ProviderService entities in the database
-        /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all ProviderService Entities in the database</returns>
-        IAsyncEnumerable<ProviderService> GetAllAsync();
+        Task<ProviderService> GetByCodeAsync(decimal number);
     }
 }

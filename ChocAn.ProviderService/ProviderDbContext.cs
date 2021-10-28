@@ -48,6 +48,7 @@ namespace ChocAn.ProviderRepository
             : base(options)
         {
         }
+
         /// <summary>
         /// Provides access to Provider entities in the database
         /// </summary>

@@ -48,7 +48,7 @@ namespace ChocAn.MockRepositories
             return Task.FromResult(item);
         }
 
-        public Task<T> DeleteAsync(Guid id)
+        public Task<T> DeleteAsync(object id)
         {
             throw new NotImplementedException();
         }
@@ -71,7 +71,7 @@ namespace ChocAn.MockRepositories
             // return Task.FromResult(items.AsEnumerable<T>());
         }
 
-        public Task<T> GetAsync(Guid id)
+        public Task<T> GetAsync(object id)
         {
             throw new NotImplementedException();
         }

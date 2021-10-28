@@ -30,106 +30,35 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ChocAn.GenericRepository;
 
 namespace ChocAn.ProviderServiceRepository
 {
     /// <summary>
     /// Implements repository pattern for ProviderService entities
     /// </summary>
-    public class DefaultProviderServiceRepository : IProviderServiceRepository
+    public class DefaultProviderServiceRepository : GenericRepository<ProviderService>, IProviderServiceRepository
     {
-        private readonly ProviderServiceDbContext context;
-
         /// <summary>
-        ///  Constructor for ProviderServiceDbContext
+        ///  Constructor for DefaultProviderServiceRepository
         /// </summary>
         /// <param name="context">DbContext of underlying database</param>
         public DefaultProviderServiceRepository(ProviderServiceDbContext context)
+            : base(context)
         {
-            this.context = context;
         }
 
         /// <summary>
-        /// Adds a ProviderService entity to the database
-        /// </summary>
-        /// <param name="member"></param>
-        /// <returns></returns>
-        public async Task<ProviderService> AddAsync(ProviderService member)
-        {
-            await context.ProviderServices.AddAsync(member);
-            context.SaveChanges();
-            return member;
-        }
-
-        /// <summary>
-        /// Retrieves a ProviderService entity from the database
+        /// Retrieves a ProviderService entity from the database by code value
         /// </summary>
         /// <param name="id">ID of ProviderService entity to retrieve</param>
         /// <returns></returns>
-        public async Task<ProviderService> GetAsync(Guid id)
-        {
-            return await context.ProviderServices.FindAsync(id);
-        }
-
-        /// <summary>
-        /// Retrieves a ProviderService entity from the database by service code
-        /// </summary>
-        /// <param name="code">Code of ProviderService entity to retrieve</param>
-        /// <returns></returns>
         public async Task<ProviderService> GetByCodeAsync(decimal code)
         {
-            return await context.ProviderServices.Where(p => p.Code == code).FirstOrDefaultAsync<ProviderService>();
-        }
-
-        /// <summary>
-        /// Updates a ProviderService entity in the database
-        /// </summary>
-        /// <param name="memberChanges">Changes to be applied to ProviderService entity</param>
-        /// <returns></returns>
-        public async Task<ProviderService> UpdateAsync(ProviderService memberChanges)
-        {
-            var member = context.ProviderServices.Attach(memberChanges);
-            member.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await context.SaveChangesAsync();
-            return memberChanges;
-        }
-
-        /// <summary>
-        /// Deletes ProviderService entity from the database
-        /// </summary>
-        /// <param name="id">ID of member to deleted</param>
-        /// <returns></returns>
-        public async Task<ProviderService> DeleteAsync(Guid id)
-        {
-            var member = await context.ProviderServices.FindAsync(id);
-            if (null != member)
-            {
-                context.ProviderServices.Remove(member);
-                await context.SaveChangesAsync();
-            }
-            return member;
-        }
-
-        /// <summary>
-        /// Retrieves all ProviderService entities in the database
-        /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all ProviderService Entities in the database</returns>
-        public async IAsyncEnumerable<ProviderService> GetAllAsync()
-        {
-            var enumerator = context.ProviderServices.AsAsyncEnumerable().GetAsyncEnumerator();
-            ProviderService member;
-
-            await enumerator.MoveNextAsync();
-            while (null != (member = enumerator.Current))
-            {
-                yield return member;
-                await enumerator.MoveNextAsync();
-            }
+            return await dbSet.Where(p => p.Code == code).FirstOrDefaultAsync<ProviderService>();
         }
     }
 }

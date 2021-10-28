@@ -31,14 +31,13 @@
 // **********************************************************************************using System;
 
 using System.Threading.Tasks;
+using ChocAn.ProviderServiceRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockProviderServiceRepository :
-        MockRepository<ProviderServiceRepository.ProviderService>,
-        ProviderServiceRepository.IProviderServiceRepository
+    public class MockProviderServiceRepository : MockRepository<ProviderService>, IProviderServiceRepository
     {
-        public Task<ProviderServiceRepository.ProviderService> GetByCodeAsync(decimal code)
+        public Task<ProviderService> GetByCodeAsync(decimal code)
         {
             return Task.FromResult(base.items.Find(s => s.Code == code));
         }
