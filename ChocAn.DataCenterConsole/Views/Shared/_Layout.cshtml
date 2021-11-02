@@ -6,27 +6,46 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChocAn DataCenter</title>
+    <title>ChocAn - Data Center</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://kit.fontawesome.com/71342f9bf4.js" crossorigin="anonymous"></script>
 </head>
 <body id="body-pd">
     <header class="header" id="header">
-        <div class="header_toggle"><i class='bx bx-menu' id="header-toggle">X</i></div>
+        <div class="header_toggle"><i title ="Menu" class='fas fa-bars' id="header-toggle"></i></div>
         <h2>@title</h2>
     </header>
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
             <div>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">DataCenter</span> </a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav_logo">
+                    <i title ="Data Center" class='fas fa-database nav_logo-icon'></i>
+                    <span class="nav_logo-name">Data Center</span>
+                </a>
                 <div class="nav_list">
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav_link" is-active-route>        <i class='bx bx-user nav_icon'>H</i>                  <span class="nav_name">Home</span> </a>
-                    <a asp-area="" asp-controller="Member" asp-action="Index" class="nav_link" is-active-route>        <i class='bx bx-user nav_icon'>M</i>                  <span class="nav_name">Members</span> </a>
-                    <a asp-area="" asp-controller="Provider" asp-action="Index" class="nav_link" is-active-route>        <i class='bx bx-message-square-detail nav_icon'>P</i> <span class="nav_name">Providers</span> </a>
-                    <a asp-area="" asp-controller="ProviderService" asp-action="Index" class="nav_link" is-active-route>        <i class='bx bx-bookmark nav_icon'>S</i>              <span class="nav_name">Services</span> </a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav_link" is-active-route>
+                        <i title="Home" class='fas fa-home nav_icon'></i>
+                        <span class="nav_name">Home</span>
+                    </a>
+                    <a asp-area="" asp-controller="Member" asp-action="Index" class="nav_link" is-active-route>        
+                        <i title="Members" class='fas fa-user nav_icon'></i>
+                        <span class="nav_name">Members</span>
+                    </a>
+                    <a asp-area="" asp-controller="Provider" asp-action="Index" class="nav_link" is-active-route>
+                        <i title="Providers" class='fas fa-user-md nav_icon'></i>
+                        <span class="nav_name">Providers</span>
+                    </a>
+                    <a asp-area="" asp-controller="ProviderService" asp-action="Index" class="nav_link" is-active-route>
+                        <i title="Services" class='fas fa-heart nav_icon'></i>
+                    <span class="nav_name">Services</span>
+                    </a>
                 </div>
             </div>
-            <a href="#" class="nav_link"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">SignOut</span> </a>
+            <a href="#" class="nav_link">
+                <i title="Sign Out"class='fas fa-sign-out-alt nav_icon'></i>
+                <span class="nav_name">Sign Out</span>
+            </a>
         </nav>
     </div>
     <!--Container Main start-->
