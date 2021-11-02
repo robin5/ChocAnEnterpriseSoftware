@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bootstrap" Version="5.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChocAn.MemberService\ChocAn.MemberRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.ProviderServiceService\ChocAn.ProviderServiceRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.ProviderService\ChocAn.ProviderRepository.csproj" />
+  </ItemGroup>
+
+</Project>

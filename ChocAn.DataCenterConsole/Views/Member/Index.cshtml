@@ -1,0 +1,29 @@
+﻿@model ChocAn.DataCenterConsole.Models.MemberIndexViewModel
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div>
+    <section class="input-group">
+        <span class="input-group-text">Find member</span>
+        <input id="find" type="text" class="form-control" placeholder="by name or by number..." aria-label="Input group example" aria-describedby="btnGroupAddon">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Go</button>
+    </section>
+    <section style="margin-top: 20px">
+        <p>Found 2</p>
+        <hr />
+        <ul class=" = grid-item grid-item-4">
+            @foreach (var member in Model.Members)
+            {
+                <li>
+                    <a class="nav-link text-dark"
+                       asp-area=""
+                       asp-controller="Member"
+                       asp-action="Details"
+                       asp-route-id="@member.Number">@member.Name</a>
+                </li>
+            }
+        </ul>
+    </section>
+</div>
+
