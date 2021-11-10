@@ -69,14 +69,14 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         /// <summary>
         /// Verifis existance of a provider
         /// </summary>
-        /// <param name="number">Provider's identification number</param>
+        /// <param name="id">Provider's identification number</param>
         /// <returns></returns>
         [HttpGet("provider/{number}", Name = nameof(TerminalProvider))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> TerminalProvider(decimal number)
+        public async Task<IActionResult> TerminalProvider(decimal id)
         {
-            var provider = await providerService.GetByNumberAsync(number);
+            var provider = await providerService.GetAsync(id);
             if (null == provider)
             {
                 return NotFound();
@@ -84,21 +84,21 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
 
             return Ok(new ProviderResource
             {
-                Number = provider.Number
+                Id = provider.Id
             });
         }
 
         /// <summary>
         /// Verifies existance of a member and returns member status.
         /// </summary>
-        /// <param name="number">Member's identification number</param>
+        /// <param name="id">Member's identification number</param>
         /// <returns></returns>
         [HttpGet("member/{number}", Name = nameof(TerminalMember))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> TerminalMember(decimal number)
+        public async Task<IActionResult> TerminalMember(decimal id)
         {
-            var member = await memberService.GetByNumberAsync(number);
+            var member = await memberService.GetAsync(id);
             if (null == member)
             {
                 return NotFound();
@@ -106,7 +106,7 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
 
             return Ok(new MemberResource
             {
-                Number = member.Number,
+                Id = member.Id,
                 Status = member.Status
             });
         }
@@ -115,14 +115,14 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         /// Verifies existance of a provider service and returns the
         /// service's code, name, and cost.
         /// </summary>
-        /// <param name="code">Provider service's identification code</param>
+        /// <param name="id">Provider service's identification code</param>
         /// <returns></returns>
         [HttpGet("service/{code}", Name = nameof(TerminalProviderService))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> TerminalProviderService(decimal code)
+        public async Task<IActionResult> TerminalProviderService(decimal id)
         {
-            var providerService = await providerServiceService.GetByCodeAsync(code);
+            var providerService = await providerServiceService.GetAsync(id);
             if (null == providerService)
             {
                 return NotFound();
@@ -130,7 +130,7 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
 
             return Ok(new ProviderServiceResource
             {
-                Code = providerService.Code,
+                Id = providerService.Id,
                 Name = providerService.Name,
                 Cost = providerService.Cost
             });
@@ -142,8 +142,8 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> Transaction([FromBody] TransactionResource terminalTransaction)
         {
-            var provider = await providerService.GetByNumberAsync(terminalTransaction.ProviderNumber);
-            var member = await memberService.GetByNumberAsync(terminalTransaction.MemberNumber);
+            var provider = await providerService.GetAsync(terminalTransaction.ProviderId);
+            var member = await memberService.GetAsync(terminalTransaction.MemberId);
 
             if ((null == provider) || (null == member))
             {
@@ -155,7 +155,7 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
                 ProviderId = provider.Id,
                 MemberId = member.Id,
                 ServiceDate = terminalTransaction.ServiceDate,
-                ServiceCode = terminalTransaction.ServiceCode,
+                ServiceCode = terminalTransaction.ServiceId,
                 ServiceComment = terminalTransaction.ServiceComment
             };
 

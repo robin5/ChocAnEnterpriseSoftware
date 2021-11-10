@@ -30,8 +30,8 @@
 // * 
 // **********************************************************************************
 
-using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.GenericRepository;
 
@@ -51,14 +51,18 @@ namespace ChocAn.MemberRepository
         {
         }
 
-        /// <summary>
-        /// Retrieves a Member entity from the database by member number
-        /// </summary>
-        /// <param name="id">ID of Member entity to retrieve</param>
-        /// <returns></returns>
-        public async Task<Member> GetByNumberAsync(decimal number)
+        override public async IAsyncEnumerable<Member> FindAllByNameAsync(string name)
         {
-            return await dbSet.Where(p => p.Number == number).FirstOrDefaultAsync<Member>();
+            var query = dbSet.Where<Member>(a => a.Name.Contains(name));
+            var enumerator = query.AsAsyncEnumerable<Member>().GetAsyncEnumerator();
+            Member entity;
+
+            await enumerator.MoveNextAsync();
+            while (null != (entity = enumerator.Current))
+            {
+                yield return entity;
+                await enumerator.MoveNextAsync();
+            }
         }
     }
 }

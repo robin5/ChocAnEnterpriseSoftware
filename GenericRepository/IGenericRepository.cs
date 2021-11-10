@@ -42,5 +42,12 @@ namespace ChocAn.GenericRepository
         /// </summary>
         /// <returns>An enumerator that provides asynchronous iteration over all Member Entities in the database</returns>
         IAsyncEnumerable<T> GetAllAsync();
+
+        /// <summary>
+        /// Retrieves all Member entities in the database similar to the 
+        /// </summary>
+        /// <param name="name">Name of Member entities to retrieve</param>
+        /// <returns>An enumerator that provides asynchronous iteration over all Member Entities in the database</returns>
+        IAsyncEnumerable<T> FindAllByNameAsync(string name);
     }
 }

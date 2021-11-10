@@ -9,15 +9,15 @@ namespace ChocAn.ProviderTerminal.Api.Resources
     public class TransactionResource
     {
         [Range(1,999999999, ErrorMessage = "Value out of range")]
-        public decimal ProviderNumber { get; set; }
+        public decimal ProviderId { get; set; }
         
         [Range(1, 999999999, ErrorMessage = "Value out of range")]
-        public decimal MemberNumber { get; set; }
+        public decimal MemberId { get; set; }
         
         public DateTime ServiceDate { get; set; }
         
         [Range(1, 999999, ErrorMessage = "Value out of range")]
-        public decimal ServiceCode { get; set; }
+        public decimal ServiceId { get; set; }
         
         [MaxLength(100, ErrorMessage = "Value out of range")]
         public string ServiceComment { get; set; }

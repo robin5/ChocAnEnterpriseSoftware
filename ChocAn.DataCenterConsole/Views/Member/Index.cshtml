@@ -1,29 +1,90 @@
-﻿@model ChocAn.DataCenterConsole.Models.MemberIndexViewModel
+﻿@{
+    // **********************************************************************************
+    // * Copyright (c) 2021 Robin Murray
+    // **********************************************************************************
+    // *
+    // * File: Index.cshtml
+    // *
+    // * Description: Index view for MemberController
+    // *
+    // **********************************************************************************
+    // * Author: Robin Murray
+    // **********************************************************************************
+    // *
+    // * Granting License: The MIT License (MIT)
+    // *
+    // *   Permission is hereby granted, free of charge, to any person obtaining a copy
+    // *   of this software and associated documentation files (the "Software"), to deal
+    // *   in the Software without restriction, including without limitation the rights
+    // *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    // *   copies of the Software, and to permit persons to whom the Software is
+    // *   furnished to do so, subject to the following conditions:
+    // *   The above copyright notice and this permission notice shall be included in
+    // *   all copies or substantial portions of the Software.
+    // *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    // *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    // *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    // *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    // *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    // *   THE SOFTWARE.
+    // *
+    // **********************************************************************************
+}
+@model ChocAn.DataCenterConsole.Models.MemberIndexViewModel
 @{
     ViewData["Title"] = "Members";
 }
 
 <div>
     <section class="input-group">
-        <span class="input-group-text">Find member</span>
-        <input id="find" type="text" class="form-control" placeholder="by name or by number..." aria-label="Input group example" aria-describedby="btnGroupAddon">
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Go</button>
+        <form asp-area=""
+              asp-controller="Member"
+              asp-action="Index"
+              style="width: 100%"
+              method="get">
+            <div class="input-group">
+                <span class="input-group-text">Find member</span>
+                <input asp-for="Find"
+                       type="text"
+                       class="form-control"
+                       placeholder="by name or by number..."
+                       aria-label="find member"
+                       aria-describedby="btnGroupAddon"
+                       value="@Model.Find">
+                <span asp-validation-for="Find"
+                      class="text-danger"></span>
+                <button id="button-addon2"
+                        class="btn btn-outline-secondary"
+                        type="submit">
+                    Go
+                </button>
+            </div>
+        </form>
+    </section>
+    <section style="margin-top: 20px;">
+        <a class="btn btn-primary"
+           asp-area=""
+           asp-controller="Member"
+           asp-action="Create">Add Member</a>
     </section>
     <section style="margin-top: 20px">
-        <p>Found 2</p>
-        <hr />
-        <ul class=" = grid-item grid-item-4">
-            @foreach (var member in Model.Members)
-            {
-                <li>
-                    <a class="nav-link text-dark"
-                       asp-area=""
-                       asp-controller="Member"
-                       asp-action="Details"
-                       asp-route-id="@member.Number">@member.Name</a>
-                </li>
-            }
-        </ul>
+        @if ((Model != null) && (Model.Items != null))
+        {
+            <p>Found @Model.Items.Count()</p>
+            <hr />
+            <ul class=" = grid-item grid-item-4">
+                @foreach (var member in Model.Items)
+                {
+                    <li>
+                        <a class="nav-link text-dark"
+                           asp-area=""
+                           asp-controller="Member"
+                           asp-action="Details"
+                           asp-route-id="@member.Id">@member.Name</a>
+                    </li>
+                }
+            </ul>
+        }
     </section>
 </div>
-

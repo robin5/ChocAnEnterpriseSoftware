@@ -48,15 +48,12 @@ namespace ChocAn.ProviderTerminal.Api.Test
     public class TerminalControllerTest
     {
         #region Useful Constants
-        private readonly Guid PROVIDER_ID = Guid.NewGuid();
-        private const decimal PROVIDER_NUMBER = 999999999;
+        private readonly decimal PROVIDER_ID = 999999999;
 
-        private readonly Guid MEMBER_ID = Guid.NewGuid();
-        private const decimal MEMBER_NUMBER = 999999999;
+        private readonly decimal MEMBER_ID = 999999998;
         private const string MEMBER_STATUS_ACTIVE = "active";
 
-        private readonly Guid PROVIDER_SERVICE_ID = Guid.NewGuid();
-        private const decimal PROVIDER_SERVICE_CODE = 999999;
+        private readonly decimal PROVIDER_SERVICE_ID = 999999;
         private const string PROVIDER_SERVICE_NAME = "Dietician";
         private const decimal PROVIDER_SERVICE_COST = 123.45M;
 
@@ -73,18 +70,18 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             await providerService.AddAsync(new Provider
             {
-                Number = PROVIDER_NUMBER
+                Id = PROVIDER_ID
             });
 
             // Act
             var controller = new TerminalController(null, providerService, null, null, null);
-            var result = await controller.TerminalProvider(PROVIDER_NUMBER);
+            var result = await controller.TerminalProvider(PROVIDER_ID);
 
             // Assert
 
             var objectResult = Assert.IsType<OkObjectResult>(result);
             var resource = Assert.IsType<ProviderResource>(objectResult.Value);
-            Assert.Equal(PROVIDER_NUMBER, resource.Number);
+            Assert.Equal(PROVIDER_ID, resource.Id);
         }
 
         [Fact]
@@ -95,7 +92,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, providerService, null, null, null);
-            var result = await controller.TerminalProvider(PROVIDER_NUMBER);
+            var result = await controller.TerminalProvider(PROVIDER_ID);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -109,19 +106,19 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             await memberService.AddAsync(new Member
             {
-                Number = MEMBER_NUMBER,
+                Id = MEMBER_ID,
                 Status = MEMBER_STATUS_ACTIVE
             });
 
             // Act
             var controller = new TerminalController(null, null, memberService, null, null);
-            var result = await controller.TerminalMember(MEMBER_NUMBER);
+            var result = await controller.TerminalMember(MEMBER_ID);
 
             // Assert
 
             var objectResult = Assert.IsType<OkObjectResult>(result);
             var resource = Assert.IsType<MemberResource>(objectResult.Value);
-            Assert.Equal(MEMBER_NUMBER, resource.Number);
+            Assert.Equal(MEMBER_ID, resource.Id);
             Assert.Equal(MEMBER_STATUS_ACTIVE, resource.Status);
         }
 
@@ -133,7 +130,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, null, memberService, null, null);
-            var result = await controller.TerminalMember(MEMBER_NUMBER);
+            var result = await controller.TerminalMember(MEMBER_ID);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -148,20 +145,19 @@ namespace ChocAn.ProviderTerminal.Api.Test
             await providerServiceService.AddAsync(new ProviderService
             {
                 Id = PROVIDER_ID,
-                Code = PROVIDER_SERVICE_CODE,
                 Name = PROVIDER_SERVICE_NAME,
                 Cost = PROVIDER_SERVICE_COST
             });
 
             // Act
             var controller = new TerminalController(null, null, null, providerServiceService, null);
-            var result = await controller.TerminalProviderService(PROVIDER_SERVICE_CODE);
+            var result = await controller.TerminalProviderService(PROVIDER_ID);
 
             // Assert
 
             var objectResult = Assert.IsType<OkObjectResult>(result);
             var resource = Assert.IsType<ProviderServiceResource>(objectResult.Value);
-            Assert.Equal(PROVIDER_SERVICE_CODE, resource.Code);
+            Assert.Equal(PROVIDER_SERVICE_ID, resource.Id);
             Assert.Equal(PROVIDER_SERVICE_NAME, resource.Name);
             Assert.Equal(PROVIDER_SERVICE_COST, resource.Cost);
         }
@@ -174,7 +170,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, null, null, providerServiceService, null);
-            var result = await controller.TerminalProviderService(PROVIDER_SERVICE_CODE);
+            var result = await controller.TerminalProviderService(PROVIDER_SERVICE_ID);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -189,7 +185,6 @@ namespace ChocAn.ProviderTerminal.Api.Test
             await providerService.AddAsync(new Provider
             {
                 Id = PROVIDER_ID,
-                Number = PROVIDER_NUMBER
             });
 
             // Init mocked MemberService
@@ -197,7 +192,6 @@ namespace ChocAn.ProviderTerminal.Api.Test
             await memberService.AddAsync(new Member
             {
                 Id = MEMBER_ID,
-                Number = MEMBER_NUMBER,
                 Status = MEMBER_STATUS_ACTIVE
             });
 
@@ -206,7 +200,6 @@ namespace ChocAn.ProviderTerminal.Api.Test
             await providerServiceService.AddAsync(new ProviderService
             {
                 Id = PROVIDER_SERVICE_ID,
-                Code = PROVIDER_SERVICE_CODE,
                 Name = PROVIDER_SERVICE_NAME,
                 Cost = PROVIDER_SERVICE_COST
             });
@@ -216,9 +209,9 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             var terminalTransaction = new TransactionResource
             {
-                ProviderNumber = PROVIDER_NUMBER,
-                MemberNumber = MEMBER_NUMBER,
-                ServiceCode = PROVIDER_SERVICE_CODE,
+                ProviderId = PROVIDER_ID,
+                MemberId = MEMBER_ID,
+                ServiceId = PROVIDER_SERVICE_ID,
                 ServiceDate = TRANSACTION_SERVICE_DATE,
                 ServiceComment = TRANSACTION_SERVICE_COMMENT
             };
@@ -257,7 +250,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             Assert.Equal(MEMBER_ID, transaction.MemberId);
             Assert.Equal(PROVIDER_ID, transaction.ProviderId);
-            Assert.Equal(PROVIDER_SERVICE_CODE, transaction.ServiceCode);
+            Assert.Equal(PROVIDER_SERVICE_ID, transaction.ServiceCode);
             Assert.Equal(TRANSACTION_SERVICE_DATE, transaction.ServiceDate);
             Assert.Equal(TRANSACTION_SERVICE_COMMENT, transaction.ServiceComment);
         }

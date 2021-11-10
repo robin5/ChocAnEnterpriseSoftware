@@ -40,11 +40,5 @@ namespace ChocAn.ProviderRepository
     /// </summary>
     public interface IProviderRepository : IGenericRepository<Provider>
     {
-        /// <summary>
-        /// Retrieves a Provider entity from the database by member number
-        /// </summary>
-        /// <param name="number">Provider ID number of entity to retrieve</param>
-        /// <returns></returns>
-        Task<Provider> GetByNumberAsync(decimal number);
     }
 }

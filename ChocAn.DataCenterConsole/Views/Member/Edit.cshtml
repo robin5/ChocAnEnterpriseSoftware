@@ -1,0 +1,98 @@
+﻿@{
+    // **********************************************************************************
+    // * Copyright (c) 2021 Robin Murray
+    // **********************************************************************************
+    // *
+    // * File: Edit.cshtml
+    // *
+    // * Description: Edit view for MemberController
+    // *
+    // **********************************************************************************
+    // * Author: Robin Murray
+    // **********************************************************************************
+    // *
+    // * Granting License: The MIT License (MIT)
+    // *
+    // *   Permission is hereby granted, free of charge, to any person obtaining a copy
+    // *   of this software and associated documentation files (the "Software"), to deal
+    // *   in the Software without restriction, including without limitation the rights
+    // *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    // *   copies of the Software, and to permit persons to whom the Software is
+    // *   furnished to do so, subject to the following conditions:
+    // *   The above copyright notice and this permission notice shall be included in
+    // *   all copies or substantial portions of the Software.
+    // *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    // *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    // *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    // *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    // *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    // *   THE SOFTWARE.
+    // *
+    // **********************************************************************************
+}
+@model ChocAn.DataCenterConsole.Models.MemberEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Member";
+}
+
+@if (null == Model)
+{
+    <div>
+        <h2>Edit</h2>
+        <hr />
+        <h4>Member not found.</h4>
+    </div>
+}
+else
+{
+    <div>
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StreetAddress" class="control-label"></label>
+                        <input asp-for="StreetAddress" class="form-control" />
+                        <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="State" class="control-label"></label>
+                        <input asp-for="State" class="form-control" />
+                        <span asp-validation-for="State" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ZipCode" class="control-label"></label>
+                        <input asp-for="ZipCode" class="form-control" />
+                        <span asp-validation-for="ZipCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Update" class="btn btn-primary" />
+                    </div>
+                    <input type="hidden" asp-for="Id" />
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

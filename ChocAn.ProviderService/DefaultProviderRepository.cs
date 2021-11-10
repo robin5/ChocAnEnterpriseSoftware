@@ -30,8 +30,8 @@
 // * 
 // **********************************************************************************
 
-using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.GenericRepository;
 
@@ -51,14 +51,18 @@ namespace ChocAn.ProviderRepository
         {
         }
 
-        /// <summary>
-        /// Retrieves a Provider entity from the database by member number
-        /// </summary>
-        /// <param name="id">ID of Provider entity to retrieve</param>
-        /// <returns></returns>
-        public async Task<Provider> GetByNumberAsync(decimal number)
+        override public async IAsyncEnumerable<Provider> FindAllByNameAsync(string name)
         {
-            return await dbSet.Where(p => p.Number == number).FirstOrDefaultAsync<Provider>();
+            var query = dbSet.Where<Provider>(a => a.Name.Contains(name));
+            var enumerator = query.AsAsyncEnumerable<Provider>().GetAsyncEnumerator();
+            Provider entity;
+
+            await enumerator.MoveNextAsync();
+            while (null != (entity = enumerator.Current))
+            {
+                yield return entity;
+                await enumerator.MoveNextAsync();
+            }
         }
     }
 }

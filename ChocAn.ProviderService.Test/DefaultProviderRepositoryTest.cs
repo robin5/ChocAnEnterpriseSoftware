@@ -45,10 +45,9 @@ namespace ChocAn.ProviderRepository.Test
         #region Useful Constants
 
         // Note: All constants need be unique
-        private const string NON_EXISTENT_PROVIDER_ID = "5bd1ffc8-9047-4219-b9a2-ae2e25db8118";
+        private const decimal NON_EXISTENT_PROVIDER_ID = 52;
 
-        private const string VALID0_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca57e";
-        private const decimal VALID0_NUMBER = 999999999;
+        private const decimal VALID0_ID = 999999999;
         private const string VALID0_NAME = "1234567890123456789012345";
         private const string VALID0_ADDRESS = "1234567890123456789012345";
         private const string VALID0_CITY = "12345678901234";
@@ -56,8 +55,7 @@ namespace ChocAn.ProviderRepository.Test
         private const decimal VALID0_ZIPCODE = 99999;
         private const string VALID0_STATUS = "Status 0";
 
-        private const string VALID1_ID = "3b3170f8-963d-4729-a687-ae2e25db7bb7";
-        private const decimal VALID1_NUMBER = 1;
+        private const decimal VALID1_ID = 1;
         private const string VALID1_NAME = "Name 1";
         private const string VALID1_ADDRESS = "Address 1";
         private const string VALID1_CITY = "City 1";
@@ -65,8 +63,7 @@ namespace ChocAn.ProviderRepository.Test
         private const decimal VALID1_ZIPCODE = 20001;
         private const string VALID1_STATUS = "Status 1";
 
-        private const string VALID2_ID = "dec047b3-1918-40bd-b9a2-f137a44429a5";
-        private const decimal VALID2_NUMBER = 2;
+        private const decimal VALID2_ID = 2;
         private const string VALID2_NAME = "Name 2";
         private const string VALID2_ADDRESS = "Address 2";
         private const string VALID2_CITY = "City 2";
@@ -74,7 +71,7 @@ namespace ChocAn.ProviderRepository.Test
         private const decimal VALID2_ZIPCODE = 30002;
         private const string VALID2_STATUS = "Status 2";
 
-        private const decimal VALID_UPDATE_NUMBER = 100000009;
+        private const decimal VALID_UPDATE_ID = 100000009;
         private const string VALID_UPDATE_NAME = "1234567890";
         private const string VALID_UPDATE_ADDRESS = "1234567890123";
         private const string VALID_UPDATE_CITY = "1232345";
@@ -108,8 +105,7 @@ namespace ChocAn.ProviderRepository.Test
                 // Arrange
                 var provider = new Provider
                 {
-                    Id = new Guid(VALID0_ID),
-                    Number = VALID0_NUMBER,
+                    Id = VALID0_ID,
                     Name = VALID0_NAME,
                     StreetAddress = VALID0_ADDRESS,
                     City = VALID0_CITY,
@@ -134,8 +130,7 @@ namespace ChocAn.ProviderRepository.Test
                 // Arrange
                 context.Add<Provider>(new Provider
                 {
-                    Id = new Guid(VALID0_ID),
-                    Number = VALID0_NUMBER,
+                    Id = VALID0_ID,
                     Name = VALID0_NAME,
                     StreetAddress = VALID0_ADDRESS,
                     City = VALID0_CITY,
@@ -144,8 +139,7 @@ namespace ChocAn.ProviderRepository.Test
                 });
                 context.Add<Provider>(new Provider
                 {
-                    Id = new Guid(VALID1_ID),
-                    Number = VALID1_NUMBER,
+                    Id = VALID1_ID,
                     Name = VALID1_NAME,
                     StreetAddress = VALID1_ADDRESS,
                     City = VALID1_CITY,
@@ -154,8 +148,7 @@ namespace ChocAn.ProviderRepository.Test
                 });
                 context.Add<Provider>(new Provider
                 {
-                    Id = new Guid(VALID2_ID),
-                    Number = VALID2_NUMBER,
+                    Id = VALID2_ID,
                     Name = VALID2_NAME,
                     StreetAddress = VALID2_ADDRESS,
                     City = VALID2_CITY,
@@ -174,12 +167,9 @@ namespace ChocAn.ProviderRepository.Test
         public async Task ValidateAddAsync()
         {
             // Arrange
-            Guid validId = new Guid(VALID0_ID);
-
             var provider = new Provider
             {
-                Id = validId,
-                Number = VALID0_NUMBER,
+                Id = VALID0_ID,
                 Name = VALID0_NAME,
                 StreetAddress = VALID0_ADDRESS,
                 City = VALID0_CITY,
@@ -197,11 +187,10 @@ namespace ChocAn.ProviderRepository.Test
             // Assert
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Add"))
             {
-                var result = context.Find<Provider>(validId);
+                var result = context.Find<Provider>(VALID0_ID);
 
                 Assert.NotNull(result);
-                Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID0_NUMBER, result.Number);
+                Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID0_NAME, result.Name);
                 Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
                 Assert.Equal(VALID0_CITY, result.City);
@@ -219,18 +208,16 @@ namespace ChocAn.ProviderRepository.Test
         {
             // Arrange
             await DefaultProviderRepositoryTest.InsertValidProviderIntoTestDatabase("Get");
-            var validId = new Guid(VALID0_ID);
 
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Get"))
             {
                 // Act
                 var defaultProviderService = new DefaultProviderRepository(context);
-                var result = await defaultProviderService.GetAsync(validId);
+                var result = await defaultProviderService.GetAsync(VALID0_ID);
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID0_NUMBER, result.Number);
+                Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID0_NAME, result.Name);
                 Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
                 Assert.Equal(VALID0_CITY, result.City);
@@ -248,13 +235,12 @@ namespace ChocAn.ProviderRepository.Test
         {
             // Arrange
             await DefaultProviderRepositoryTest.InsertValidProviderIntoTestDatabase("ValidateGetProviderAsyncNonExistentProvider");
-            var nonExistentProviderId = new Guid(NON_EXISTENT_PROVIDER_ID);
 
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("ValidateGetProviderAsyncNonExistentProvider"))
             {
                 // Act
                 var defaultProviderService = new DefaultProviderRepository(context);
-                var result = await defaultProviderService.GetAsync(nonExistentProviderId);
+                var result = await defaultProviderService.GetAsync(NON_EXISTENT_PROVIDER_ID);
 
                 // Assert
                 Assert.Null(result);
@@ -271,12 +257,9 @@ namespace ChocAn.ProviderRepository.Test
             // Arrange
             await DefaultProviderRepositoryTest.InsertValidProviderIntoTestDatabase("Update");
 
-            var validId = new Guid(VALID0_ID);
-
             var providerChanges = new Provider
             {
-                Id = validId,
-                Number = VALID_UPDATE_NUMBER,
+                Id = VALID0_ID,
                 Name = VALID_UPDATE_NAME,
                 StreetAddress = VALID_UPDATE_ADDRESS,
                 City = VALID_UPDATE_CITY,
@@ -293,8 +276,7 @@ namespace ChocAn.ProviderRepository.Test
                 // Assert
                 // Validate return value of function call
                 Assert.NotNull(result);
-                Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID_UPDATE_NUMBER, result.Number);
+                Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID_UPDATE_NAME, result.Name);
                 Assert.Equal(VALID_UPDATE_ADDRESS, result.StreetAddress);
                 Assert.Equal(VALID_UPDATE_CITY, result.City);
@@ -302,10 +284,9 @@ namespace ChocAn.ProviderRepository.Test
                 Assert.Equal(VALID_UPDATE_ZIPCODE, result.ZipCode);
 
                 // Validate provider was updated in the database
-                var provider = await context.Providers.FindAsync(validId);
+                var provider = await context.Providers.FindAsync(VALID0_ID);
                 Assert.NotNull(provider);
-                Assert.Equal(validId, provider.Id);
-                Assert.Equal(VALID_UPDATE_NUMBER, provider.Number);
+                Assert.Equal(VALID0_ID, provider.Id);
                 Assert.Equal(VALID_UPDATE_NAME, provider.Name);
                 Assert.Equal(VALID_UPDATE_ADDRESS, provider.StreetAddress);
                 Assert.Equal(VALID_UPDATE_CITY, provider.City);
@@ -328,12 +309,11 @@ namespace ChocAn.ProviderRepository.Test
             {
                 // Act
                 var defaultProviderService = new DefaultProviderRepository(context);
-                var result = await defaultProviderService.DeleteAsync(new Guid(VALID0_ID));
+                var result = await defaultProviderService.DeleteAsync(VALID0_ID);
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id.ToString());
-                Assert.Equal(VALID0_NUMBER, result.Number);
+                Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID0_NAME, result.Name);
                 Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
                 Assert.Equal(VALID0_CITY, result.City);
@@ -366,9 +346,8 @@ namespace ChocAn.ProviderRepository.Test
                 // Assert
                 await foreach (Provider provider in defaultProviderService.GetAllAsync())
                 {
-                    if (VALID0_ID == provider.Id.ToString())
+                    if (VALID0_ID == provider.Id)
                     {
-                        Assert.Equal(VALID0_NUMBER, provider.Number);
                         Assert.Equal(VALID0_NAME, provider.Name);
                         Assert.Equal(VALID0_ADDRESS, provider.StreetAddress);
                         Assert.Equal(VALID0_CITY, provider.City);
@@ -376,9 +355,8 @@ namespace ChocAn.ProviderRepository.Test
                         Assert.Equal(VALID0_ZIPCODE, provider.ZipCode);
                         provider0Found = true;
                     }
-                    else if (VALID1_ID == provider.Id.ToString())
+                    else if (VALID1_ID == provider.Id)
                     {
-                        Assert.Equal(VALID1_NUMBER, provider.Number);
                         Assert.Equal(VALID1_NAME, provider.Name);
                         Assert.Equal(VALID1_ADDRESS, provider.StreetAddress);
                         Assert.Equal(VALID1_CITY, provider.City);
@@ -386,9 +364,8 @@ namespace ChocAn.ProviderRepository.Test
                         Assert.Equal(VALID1_ZIPCODE, provider.ZipCode);
                         provider1Found = true;
                     }
-                    else if (VALID2_ID == provider.Id.ToString())
+                    else if (VALID2_ID == provider.Id)
                     {
-                        Assert.Equal(VALID2_NUMBER, provider.Number);
                         Assert.Equal(VALID2_NAME, provider.Name);
                         Assert.Equal(VALID2_ADDRESS, provider.StreetAddress);
                         Assert.Equal(VALID2_CITY, provider.City);

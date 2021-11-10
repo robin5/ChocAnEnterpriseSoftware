@@ -40,11 +40,5 @@ namespace ChocAn.MemberRepository
     /// </summary>
     public interface IMemberRepository : IGenericRepository<Member>
     {
-        /// <summary>
-        /// Retrieves a Member entity from the database by member number
-        /// </summary>
-        /// <param name="number">Member ID number of entity to retrieve</param>
-        /// <returns></returns>
-        Task<Member> GetByNumberAsync(decimal number);
     }
 }

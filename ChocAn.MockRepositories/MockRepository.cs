@@ -65,9 +65,6 @@ namespace ChocAn.MockRepositories
                 //await Task.Delay(1);
                 await Task.FromResult(enumerator.MoveNext());
             }
-
-
-
             // return Task.FromResult(items.AsEnumerable<T>());
         }
 
@@ -79,6 +76,21 @@ namespace ChocAn.MockRepositories
         public Task<T> UpdateAsync(T memberChanges)
         {
             throw new NotImplementedException();
+        }
+
+        public async IAsyncEnumerable<T> FindAllByNameAsync(string name)
+        {
+            var enumerator = items.AsEnumerable().GetEnumerator();
+            T item;
+
+            enumerator.MoveNext();
+            while (null != (item = enumerator.Current))
+            {
+                yield return item;
+                //await Task.Delay(1);
+                await Task.FromResult(enumerator.MoveNext());
+            }
+            // return Task.FromResult(items.AsEnumerable<T>());
         }
     }
 }

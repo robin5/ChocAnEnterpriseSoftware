@@ -39,6 +39,7 @@ using Microsoft.EntityFrameworkCore;
 using ChocAn.MemberRepository;
 using ChocAn.ProviderRepository;
 using ChocAn.ProviderServiceRepository;
+using ChocAn.DataCenterConsole.Infrastructure;
 
 namespace ChocAn.DataCenterConsole
 {
@@ -68,6 +69,7 @@ namespace ChocAn.DataCenterConsole
             services.AddScoped<IMemberRepository, DefaultMemberRepository>();
             services.AddScoped<IProviderRepository, DefaultProviderRepository>();
             services.AddScoped<IProviderServiceRepository, DefaultProviderServiceRepository>();
+            services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

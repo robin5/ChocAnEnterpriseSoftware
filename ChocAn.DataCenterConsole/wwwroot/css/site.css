@@ -257,3 +257,14 @@ a {
         padding-left: calc(var(--nav-width) + 188px);
     }
 }
+
+/* Misc styles
+-------------------------------------------------- */
+
+.back-to-list {
+    margin-top: 20px;
+}
+.modal-header {
+    background-color: var(--first-color);
+    color: var(--white-color)
+}

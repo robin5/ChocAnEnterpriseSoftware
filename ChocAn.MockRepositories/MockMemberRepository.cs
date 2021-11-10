@@ -37,9 +37,5 @@ namespace ChocAn.MockRepositories
 {
     public class MockMemberRepository : MockRepository<Member>, IMemberRepository
     {
-        public Task<Member> GetByNumberAsync(decimal number)
-        {
-            return Task.FromResult(base.items.Find(s => s.Number == number));
-        }
     }
 }

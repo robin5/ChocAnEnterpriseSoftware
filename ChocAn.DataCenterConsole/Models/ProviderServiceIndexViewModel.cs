@@ -3,8 +3,7 @@ using ChocAn.ProviderServiceRepository;
 
 namespace ChocAn.DataCenterConsole.Models
 {
-    public class ProviderServiceIndexViewModel
+    public class ProviderServiceIndexViewModel : FindViewModel<ProviderService>
     {
-        public IEnumerable<ProviderService> ProviderServices { get; set; }
     }
 }

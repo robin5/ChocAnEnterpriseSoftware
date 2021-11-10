@@ -39,8 +39,7 @@ namespace ChocAn.ProviderServiceRepository
     /// </summary>
     public class ProviderService
     {
-        public Guid Id { get; set; }
-        public decimal Code { get; set; }
+        public decimal Id { get; set; }
         public string Name { get; set; }
         public decimal Cost { get; set; }
     }

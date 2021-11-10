@@ -30,114 +30,109 @@
 // * 
 // **********************************************************************************
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 using ChocAn.ProviderServiceRepository;
 using ChocAn.DataCenterConsole.Models;
+using ChocAn.DataCenterConsole.Actions;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
     public class ProviderServiceController : Controller
     {
         private readonly ILogger<ProviderServiceController> logger;
-        private readonly IProviderServiceRepository providerServiceRepository;
+        private readonly IProviderServiceRepository repository;
+        private readonly IMapper mapper;
 
-        public ProviderServiceController(ILogger<ProviderServiceController> logger,
-            IProviderServiceRepository providerServiceRepository)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="repository"></param>
+        /// <param name="mapper"></param>
+        public ProviderServiceController(
+            ILogger<ProviderServiceController> logger,
+            IProviderServiceRepository repository,
+            IMapper mapper)
         {
             this.logger = logger;
-            this.providerServiceRepository = providerServiceRepository;
+            this.repository = repository;
+            this.mapper = mapper;
         }
 
-        // GET: ProviderServiceController
-        public async Task<IActionResult> Index()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> Index(string find)
         {
-            List<ProviderService> listProviderServices = new List<ProviderService>();
-            await foreach (ProviderService providerService in providerServiceRepository.GetAllAsync())
-            {
-                listProviderServices.Add(providerService);
-            }
-
-            var vm = new ProviderServiceIndexViewModel
-            {
-                ProviderServices = listProviderServices
-            };
-
-            return View(vm);
+            var action = new IndexAction<Controller, ProviderService, ProviderServiceIndexViewModel>(this, repository, find);
+            return await action.ActionResult();
         }
 
-        // GET: ProviderServiceController/Details/5
-        public ActionResult Details(int id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> DetailsAsync(decimal id)
         {
-            return View();
+            var action = new DetailsAction<Controller, ProviderService, ProviderServiceDetailsViewModel>(this, id, repository, mapper);
+            return await action.ActionResult();
         }
 
-        // GET: ProviderServiceController/Create
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ProviderServiceController/Create
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CreateAsync(ProviderServiceCreateViewModel viewModel)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var action = new CreateAction<Controller, ProviderService, ProviderServiceCreateViewModel>(this,
+                repository, viewModel, mapper, nameof(Index));
+            return await action.ActionResult();
         }
 
         // GET: ProviderServiceController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> EditAsync(int id)
         {
-            return View();
+            var action = new EditAction<Controller, ProviderService, ProviderServiceEditViewModel>(this,
+                id, repository, mapper);
+            return await action.ActionResult();
         }
 
         // POST: ProviderServiceController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(ProviderServiceEditViewModel viewModel)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ProviderServiceController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
+            var action = new PostEditAction<Controller, ProviderService, ProviderServiceEditViewModel>(this,
+                repository, viewModel, mapper, nameof(Index));
+            return await action.ActionResult();
         }
 
         // POST: ProviderServiceController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(decimal id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await repository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

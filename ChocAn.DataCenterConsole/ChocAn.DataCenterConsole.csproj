@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\bootstrap5\**" />
+    <Content Remove="wwwroot\lib\bootstrap5\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap5\**" />
+    <None Remove="wwwroot\lib\bootstrap5\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ChocAn.MemberService\ChocAn.MemberRepository.csproj" />
     <ProjectReference Include="..\ChocAn.ProviderServiceService\ChocAn.ProviderServiceRepository.csproj" />
     <ProjectReference Include="..\ChocAn.ProviderService\ChocAn.ProviderRepository.csproj" />

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using ChocAn.ProviderRepository;
+﻿using ChocAn.ProviderRepository;
 
 namespace ChocAn.DataCenterConsole.Models
 {
-    public class ProviderIndexViewModel
+    public class ProviderIndexViewModel : FindViewModel<Provider>
     {
-        public IEnumerable<Provider> Providers { get; set; }
     }
 }

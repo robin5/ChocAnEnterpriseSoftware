@@ -45,20 +45,17 @@ namespace ChocAn.ProviderServiceRepository.Test
         #region Useful Constants
 
         // Note: All constants need be unique
-        private const string NON_EXISTENT_MEMBER_ID = "5bd1ffc8-9047-4219-b9a2-ae2e25db8118";
+        private const decimal NON_EXISTENT_MEMBER_ID = 50;
 
-        private const string VALID0_ID = "5bd1ffc8-9047-4219-86f0-ee93777ca57e";
-        private const decimal VALID0_CODE = 999999;
+        private const decimal VALID0_ID = 999999;
         private const string VALID0_NAME = "1234567890123456789012345";
         private const decimal VALID0_COST = 213.99M;
 
-        private const string VALID1_ID = "3b3170f8-963d-4729-a687-ae2e25db7bb7";
-        private const decimal VALID1_CODE = 1;
+        private const decimal VALID1_ID = 20;
         private const string VALID1_NAME = "Name 1";
         private const decimal VALID1_COST = 18.18M;
 
-        private const string VALID2_ID = "dec047b3-1918-40bd-b9a2-f137a44429a5";
-        private const decimal VALID2_CODE = 2;
+        private const decimal VALID2_ID = 30;
         private const string VALID2_NAME = "Name 2";
         private const decimal VALID2_COST = 107.00M;
 
@@ -92,8 +89,7 @@ namespace ChocAn.ProviderServiceRepository.Test
                 // Arrange
                 var providerService = new ProviderService
                 {
-                    Id = new Guid(VALID0_ID),
-                    Code = VALID0_CODE,
+                    Id = VALID0_ID,
                     Name = VALID0_NAME,
                     Cost = VALID0_COST
                 };
@@ -115,22 +111,19 @@ namespace ChocAn.ProviderServiceRepository.Test
                 // Arrange
                 context.Add<ProviderService>(new ProviderService
                 {
-                    Id = new Guid(VALID0_ID),
-                    Code = VALID0_CODE,
+                    Id = VALID0_ID,
                     Name = VALID0_NAME,
                     Cost = VALID0_COST
                 });
                 context.Add<ProviderService>(new ProviderService
                 {
-                    Id = new Guid(VALID1_ID),
-                    Code = VALID1_CODE,
+                    Id = VALID1_ID,
                     Name = VALID1_NAME,
                     Cost = VALID1_COST
                 });
                 context.Add<ProviderService>(new ProviderService
                 {
-                    Id = new Guid(VALID2_ID),
-                    Code = VALID2_CODE,
+                    Id = VALID2_ID,
                     Name = VALID2_NAME,
                     Cost = VALID2_COST
                 });
@@ -146,12 +139,9 @@ namespace ChocAn.ProviderServiceRepository.Test
         public async Task ValidateAddAsync()
         {
             // Arrange
-            Guid validId = new Guid(VALID0_ID);
-
             var providerService = new ProviderService
             {
-                Id = validId,
-                Code = VALID0_CODE,
+                Id = VALID0_ID,
                 Name = VALID0_NAME,
                 Cost = VALID0_COST
             };
@@ -166,11 +156,10 @@ namespace ChocAn.ProviderServiceRepository.Test
             // Assert
             using (ProviderServiceDbContext context = DefaultProviderServiceRepositoryTest.GetContext("Add"))
             {
-                var result = context.Find<ProviderService>(validId);
+                var result = context.Find<ProviderService>(VALID0_ID);
 
                 Assert.NotNull(result);
-                Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID0_CODE, result.Code);
+                Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID0_NAME, result.Name);
                 Assert.Equal(VALID0_COST, result.Cost);
             }
@@ -185,18 +174,16 @@ namespace ChocAn.ProviderServiceRepository.Test
         {
             // Arrange
             await DefaultProviderServiceRepositoryTest.InsertValidProviderServiceIntoTestDatabase("Get");
-            var validId = new Guid(VALID0_ID);
 
             using (ProviderServiceDbContext context = DefaultProviderServiceRepositoryTest.GetContext("Get"))
             {
                 // Act
                 var defaultProviderServiceService = new DefaultProviderServiceRepository(context);
-                var result = await defaultProviderServiceService.GetAsync(validId);
+                var result = await defaultProviderServiceService.GetAsync(VALID0_ID);
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID0_CODE, result.Code);
+                Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID0_NAME, result.Name);
                 Assert.Equal(VALID0_COST, result.Cost);
             }
@@ -211,13 +198,12 @@ namespace ChocAn.ProviderServiceRepository.Test
         {
             // Arrange
             await DefaultProviderServiceRepositoryTest.InsertValidProviderServiceIntoTestDatabase("ValidateGetProviderServiceAsyncNonExistentProviderService");
-            var nonExistentProviderServiceId = new Guid(NON_EXISTENT_MEMBER_ID);
 
             using (ProviderServiceDbContext context = DefaultProviderServiceRepositoryTest.GetContext("ValidateGetProviderServiceAsyncNonExistentProviderService"))
             {
                 // Act
                 var defaultProviderServiceService = new DefaultProviderServiceRepository(context);
-                var result = await defaultProviderServiceService.GetAsync(nonExistentProviderServiceId);
+                var result = await defaultProviderServiceService.GetAsync(NON_EXISTENT_MEMBER_ID);
 
                 // Assert
                 Assert.Null(result);
@@ -234,12 +220,9 @@ namespace ChocAn.ProviderServiceRepository.Test
             // Arrange
             await DefaultProviderServiceRepositoryTest.InsertValidProviderServiceIntoTestDatabase("Update");
 
-            var validId = new Guid(VALID0_ID);
-
             var providerServiceChanges = new ProviderService
             {
-                Id = validId,
-                Code = VALID_UPDATE_CODE,
+                Id = VALID0_ID,
                 Name = VALID_UPDATE_NAME,
                 Cost = VALID_UPDATE_COST
             };
@@ -253,16 +236,14 @@ namespace ChocAn.ProviderServiceRepository.Test
                 // Assert
                 // Validate return value of function call
                 Assert.NotNull(result);
-                Assert.Equal(validId, result.Id);
-                Assert.Equal(VALID_UPDATE_CODE, result.Code);
+                Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID_UPDATE_NAME, result.Name);
                 Assert.Equal(VALID_UPDATE_COST, result.Cost);
 
                 // Validate providerService was updated in the database
-                var providerService = await context.ProviderServices.FindAsync(validId);
+                var providerService = await context.ProviderServices.FindAsync(VALID0_ID);
                 Assert.NotNull(providerService);
-                Assert.Equal(validId, providerService.Id);
-                Assert.Equal(VALID_UPDATE_CODE, providerService.Code);
+                Assert.Equal(VALID0_ID, providerService.Id);
                 Assert.Equal(VALID_UPDATE_NAME, providerService.Name);
                 Assert.Equal(VALID_UPDATE_COST, providerService.Cost);
             }
@@ -282,12 +263,11 @@ namespace ChocAn.ProviderServiceRepository.Test
             {
                 // Act
                 var defaultProviderServiceService = new DefaultProviderServiceRepository(context);
-                var result = await defaultProviderServiceService.DeleteAsync(new Guid(VALID0_ID));
+                var result = await defaultProviderServiceService.DeleteAsync(VALID0_ID);
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id.ToString());
-                Assert.Equal(VALID0_CODE, result.Code);
+                Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID0_NAME, result.Name);
                 Assert.Equal(VALID0_COST, result.Cost);
 
@@ -317,23 +297,20 @@ namespace ChocAn.ProviderServiceRepository.Test
                 // Assert
                 await foreach (ProviderService providerService in defaultProviderServiceService.GetAllAsync())
                 {
-                    if (VALID0_ID == providerService.Id.ToString())
+                    if (VALID0_ID == providerService.Id)
                     {
-                        Assert.Equal(VALID0_CODE, providerService.Code);
                         Assert.Equal(VALID0_NAME, providerService.Name);
                         Assert.Equal(VALID0_COST, providerService.Cost);
                         providerService0Found = true;
                     }
-                    else if (VALID1_ID == providerService.Id.ToString())
+                    else if (VALID1_ID == providerService.Id)
                     {
-                        Assert.Equal(VALID1_CODE, providerService.Code);
                         Assert.Equal(VALID1_NAME, providerService.Name);
                         Assert.Equal(VALID1_COST, providerService.Cost);
                         providerService1Found = true;
                     }
-                    else if (VALID2_ID == providerService.Id.ToString())
+                    else if (VALID2_ID == providerService.Id)
                     {
-                        Assert.Equal(VALID2_CODE, providerService.Code);
                         Assert.Equal(VALID2_NAME, providerService.Name);
                         Assert.Equal(VALID2_COST, providerService.Cost);
                         providerService2Found = true;

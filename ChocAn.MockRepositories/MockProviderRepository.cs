@@ -37,9 +37,5 @@ namespace ChocAn.MockRepositories
 {
     public class MockProviderRepository : MockRepository<Provider>, IProviderRepository
     {
-        public Task<Provider> GetByNumberAsync(decimal number)
-        {
-            return Task.FromResult(base.items.Find(s => s.Number == number));
-        }
     }
 }

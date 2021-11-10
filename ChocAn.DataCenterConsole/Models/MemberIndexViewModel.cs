@@ -3,8 +3,7 @@ using ChocAn.MemberRepository;
 
 namespace ChocAn.DataCenterConsole.Models
 {
-    public class MemberIndexViewModel
+    public class MemberIndexViewModel : FindViewModel<Member>
     {
-        public IEnumerable<Member> Members { get; set; }
     }
 }

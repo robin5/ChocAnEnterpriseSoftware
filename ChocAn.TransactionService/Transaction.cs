@@ -40,9 +40,9 @@ namespace ChocAn.TransactionRepository
     /// </summary>
     public class Transaction
     {
-        public Guid Id { get; set; }
-        public Guid ProviderId { get; set; }
-        public Guid MemberId { get; set; }
+        public decimal Id { get; set; }
+        public decimal ProviderId { get; set; }
+        public decimal MemberId { get; set; }
         public DateTime ServiceDate { get; set; }
         public decimal ServiceCode { get; set; }
         public string ServiceComment { get; set; }

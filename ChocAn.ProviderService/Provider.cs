@@ -31,7 +31,7 @@
 // * 
 // **********************************************************************************
 
-using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ChocAn.ProviderRepository
 {
@@ -40,9 +40,10 @@ namespace ChocAn.ProviderRepository
     /// </summary>
     public class Provider
     {
-        public Guid Id { get; set; }
-        public decimal Number { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public decimal Id { get; set; }
         public string Name { get; set; }
+        public string Email { get; set; }
         public string StreetAddress { get; set; }
         public string City { get; set; }
         public string State { get; set; }

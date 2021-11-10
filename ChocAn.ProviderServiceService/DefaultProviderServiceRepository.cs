@@ -30,8 +30,8 @@
 // * 
 // **********************************************************************************
 
-using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.GenericRepository;
 
@@ -51,14 +51,18 @@ namespace ChocAn.ProviderServiceRepository
         {
         }
 
-        /// <summary>
-        /// Retrieves a ProviderService entity from the database by code value
-        /// </summary>
-        /// <param name="id">ID of ProviderService entity to retrieve</param>
-        /// <returns></returns>
-        public async Task<ProviderService> GetByCodeAsync(decimal code)
+        override public async IAsyncEnumerable<ProviderService> FindAllByNameAsync(string name)
         {
-            return await dbSet.Where(p => p.Code == code).FirstOrDefaultAsync<ProviderService>();
+            var query = dbSet.Where<ProviderService>(a => a.Name.Contains(name));
+            var enumerator = query.AsAsyncEnumerable<ProviderService>().GetAsyncEnumerator();
+            ProviderService entity;
+
+            await enumerator.MoveNextAsync();
+            while (null != (entity = enumerator.Current))
+            {
+                yield return entity;
+                await enumerator.MoveNextAsync();
+            }
         }
     }
 }
