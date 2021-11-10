@@ -13,16 +13,12 @@
 </head>
 <body id="body-pd" style="position: relative; width: 100%">
     <header class="header" id="header">
-        <div class="header_toggle"><i title="Menu" class='fas fa-bars' id="header-toggle"></i></div>
-        <h2>@title</h2>
+        <h2><i title="Data Center" class='fas fa-database nav_logo-icon'></i>&nbsp;@title</h2>
     </header>
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
             <div>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav_logo">
-                    <i title="Data Center" class='fas fa-database nav_logo-icon'></i>
-                    <span class="nav_logo-name">Data Center</span>
-                </a>
+                <div class="header-toggle"><i title="Menu" class='fas fa-bars' id="header-toggle"></i></div>
                 <div class="nav_list">
                     <a asp-area="" asp-controller="Home" asp-action="Index" class="nav_link" is-active-route>
                         <i title="Home" class='fas fa-home nav_icon'></i>

@@ -69,7 +69,7 @@
            asp-action="Create">Add Service</a>
     </section>
     <section style="margin-top: 20px">
-        @if ((Model != null) && (Model.Items != null))
+        @if ((Model.Find != null) && (Model.Find.Trim() != string.Empty))
         {
             <p>Found @Model.Items.Count()</p>
             <hr />

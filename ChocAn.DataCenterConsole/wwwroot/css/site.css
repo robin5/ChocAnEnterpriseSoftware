@@ -121,11 +121,11 @@ a {
     transition: .5s;
 }
 
-.header_toggle {
-    color: var(--first-color);
+.header-toggle {
+    color: var(--white-color);
     font-size: 1.5rem;
     cursor: pointer;
-    margin: 20px;
+    margin: 0 0 40px 25px;
 }
 
 .header_img {
@@ -175,8 +175,8 @@ a {
 }
 
 .nav_logo-icon {
-    font-size: 1.25rem;
-    color: var(--white-color);
+    font-size: 1.6rem;
+    color: var(--first-color);
 }
 
 .nav_logo-name {
