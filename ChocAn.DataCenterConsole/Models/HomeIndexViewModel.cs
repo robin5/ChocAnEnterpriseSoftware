@@ -4,7 +4,7 @@
 // *
 // * File: HomeIndexViewModel.cs
 // *
-// * Description: View model for Home controller's Index view.
+// * Description: ViewModel for the Index action of the Home controller.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
