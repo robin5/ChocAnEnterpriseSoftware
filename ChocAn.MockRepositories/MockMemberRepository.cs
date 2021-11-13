@@ -30,12 +30,75 @@
 // * 
 // **********************************************************************************using System;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChocAn.MemberRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockMemberRepository : MockRepository<Member>, IMemberRepository
+    public class MockMemberRepository : IMemberRepository
     {
+        protected IDictionary<decimal, Member> items = new Dictionary<decimal, Member>();
+        decimal key = 0;
+
+        public Task<Member> AddAsync(Member item)
+        {
+            items.Add(item.Id, item);
+            return Task.FromResult(item);
+        }
+
+        public Task<Member> DeleteAsync(object id)
+        {
+            Member item = null;
+
+            if (items.TryGetValue((decimal)id, out item))
+            {
+                items.Remove((decimal)id);
+                return Task.FromResult(item);
+            }
+            return Task.FromResult((Member)null);
+        }
+
+        public async IAsyncEnumerable<Member> GetAllAsync()
+        {
+            var enumerator = items.AsEnumerable().GetEnumerator();
+            Member item;
+
+            enumerator.MoveNext();
+            while (null != (item = enumerator.Current.Value))
+            {
+                yield return item;
+                await Task.FromResult(enumerator.MoveNext());
+            }
+        }
+
+        public Task<Member> GetAsync(object id)
+        {
+            Member item = null;
+
+            items.TryGetValue((decimal)id, out item);
+            return Task.FromResult(item);
+        }
+
+        public Task<Member> UpdateAsync(Member memberChanges)
+        {
+            items[memberChanges.Id] = memberChanges;
+            return Task.FromResult(memberChanges);
+        }
+
+        public async IAsyncEnumerable<Member> FindAllByNameAsync(string name)
+        {
+            var enumerator = items.AsEnumerable().GetEnumerator();
+            Member item;
+
+            enumerator.MoveNext();
+            while (null != (item = enumerator.Current.Value))
+            {
+                if (!item.Name.Contains(name)) continue;
+                yield return item;
+                await Task.FromResult(enumerator.MoveNext());
+            }
+        }
     }
 }

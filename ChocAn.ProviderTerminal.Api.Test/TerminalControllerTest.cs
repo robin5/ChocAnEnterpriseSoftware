@@ -140,18 +140,18 @@ namespace ChocAn.ProviderTerminal.Api.Test
         public async Task ValidateTerminalProviderService_ExistingProviderService()
         {
             // Arrange
-            var providerServiceService = new MockProviderServiceRepository();
+            var providerServiceRepository = new MockProviderServiceRepository();
 
-            await providerServiceService.AddAsync(new ProviderService
+            await providerServiceRepository.AddAsync(new ProviderService
             {
-                Id = PROVIDER_ID,
+                Id = PROVIDER_SERVICE_ID,
                 Name = PROVIDER_SERVICE_NAME,
                 Cost = PROVIDER_SERVICE_COST
             });
 
             // Act
-            var controller = new TerminalController(null, null, null, providerServiceService, null);
-            var result = await controller.TerminalProviderService(PROVIDER_ID);
+            var controller = new TerminalController(null, null, null, providerServiceRepository, null);
+            var result = await controller.TerminalProviderService(PROVIDER_SERVICE_ID);
 
             // Assert
 

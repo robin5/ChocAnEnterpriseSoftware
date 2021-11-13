@@ -30,12 +30,75 @@
 // * 
 // **********************************************************************************using System;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChocAn.ProviderServiceRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockProviderServiceRepository : MockRepository<ProviderService>, IProviderServiceRepository
+    public class MockProviderServiceRepository : IProviderServiceRepository
     {
+        protected IDictionary<decimal, ProviderService> items = new Dictionary<decimal, ProviderService>();
+        decimal key = 0;
+
+        public Task<ProviderService> AddAsync(ProviderService item)
+        {
+            items.Add(item.Id, item);
+            return Task.FromResult(item);
+        }
+
+        public Task<ProviderService> DeleteAsync(object id)
+        {
+            ProviderService item = null;
+
+            if (items.TryGetValue((decimal)id, out item))
+            {
+                items.Remove((decimal)id);
+                return Task.FromResult(item);
+            }
+            return Task.FromResult((ProviderService)null);
+        }
+
+        public async IAsyncEnumerable<ProviderService> GetAllAsync()
+        {
+            var enumerator = items.AsEnumerable().GetEnumerator();
+            ProviderService item;
+
+            enumerator.MoveNext();
+            while (null != (item = enumerator.Current.Value))
+            {
+                yield return item;
+                await Task.FromResult(enumerator.MoveNext());
+            }
+        }
+
+        public Task<ProviderService> GetAsync(object id)
+        {
+            ProviderService item = null;
+
+            items.TryGetValue((decimal)id, out item);
+            return Task.FromResult(item);
+        }
+
+        public Task<ProviderService> UpdateAsync(ProviderService changes)
+        {
+            items[changes.Id] = changes;
+            return Task.FromResult(changes);
+        }
+
+        public async IAsyncEnumerable<ProviderService> FindAllByNameAsync(string name)
+        {
+            var enumerator = items.AsEnumerable().GetEnumerator();
+            ProviderService item;
+
+            enumerator.MoveNext();
+            while (null != (item = enumerator.Current.Value))
+            {
+                if (!item.Name.Contains(name)) continue;
+                yield return item;
+                await Task.FromResult(enumerator.MoveNext());
+            }
+        }
     }
 }
