@@ -47,6 +47,6 @@ namespace ChocAn.DataCenterConsole.Models
         [Required]
         public string State { get; set; }
         [Required]
-        public decimal ZipCode { get; set; }
+        public int ZipCode { get; set; }
     }
 }

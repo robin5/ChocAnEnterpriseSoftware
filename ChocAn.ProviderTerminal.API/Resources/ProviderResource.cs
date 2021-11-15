@@ -7,6 +7,7 @@ namespace ChocAn.ProviderTerminal.Api.Resources
 {
     public class ProviderResource
     {
-        public decimal Id { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

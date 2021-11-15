@@ -78,7 +78,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IActionResult> DetailsAsync(decimal id)
+        public async Task<IActionResult> DetailsAsync(int id)
         {
             var action = new DetailsAction<Controller, Member, MemberDetailsViewModel>(this, id, memberService, mapper);
             return await action.ActionResult();
@@ -112,7 +112,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IActionResult> EditAsync(decimal id)
+        public async Task<IActionResult> EditAsync(int id)
         {
             var action = new EditAction<Controller, Member, MemberEditViewModel>(this,
                 id, memberService, mapper);
@@ -137,7 +137,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         // POST: MemberController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(decimal id)
+        public async Task<ActionResult> Delete(int id)
         {
             await memberService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));

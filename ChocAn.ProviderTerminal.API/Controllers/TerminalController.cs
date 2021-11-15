@@ -47,36 +47,35 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
     public class TerminalController : ControllerBase
     {
         private readonly ILogger<TerminalController> logger;
-        private readonly IProviderRepository providerService;
-        private readonly IMemberRepository memberService;
-        private readonly IProviderServiceRepository providerServiceService;
-        private readonly ITransactionRepository transactionService;
+        private readonly IProviderRepository providerRepository;
+        private readonly IMemberRepository memberRepository;
+        private readonly IProviderServiceRepository providerServiceRepository;
+        private readonly ITransactionRepository transactionRepository;
         public TerminalController(
             ILogger<TerminalController> logger,
-            IProviderRepository providerService,
-            IMemberRepository memberService,
-            IProviderServiceRepository providerServiceService,
-            ITransactionRepository transactionService)
+            IProviderRepository providerRepository,
+            IMemberRepository memberRepository,
+            IProviderServiceRepository providerServiceRepsoitory,
+            ITransactionRepository transactionRepository)
         {
             this.logger = logger;
-            this.providerService = providerService;
-            this.memberService = memberService;
-            this.providerServiceService = providerServiceService;
-            this.transactionService = transactionService;
+            this.providerRepository = providerRepository;
+            this.memberRepository = memberRepository;
+            this.providerServiceRepository = providerServiceRepsoitory;
+            this.transactionRepository = transactionRepository;
         }
 
-        // GET api/<TerminalController>/5
         /// <summary>
         /// Verifis existance of a provider
         /// </summary>
         /// <param name="id">Provider's identification number</param>
         /// <returns></returns>
-        [HttpGet("provider/{number}", Name = nameof(TerminalProvider))]
+        [HttpGet("provider/{id}", Name = nameof(Provider))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> TerminalProvider(decimal id)
+        public async Task<IActionResult> Provider(int id)
         {
-            var provider = await providerService.GetAsync(id);
+            var provider = await providerRepository.GetAsync(id);
             if (null == provider)
             {
                 return NotFound();
@@ -84,7 +83,8 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
 
             return Ok(new ProviderResource
             {
-                Id = provider.Id
+                Id = provider.Id,
+                Name = provider.Name
             });
         }
 
@@ -93,12 +93,12 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         /// </summary>
         /// <param name="id">Member's identification number</param>
         /// <returns></returns>
-        [HttpGet("member/{number}", Name = nameof(TerminalMember))]
+        [HttpGet("member/{id}", Name = nameof(Member))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> TerminalMember(decimal id)
+        public async Task<IActionResult> Member(int id)
         {
-            var member = await memberService.GetAsync(id);
+            var member = await memberRepository.GetAsync(id);
             if (null == member)
             {
                 return NotFound();
@@ -117,12 +117,12 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         /// </summary>
         /// <param name="id">Provider service's identification code</param>
         /// <returns></returns>
-        [HttpGet("service/{code}", Name = nameof(TerminalProviderService))]
+        [HttpGet("service/{id}", Name = nameof(ProviderService))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> TerminalProviderService(decimal id)
+        public async Task<IActionResult> ProviderService(int id)
         {
-            var providerService = await providerServiceService.GetAsync(id);
+            var providerService = await providerServiceRepository.GetAsync(id);
             if (null == providerService)
             {
                 return NotFound();
@@ -140,12 +140,13 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [HttpPost("transaction", Name = nameof(Transaction))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Transaction([FromBody] TransactionResource terminalTransaction)
+        public async Task<IActionResult> Transaction([FromBody] TransactionResource transactionResource)
         {
-            var provider = await providerService.GetAsync(terminalTransaction.ProviderId);
-            var member = await memberService.GetAsync(terminalTransaction.MemberId);
+            var provider = await providerRepository.GetAsync(transactionResource.ProviderId);
+            var member = await memberRepository.GetAsync(transactionResource.MemberId);
+            var providerService = await providerServiceRepository.GetAsync(transactionResource.ServiceId);
 
-            if ((null == provider) || (null == member))
+            if ((null == provider) || (null == member) || (null == providerService))
             {
                 return BadRequest();
             }
@@ -154,15 +155,15 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
             {
                 ProviderId = provider.Id,
                 MemberId = member.Id,
-                ServiceDate = terminalTransaction.ServiceDate,
-                ServiceCode = terminalTransaction.ServiceId,
-                ServiceComment = terminalTransaction.ServiceComment
+                ServiceId = providerService.Id,
+                ServiceDate = transactionResource.ServiceDate,
+                ServiceComment = transactionResource.ServiceComment
             };
 
-            await transactionService.AddAsync(transaction);
+            await transactionRepository.AddAsync(transaction);
 
             // Tell terminal transaction was accepted
-            return Created("", new TransactionResource { Status = "accepted"});
+            return Created("", transactionResource);
         }
     }
 }

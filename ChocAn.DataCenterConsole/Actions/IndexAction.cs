@@ -56,9 +56,9 @@ namespace ChocAn.DataCenterConsole.Actions
         public async Task<IActionResult> ActionResult()
         {
             List<TModel> entities = new List<TModel>();
-            decimal id;
+            int id;
 
-            if (decimal.TryParse(find, out id))
+            if (int.TryParse(find, out id))
             {
                 var provider = await repository.GetAsync(id);
                 if (null != provider)

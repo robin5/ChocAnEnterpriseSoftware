@@ -44,10 +44,10 @@ namespace ChocAn.DataCenterConsole.Actions
         where TController : Controller
     {
         private readonly TController controller;
-        private readonly decimal id;
+        private readonly int id;
         private readonly IGenericRepository<TModel> repository;
         private readonly IMapper mapper;
-        public EditAction(TController controller, decimal id, IGenericRepository<TModel> repository, IMapper mapper)
+        public EditAction(TController controller, int id, IGenericRepository<TModel> repository, IMapper mapper)
         {
             this.controller = controller;
             this.id = id;

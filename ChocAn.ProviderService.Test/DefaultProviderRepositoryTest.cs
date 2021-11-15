@@ -45,38 +45,38 @@ namespace ChocAn.ProviderRepository.Test
         #region Useful Constants
 
         // Note: All constants need be unique
-        private const decimal NON_EXISTENT_PROVIDER_ID = 52;
+        private const int NON_EXISTENT_PROVIDER_ID = 52;
 
-        private const decimal VALID0_ID = 999999999;
+        private const int VALID0_ID = 999999999;
         private const string VALID0_NAME = "1234567890123456789012345";
         private const string VALID0_ADDRESS = "1234567890123456789012345";
         private const string VALID0_CITY = "12345678901234";
         private const string VALID0_STATE = "12";
-        private const decimal VALID0_ZIPCODE = 99999;
+        private const int VALID0_ZIPCODE = 99999;
         private const string VALID0_STATUS = "Status 0";
 
-        private const decimal VALID1_ID = 1;
+        private const int VALID1_ID = 1;
         private const string VALID1_NAME = "Name 1";
         private const string VALID1_ADDRESS = "Address 1";
         private const string VALID1_CITY = "City 1";
         private const string VALID1_STATE = "WA";
-        private const decimal VALID1_ZIPCODE = 20001;
+        private const int VALID1_ZIPCODE = 20001;
         private const string VALID1_STATUS = "Status 1";
 
-        private const decimal VALID2_ID = 2;
+        private const int VALID2_ID = 2;
         private const string VALID2_NAME = "Name 2";
         private const string VALID2_ADDRESS = "Address 2";
         private const string VALID2_CITY = "City 2";
         private const string VALID2_STATE = "OR";
-        private const decimal VALID2_ZIPCODE = 30002;
+        private const int VALID2_ZIPCODE = 30002;
         private const string VALID2_STATUS = "Status 2";
 
-        private const decimal VALID_UPDATE_ID = 100000009;
+        private const int VALID_UPDATE_ID = 100000009;
         private const string VALID_UPDATE_NAME = "1234567890";
         private const string VALID_UPDATE_ADDRESS = "1234567890123";
         private const string VALID_UPDATE_CITY = "1232345";
         private const string VALID_UPDATE_STATE = "CA";
-        private const decimal VALID_UPDATE_ZIPCODE = 10026;
+        private const int VALID_UPDATE_ZIPCODE = 10026;
         private const string VALID_UPDATE_STATUS = "suspended";
         #endregion
 

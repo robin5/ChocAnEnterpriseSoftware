@@ -56,7 +56,7 @@ namespace ChocAn.TransactionRepository
         /// <returns></returns>
         override public async Task<Transaction> AddAsync(Transaction obj)
         {
-            obj.TransactionDateTime = DateTime.Now;
+            obj.Created = DateTime.Now;
             await dbSet.AddAsync(obj);
             context.SaveChanges();
             return obj;

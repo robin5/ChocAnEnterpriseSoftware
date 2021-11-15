@@ -48,12 +48,12 @@ namespace ChocAn.ProviderTerminal.Api.Test
     public class TerminalControllerTest
     {
         #region Useful Constants
-        private readonly decimal PROVIDER_ID = 999999999;
+        private readonly int PROVIDER_ID = 999999999;
 
-        private readonly decimal MEMBER_ID = 999999998;
+        private readonly int MEMBER_ID = 999999998;
         private const string MEMBER_STATUS_ACTIVE = "active";
 
-        private readonly decimal PROVIDER_SERVICE_ID = 999999;
+        private readonly int PROVIDER_SERVICE_ID = 999999;
         private const string PROVIDER_SERVICE_NAME = "Dietician";
         private const decimal PROVIDER_SERVICE_COST = 123.45M;
 
@@ -75,7 +75,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, providerService, null, null, null);
-            var result = await controller.TerminalProvider(PROVIDER_ID);
+            var result = await controller.Provider(PROVIDER_ID);
 
             // Assert
 
@@ -92,7 +92,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, providerService, null, null, null);
-            var result = await controller.TerminalProvider(PROVIDER_ID);
+            var result = await controller.Provider(PROVIDER_ID);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -112,7 +112,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, null, memberService, null, null);
-            var result = await controller.TerminalMember(MEMBER_ID);
+            var result = await controller.Member(MEMBER_ID);
 
             // Assert
 
@@ -130,7 +130,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, null, memberService, null, null);
-            var result = await controller.TerminalMember(MEMBER_ID);
+            var result = await controller.Member(MEMBER_ID);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -151,7 +151,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, null, null, providerServiceRepository, null);
-            var result = await controller.TerminalProviderService(PROVIDER_SERVICE_ID);
+            var result = await controller.ProviderService(PROVIDER_SERVICE_ID);
 
             // Assert
 
@@ -170,7 +170,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             var controller = new TerminalController(null, null, null, providerServiceService, null);
-            var result = await controller.TerminalProviderService(PROVIDER_SERVICE_ID);
+            var result = await controller.ProviderService(PROVIDER_SERVICE_ID);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -233,8 +233,6 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             var transactionResource = Assert.IsType<TransactionResource>(resource);
 
-            Assert.Equal("accepted", transactionResource.Status);
-
             // get all transaction from mock object
             List<Transaction> transactions = new List<Transaction>();
             await foreach (Transaction t in transactionService.GetAllAsync())
@@ -250,7 +248,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             Assert.Equal(MEMBER_ID, transaction.MemberId);
             Assert.Equal(PROVIDER_ID, transaction.ProviderId);
-            Assert.Equal(PROVIDER_SERVICE_ID, transaction.ServiceCode);
+            Assert.Equal(PROVIDER_SERVICE_ID, transaction.ServiceId);
             Assert.Equal(TRANSACTION_SERVICE_DATE, transaction.ServiceDate);
             Assert.Equal(TRANSACTION_SERVICE_COMMENT, transaction.ServiceComment);
         }

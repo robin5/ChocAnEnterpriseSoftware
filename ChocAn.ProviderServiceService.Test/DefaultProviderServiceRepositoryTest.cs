@@ -45,21 +45,20 @@ namespace ChocAn.ProviderServiceRepository.Test
         #region Useful Constants
 
         // Note: All constants need be unique
-        private const decimal NON_EXISTENT_MEMBER_ID = 50;
+        private const int NON_EXISTENT_MEMBER_ID = 50;
 
-        private const decimal VALID0_ID = 999999;
+        private const int VALID0_ID = 999999;
         private const string VALID0_NAME = "1234567890123456789012345";
         private const decimal VALID0_COST = 213.99M;
 
-        private const decimal VALID1_ID = 20;
+        private const int VALID1_ID = 20;
         private const string VALID1_NAME = "Name 1";
         private const decimal VALID1_COST = 18.18M;
 
-        private const decimal VALID2_ID = 30;
+        private const int VALID2_ID = 30;
         private const string VALID2_NAME = "Name 2";
         private const decimal VALID2_COST = 107.00M;
 
-        private const decimal VALID_UPDATE_CODE = 123456;
         private const string VALID_UPDATE_NAME = "1234567890";
         private const decimal VALID_UPDATE_COST = 74.34M;
         #endregion

@@ -37,7 +37,7 @@ namespace ChocAn.DataCenterConsole.Models
     public class ProviderServiceEditViewModel
     {
         [Required]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

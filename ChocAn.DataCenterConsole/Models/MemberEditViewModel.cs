@@ -37,7 +37,7 @@ namespace ChocAn.DataCenterConsole.Models
     public class MemberEditViewModel
     {
         [Required]
-        public decimal Id { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
@@ -49,6 +49,6 @@ namespace ChocAn.DataCenterConsole.Models
         [Required]
         public string State { get; set; }
         [Required]
-        public decimal ZipCode { get; set; }
+        public int ZipCode { get; set; }
     }
 }

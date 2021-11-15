@@ -77,7 +77,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IActionResult> DetailsAsync(decimal id)
+        public async Task<IActionResult> DetailsAsync(int id)
         {
             var action = new DetailsAction<Controller, Provider, ProviderDetailsViewModel>(this, id, repository, mapper);
             return await action.ActionResult();
@@ -136,7 +136,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         // POST: ProviderController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(decimal id)
+        public async Task<ActionResult> Delete(int id)
         {
             await repository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));

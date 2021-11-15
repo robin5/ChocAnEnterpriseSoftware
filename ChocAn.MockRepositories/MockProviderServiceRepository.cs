@@ -39,8 +39,7 @@ namespace ChocAn.MockRepositories
 {
     public class MockProviderServiceRepository : IProviderServiceRepository
     {
-        protected IDictionary<decimal, ProviderService> items = new Dictionary<decimal, ProviderService>();
-        decimal key = 0;
+        protected IDictionary<int, ProviderService> items = new Dictionary<int, ProviderService>();
 
         public Task<ProviderService> AddAsync(ProviderService item)
         {
@@ -52,9 +51,9 @@ namespace ChocAn.MockRepositories
         {
             ProviderService item = null;
 
-            if (items.TryGetValue((decimal)id, out item))
+            if (items.TryGetValue((int)id, out item))
             {
-                items.Remove((decimal)id);
+                items.Remove((int)id);
                 return Task.FromResult(item);
             }
             return Task.FromResult((ProviderService)null);
@@ -77,7 +76,7 @@ namespace ChocAn.MockRepositories
         {
             ProviderService item = null;
 
-            items.TryGetValue((decimal)id, out item);
+            items.TryGetValue((int)id, out item);
             return Task.FromResult(item);
         }
 

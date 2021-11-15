@@ -45,38 +45,38 @@ namespace ChocAn.TransactionRepository.Test
         #region Useful Constants
 
         // Note: All constants need be unique
-        private const decimal NON_EXISTENT_MEMBER_ID = 50;
+        private const int NON_EXISTENT_MEMBER_ID = 50;
 
-        private const decimal T0_ID = 10;
-        private const decimal T0_PROVIDER_ID = 20;
-        private const decimal T0_MEMBER_ID = 30;
+        private const int T0_ID = 10;
+        private const int T0_PROVIDER_ID = 20;
+        private const int T0_MEMBER_ID = 30;
         private static readonly DateTime T0_SERVICE_DATETIME = new DateTime(2021, 1, 1);
-        private const decimal T0_SERVICE_CODE = 999999;
+        private const int T0_SERVICE_ID = 999999;
         private const string T0_SERVICE_COMMENT = "1234567890123456789012345";
-        private static readonly DateTime T0_TRANSACTION_DATETIME = new DateTime(2021, 1, 2);
+        private static readonly DateTime T0_CREATED = new DateTime(2021, 1, 2);
 
-        private const decimal T1_ID = 11;
-        private const decimal T1_PROVIDER_ID = 21;
-        private const decimal T1_MEMBER_ID = 31;
+        private const int T1_ID = 11;
+        private const int T1_PROVIDER_ID = 21;
+        private const int T1_MEMBER_ID = 31;
         private static readonly DateTime T1_SERVICE_DATETIME = new DateTime(2021, 1, 3);
-        private const decimal T1_SERVICE_CODE = 1;
+        private const int T1_SERVICE_ID = 1;
         private const string T1_SERVICE_COMMENT = "1234567890123456789012345";
-        private static readonly DateTime T1_TRANSACTION_DATETIME = new DateTime(2021, 1, 4);
+        private static readonly DateTime T1_CREATED = new DateTime(2021, 1, 4);
 
-        private const decimal T2_ID = 12;
-        private const decimal T2_PROVIDER_ID = 22;
-        private const decimal T2_MEMBER_ID = 32;
+        private const int T2_ID = 12;
+        private const int T2_PROVIDER_ID = 22;
+        private const int T2_MEMBER_ID = 32;
         private static readonly DateTime T2_SERVICE_DATETIME = new DateTime(2021, 1, 5);
-        private const decimal T2_SERVICE_CODE = 2;
+        private const int T2_SERVICE_ID = 2;
         private const string T2_SERVICE_COMMENT = "1234567890123456789012345";
-        private static readonly DateTime T2_TRANSACTION_DATETIME = new DateTime(2021, 1, 6);
+        private static readonly DateTime T2_CREATED = new DateTime(2021, 1, 6);
 
-        private const decimal T_UPDATE_PROVIDER_ID = 23;
-        private const decimal T_UPDATE_MEMBER_ID = 33;
+        private const int T_UPDATE_PROVIDER_ID = 23;
+        private const int T_UPDATE_MEMBER_ID = 33;
         private static readonly DateTime T_UPDATE_SERVICE_DATETIME = new DateTime(2021, 1, 7);
-        private const decimal T_UPDATE_SERVICE_CODE = 3;
+        private const int T_UPDATE_SERVICE_ID = 3;
         private const string T_UPDATE_SERVICE_COMMENT = "1234567890123456789012345";
-        private static readonly DateTime T_UPDATE_TRANSACTION_DATETIME = new DateTime(2021, 1, 8);
+        private static readonly DateTime T_UPDATE_CREATED = new DateTime(2021, 1, 8);
         #endregion
 
         /// <summary>
@@ -107,10 +107,10 @@ namespace ChocAn.TransactionRepository.Test
                     Id = T0_ID,
                     ProviderId = T0_PROVIDER_ID,
                     MemberId = T0_MEMBER_ID,
+                    ServiceId = T0_SERVICE_ID,
                     ServiceDate = T0_SERVICE_DATETIME,
-                    ServiceCode = T0_SERVICE_CODE,
                     ServiceComment = T0_SERVICE_COMMENT,
-                    TransactionDateTime = T0_TRANSACTION_DATETIME
+                    Created = T0_CREATED
                 };
 
                 context.Add<Transaction>(transaction);
@@ -133,30 +133,30 @@ namespace ChocAn.TransactionRepository.Test
                     Id = T0_ID,
                     ProviderId = T0_PROVIDER_ID,
                     MemberId = T0_MEMBER_ID,
+                    ServiceId = T0_SERVICE_ID,
                     ServiceDate = T0_SERVICE_DATETIME,
-                    ServiceCode = T0_SERVICE_CODE,
                     ServiceComment = T0_SERVICE_COMMENT,
-                    TransactionDateTime = T0_TRANSACTION_DATETIME
+                    Created = T0_CREATED
                 });
                 context.Add<Transaction>(new Transaction
                 {
                     Id = T1_ID,
                     ProviderId = T1_PROVIDER_ID,
                     MemberId = T1_MEMBER_ID,
+                    ServiceId = T1_SERVICE_ID,
                     ServiceDate = T1_SERVICE_DATETIME,
-                    ServiceCode = T1_SERVICE_CODE,
                     ServiceComment = T1_SERVICE_COMMENT,
-                    TransactionDateTime = T1_TRANSACTION_DATETIME
+                    Created = T1_CREATED
                 });
                 context.Add<Transaction>(new Transaction
                 {
                     Id = T2_ID,
                     ProviderId = T2_PROVIDER_ID,
                     MemberId = T2_MEMBER_ID,
+                    ServiceId = T2_SERVICE_ID,
                     ServiceDate = T2_SERVICE_DATETIME,
-                    ServiceCode = T2_SERVICE_CODE,
                     ServiceComment = T2_SERVICE_COMMENT,
-                    TransactionDateTime = T2_TRANSACTION_DATETIME
+                    Created = T2_CREATED
                 });
 
                 await context.SaveChangesAsync();
@@ -177,10 +177,10 @@ namespace ChocAn.TransactionRepository.Test
                 Id = T0_ID,
                 ProviderId = T0_PROVIDER_ID,
                 MemberId = T0_MEMBER_ID,
+                ServiceId = T0_SERVICE_ID,
                 ServiceDate = T0_SERVICE_DATETIME,
-                ServiceCode = T0_SERVICE_CODE,
                 ServiceComment = T0_SERVICE_COMMENT,
-                // Note: TransactionDateTime is set by database
+                // Note: Created is set by database
             };
 
             // Act
@@ -199,10 +199,10 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, result.Id);
                 Assert.Equal(T0_PROVIDER_ID, result.ProviderId);
                 Assert.Equal(T0_MEMBER_ID, result.MemberId);
+                Assert.Equal(T0_SERVICE_ID, result.ServiceId);
                 Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
-                Assert.Equal(T0_SERVICE_CODE, result.ServiceCode);
                 Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
-                Assert.True(beforeTransactionTime <= result.TransactionDateTime);
+                Assert.True(beforeTransactionTime <= result.Created);
             }
         }
 
@@ -227,10 +227,10 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, result.Id);
                 Assert.Equal(T0_PROVIDER_ID, result.ProviderId);
                 Assert.Equal(T0_MEMBER_ID, result.MemberId);
+                Assert.Equal(T0_SERVICE_ID, result.ServiceId);
                 Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
-                Assert.Equal(T0_SERVICE_CODE, result.ServiceCode);
                 Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
-                Assert.Equal(T0_TRANSACTION_DATETIME, result.TransactionDateTime);
+                Assert.Equal(T0_CREATED, result.Created);
             }
         }
 
@@ -271,10 +271,10 @@ namespace ChocAn.TransactionRepository.Test
                 Id = T0_ID,
                 ProviderId = T_UPDATE_PROVIDER_ID,
                 MemberId = T_UPDATE_MEMBER_ID,
+                ServiceId = T_UPDATE_SERVICE_ID,
                 ServiceDate = T_UPDATE_SERVICE_DATETIME,
-                ServiceCode = T_UPDATE_SERVICE_CODE,
                 ServiceComment = T_UPDATE_SERVICE_COMMENT,
-                TransactionDateTime = T_UPDATE_TRANSACTION_DATETIME
+                Created = T_UPDATE_CREATED
             };
 
             using (TransactionDbContext context = DefaultTransactionRepositoryTest.GetContext("Update"))
@@ -289,10 +289,10 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, result.Id);
                 Assert.Equal(T_UPDATE_PROVIDER_ID, result.ProviderId);
                 Assert.Equal(T_UPDATE_MEMBER_ID, result.MemberId);
+                Assert.Equal(T_UPDATE_SERVICE_ID, result.ServiceId);
                 Assert.Equal(T_UPDATE_SERVICE_DATETIME, result.ServiceDate);
-                Assert.Equal(T_UPDATE_SERVICE_CODE, result.ServiceCode);
                 Assert.Equal(T_UPDATE_SERVICE_COMMENT, result.ServiceComment);
-                Assert.Equal(T_UPDATE_TRANSACTION_DATETIME, result.TransactionDateTime);
+                Assert.Equal(T_UPDATE_CREATED, result.Created);
 
                 // Validate transaction was updated in the database
                 var transaction = await context.Transactions.FindAsync(T0_ID);
@@ -300,10 +300,10 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, transaction.Id);
                 Assert.Equal(T_UPDATE_PROVIDER_ID, transaction.ProviderId);
                 Assert.Equal(T_UPDATE_MEMBER_ID, transaction.MemberId);
+                Assert.Equal(T_UPDATE_SERVICE_ID, transaction.ServiceId);
                 Assert.Equal(T_UPDATE_SERVICE_DATETIME, transaction.ServiceDate);
-                Assert.Equal(T_UPDATE_SERVICE_CODE, transaction.ServiceCode);
                 Assert.Equal(T_UPDATE_SERVICE_COMMENT, transaction.ServiceComment);
-                Assert.Equal(T_UPDATE_TRANSACTION_DATETIME, transaction.TransactionDateTime);
+                Assert.Equal(T_UPDATE_CREATED, transaction.Created);
             }
         }
 
@@ -328,10 +328,10 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, result.Id);
                 Assert.Equal(T0_PROVIDER_ID, result.ProviderId);
                 Assert.Equal(T0_MEMBER_ID, result.MemberId);
+                Assert.Equal(T0_SERVICE_ID, result.ServiceId);
                 Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
-                Assert.Equal(T0_SERVICE_CODE, result.ServiceCode);
                 Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
-                Assert.Equal(T0_TRANSACTION_DATETIME, result.TransactionDateTime);
+                Assert.Equal(T0_CREATED, result.Created);
 
                 Assert.Equal(0, await context.Transactions.CountAsync());
             }
@@ -364,30 +364,30 @@ namespace ChocAn.TransactionRepository.Test
                         transaction0Found = true;
                         Assert.Equal(T0_PROVIDER_ID, transaction.ProviderId);
                         Assert.Equal(T0_MEMBER_ID, transaction.MemberId);
+                        Assert.Equal(T0_SERVICE_ID, transaction.ServiceId);
                         Assert.Equal(T0_SERVICE_DATETIME, transaction.ServiceDate);
-                        Assert.Equal(T0_SERVICE_CODE, transaction.ServiceCode);
                         Assert.Equal(T0_SERVICE_COMMENT, transaction.ServiceComment);
-                        Assert.Equal(T0_TRANSACTION_DATETIME, transaction.TransactionDateTime);
+                        Assert.Equal(T0_CREATED, transaction.Created);
                     }
                     else if (T1_ID == transaction.Id)
                     {
                         transaction1Found = true;
                         Assert.Equal(T1_PROVIDER_ID, transaction.ProviderId);
                         Assert.Equal(T1_MEMBER_ID, transaction.MemberId);
+                        Assert.Equal(T1_SERVICE_ID, transaction.ServiceId);
                         Assert.Equal(T1_SERVICE_DATETIME, transaction.ServiceDate);
-                        Assert.Equal(T1_SERVICE_CODE, transaction.ServiceCode);
                         Assert.Equal(T1_SERVICE_COMMENT, transaction.ServiceComment);
-                        Assert.Equal(T1_TRANSACTION_DATETIME, transaction.TransactionDateTime);
+                        Assert.Equal(T1_CREATED, transaction.Created);
                     }
                     else if (T2_ID == transaction.Id)
                     {
                         transaction2Found = true;
                         Assert.Equal(T2_PROVIDER_ID, transaction.ProviderId);
                         Assert.Equal(T2_MEMBER_ID, transaction.MemberId);
+                        Assert.Equal(T2_SERVICE_ID, transaction.ServiceId);
                         Assert.Equal(T2_SERVICE_DATETIME, transaction.ServiceDate);
-                        Assert.Equal(T2_SERVICE_CODE, transaction.ServiceCode);
                         Assert.Equal(T2_SERVICE_COMMENT, transaction.ServiceComment);
-                        Assert.Equal(T2_TRANSACTION_DATETIME, transaction.TransactionDateTime);
+                        Assert.Equal(T2_CREATED, transaction.Created);
                     }
                 }
 

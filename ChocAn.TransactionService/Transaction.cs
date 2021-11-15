@@ -40,12 +40,12 @@ namespace ChocAn.TransactionRepository
     /// </summary>
     public class Transaction
     {
-        public decimal Id { get; set; }
-        public decimal ProviderId { get; set; }
-        public decimal MemberId { get; set; }
+        public int Id { get; set; }
+        public int ProviderId { get; set; }
+        public int MemberId { get; set; }
+        public int ServiceId { get; set; }
         public DateTime ServiceDate { get; set; }
-        public decimal ServiceCode { get; set; }
         public string ServiceComment { get; set; }
-        public DateTime TransactionDateTime { get; set; }
+        public DateTime Created { get; set; }
     }
 }
