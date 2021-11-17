@@ -2,10 +2,10 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: EditAction.cs
+// * File: IndexViewModel.cs
 // *
-// * Description: Implements a generic HTTPPost Edit action with Controller, Model, 
-// *              and ViewModel parameter types
+// * Description: Generic ViewModel for the Index action of the Member, Provider, and
+// *     ProviderService controllers.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -31,43 +31,13 @@
 // * 
 // **********************************************************************************
 
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ChocAn.GenericRepository;
-using AutoMapper;
+using System.Collections.Generic;
 
-namespace ChocAn.DataCenterConsole.Actions
+namespace ChocAn.DataCenterConsole.Models
 {
-    public class PostEditAction<TController, TModel, TViewModel>
-        where TModel : class
-        where TViewModel : class, new()
-        where TController : Controller
+    public class IndexViewModel<TModel>
     {
-        private readonly TController controller;
-        private readonly IGenericRepository<TModel> repository;
-        private readonly TViewModel viewModel;
-        private readonly IMapper mapper;
-        private readonly string indexAction;
-        public PostEditAction(TController controller, IGenericRepository<TModel> repository, TViewModel viewModel, IMapper mapper, string indexAction = null)
-        {
-            this.controller = controller;
-            this.repository = repository;
-            this.viewModel = viewModel;
-            this.mapper = mapper;
-            this.indexAction = indexAction;
-        }
-        public async Task<IActionResult> ActionResult()
-        {
-            if (!controller.ModelState.IsValid)
-            {
-                return controller.View(viewModel);
-            }
-
-            var entity = mapper.Map<TModel>(viewModel);
-
-            await repository.UpdateAsync(entity);
-
-            return controller.RedirectToAction(indexAction);
-        }
+        public string Find { get; set; }
+        public IEnumerable<TModel> Items { get; set; }
     }
 }

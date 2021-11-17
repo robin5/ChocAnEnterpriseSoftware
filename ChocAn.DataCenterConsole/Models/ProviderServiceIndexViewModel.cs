@@ -34,7 +34,7 @@ using ChocAn.ProviderServiceRepository;
 
 namespace ChocAn.DataCenterConsole.Models
 {
-    public class ProviderServiceIndexViewModel : FindViewModel<ProviderService>
+    public class ProviderServiceIndexViewModel : IndexViewModel<ProviderService>
     {
     }
 }

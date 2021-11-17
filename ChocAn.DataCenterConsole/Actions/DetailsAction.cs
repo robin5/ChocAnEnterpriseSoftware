@@ -38,34 +38,25 @@ using AutoMapper;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class DetailsAction<TController, TModel, TViewModel>
+    public class DetailsAction<TModel, TViewModel> : IDetailsAction<TModel>
         where TModel : class
         where TViewModel : class, new()
-        where TController : Controller
     {
-        private readonly IGenericRepository<TModel> repository;
-        private readonly TController controller;
-        private readonly int id;
-        private readonly IMapper mapper;
-        public DetailsAction(TController controller, int id, IGenericRepository<TModel> repository, IMapper mapper)
-        {
-            this.controller = controller;
-            this.id = id;
-            this.repository = repository;
-            this.mapper = mapper;
-        }
-        public async Task<IActionResult> ActionResult()
+        public Controller Controller { get; set; }
+        public IGenericRepository<TModel> Repository { get; set; }
+        public IMapper Mapper { get; set; }
+        public async Task<IActionResult> ActionResult(int id)
         {
             // Get a TModel entity from the repository
-            var entity = await repository.GetAsync(id);
+            var entity = await Repository.GetAsync(id);
             if (null != entity)
             {
                 // Instantiate a TViewModel from the TModel entity
-                var viewModel = mapper.Map<TViewModel>(entity);
+                var viewModel = Mapper.Map<TViewModel>(entity);
                 // Render the view
-                return controller.View(viewModel);
+                return Controller.View(viewModel);
             }
-            return controller.View();
+            return Controller.View();
         }
     }
 }

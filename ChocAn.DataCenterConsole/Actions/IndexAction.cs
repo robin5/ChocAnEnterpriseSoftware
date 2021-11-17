@@ -39,28 +39,20 @@ using ChocAn.DataCenterConsole.Models;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class IndexAction<TController, TModel, TViewModel>
+    public class IndexAction<TModel, TViewModel> : IIndexAction<TModel>
         where TModel : class
-        where TViewModel : FindViewModel<TModel>, new()
-        where TController : Controller
+        where TViewModel : IndexViewModel<TModel>, new()
     {
-        private readonly IGenericRepository<TModel> repository;
-        private readonly TController controller;
-        private readonly string find;
-        public IndexAction(TController controller, IGenericRepository<TModel> repository, string find)
-        {
-            this.controller = controller;
-            this.repository = repository;
-            this.find = find;
-        }
-        public async Task<IActionResult> ActionResult()
+        public Controller Controller { get; set; }
+        public IGenericRepository<TModel> Repository { get; set; }
+        public async Task<IActionResult> ActionResult(string find)
         {
             List<TModel> entities = new List<TModel>();
             int id;
 
             if (int.TryParse(find, out id))
             {
-                var provider = await repository.GetAsync(id);
+                var provider = await Repository.GetAsync(id);
                 if (null != provider)
                 {
                     entities.Add(provider);
@@ -68,7 +60,7 @@ namespace ChocAn.DataCenterConsole.Actions
             }
             else
             {
-                await foreach (TModel provider in repository.FindAllByNameAsync(find))
+                await foreach (TModel provider in Repository.FindAllByNameAsync(find))
                 {
                     entities.Add(provider);
                 }
@@ -80,7 +72,7 @@ namespace ChocAn.DataCenterConsole.Actions
                 Items = entities
             };
 
-            return controller.View(vm);
+            return Controller.View(vm);
         }
     }
 }

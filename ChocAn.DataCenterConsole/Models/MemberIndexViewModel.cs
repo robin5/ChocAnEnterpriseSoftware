@@ -34,7 +34,7 @@ using ChocAn.MemberRepository;
 
 namespace ChocAn.DataCenterConsole.Models
 {
-    public class MemberIndexViewModel : FindViewModel<Member>
+    public class MemberIndexViewModel : IndexViewModel<Member>
     {
     }
 }

@@ -43,23 +43,63 @@ namespace ChocAn.DataCenterConsole.Controllers
     public class ProviderServiceController : Controller
     {
         private readonly ILogger<ProviderServiceController> logger;
-        private readonly IProviderServiceRepository repository;
-        private readonly IMapper mapper;
+
+        private readonly IIndexAction<ProviderService> indexAction;
+        private readonly IDetailsAction<ProviderService> detailsAction;
+        private readonly ICreateAction<ProviderService, ProviderServiceCreateViewModel> createAction;
+        private readonly IEditAction<ProviderService, ProviderServiceEditViewModel> editAction;
+        private readonly IDeleteAction<ProviderService> deleteAction;
 
         /// <summary>
-        /// 
+        /// Constructor for ProviderServiceController
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="repository"></param>
         /// <param name="mapper"></param>
+        /// <param name="indexAction"></param>
+        /// <param name="detailsAction"></param>
+        /// <param name="createAction"></param>
+        /// <param name="editAction"></param>
+        /// <param name="deleteAction"></param>
         public ProviderServiceController(
             ILogger<ProviderServiceController> logger,
             IProviderServiceRepository repository,
-            IMapper mapper)
+            IMapper mapper,
+            IIndexAction<ProviderService> indexAction,
+            IDetailsAction<ProviderService> detailsAction,
+            ICreateAction<ProviderService, ProviderServiceCreateViewModel> createAction,
+            IEditAction<ProviderService, ProviderServiceEditViewModel> editAction,
+            IDeleteAction<ProviderService> deleteAction)
         {
             this.logger = logger;
-            this.repository = repository;
-            this.mapper = mapper;
+
+            // Configure Index action
+            this.indexAction = indexAction;
+            this.indexAction.Controller = this;
+            this.indexAction.Repository = repository;
+
+            // Configure Details action
+            this.detailsAction = detailsAction;
+            this.detailsAction.Controller = this;
+            this.detailsAction.Repository = repository;
+            this.detailsAction.Mapper = mapper;
+
+            // Configure Create action
+            this.createAction = createAction;
+            this.createAction.Controller = this;
+            this.createAction.Repository = repository;
+            this.createAction.Mapper = mapper;
+
+            // Configure Edit action
+            this.editAction = editAction;
+            this.editAction.Controller = this;
+            this.editAction.Repository = repository;
+            this.editAction.Mapper = mapper;
+
+            // Configure Delete action
+            this.deleteAction = deleteAction;
+            this.deleteAction.Controller = this;
+            this.deleteAction.Repository = repository;
         }
 
         /// <summary>
@@ -69,8 +109,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string find)
         {
-            var action = new IndexAction<Controller, ProviderService, ProviderServiceIndexViewModel>(this, repository, find);
-            return await action.ActionResult();
+            return await indexAction.ActionResult(find);
         }
 
         /// <summary>
@@ -78,16 +117,17 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [HttpGet]
         public async Task<IActionResult> DetailsAsync(int id)
         {
-            var action = new DetailsAction<Controller, ProviderService, ProviderServiceDetailsViewModel>(this, id, repository, mapper);
-            return await action.ActionResult();
+            return await detailsAction.ActionResult(id);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
@@ -102,36 +142,42 @@ namespace ChocAn.DataCenterConsole.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(ProviderServiceCreateViewModel viewModel)
         {
-            var action = new CreateAction<Controller, ProviderService, ProviderServiceCreateViewModel>(this,
-                repository, viewModel, mapper, nameof(Index));
-            return await action.ActionResult();
+            return await createAction.ActionResult(viewModel, nameof(Index));
         }
 
-        // GET: ProviderServiceController/Edit/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
         public async Task<IActionResult> EditAsync(int id)
         {
-            var action = new EditAction<Controller, ProviderService, ProviderServiceEditViewModel>(this,
-                id, repository, mapper);
-            return await action.ActionResult();
+            return await editAction.ActionResult(id);
         }
 
-        // POST: ProviderServiceController/Edit/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProviderServiceEditViewModel viewModel)
         {
-            var action = new PostEditAction<Controller, ProviderService, ProviderServiceEditViewModel>(this,
-                repository, viewModel, mapper, nameof(Index));
-            return await action.ActionResult();
+            return await editAction.ActionResult(viewModel, nameof(Index));
         }
 
-        // POST: ProviderServiceController/Delete/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            await repository.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            return await deleteAction.ActionResult(id, nameof(Index));
         }
     }
 }

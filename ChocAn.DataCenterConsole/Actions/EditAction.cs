@@ -38,33 +38,37 @@ using AutoMapper;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class EditAction<TController, TModel, TViewModel>
+    public class EditAction<TModel, TViewModel> : IEditAction<TModel, TViewModel>
         where TModel : class
         where TViewModel : class, new()
-        where TController : Controller
     {
-        private readonly TController controller;
-        private readonly int id;
-        private readonly IGenericRepository<TModel> repository;
-        private readonly IMapper mapper;
-        public EditAction(TController controller, int id, IGenericRepository<TModel> repository, IMapper mapper)
+        public Controller Controller { get; set; }
+        public IGenericRepository<TModel> Repository { get; set; }
+        public IMapper Mapper { get; set; }
+        public async Task<IActionResult> ActionResult(int id)
         {
-            this.controller = controller;
-            this.id = id;
-            this.repository = repository;
-            this.mapper = mapper;
-        }
-        public async Task<IActionResult> ActionResult()
-        {
-            var entity = await repository.GetAsync(id);
+            var entity = await Repository.GetAsync(id);
             if (null != entity)
             {
                 // map VM
-                var vm = mapper.Map<TViewModel>(entity);
+                var viewModel = Mapper.Map<TViewModel>(entity);
 
-                return controller.View(vm);
+                return Controller.View(viewModel);
             }
-            return controller.View();
+            return Controller.View();
+        }
+        public async Task<IActionResult> ActionResult(TViewModel viewModel, string indexAction = null)
+        {
+            if (!Controller.ModelState.IsValid)
+            {
+                return Controller.View(viewModel);
+            }
+
+            var entity = Mapper.Map<TModel>(viewModel);
+
+            await Repository.UpdateAsync(entity);
+
+            return Controller.RedirectToAction(indexAction);
         }
     }
 }

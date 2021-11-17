@@ -40,6 +40,9 @@ using ChocAn.MemberRepository;
 using ChocAn.ProviderRepository;
 using ChocAn.ProviderServiceRepository;
 using ChocAn.DataCenterConsole.Infrastructure;
+using ChocAn.DataCenterConsole.Actions;
+using Microsoft.AspNetCore.Mvc;
+using ChocAn.DataCenterConsole.Models;
 
 namespace ChocAn.DataCenterConsole
 {
@@ -66,6 +69,28 @@ namespace ChocAn.DataCenterConsole
 
             services.AddControllersWithViews();
 
+            // MemberController actions
+            services.AddTransient<IIndexAction<Member>, IndexAction<Member, MemberIndexViewModel>>();
+            services.AddTransient<IDetailsAction<Member>, DetailsAction<Member, MemberDetailsViewModel>>();
+            services.AddTransient<ICreateAction<Member, MemberCreateViewModel>, CreateAction<Member, MemberCreateViewModel>>();
+            services.AddTransient<IEditAction<Member, MemberEditViewModel>, EditAction<Member, MemberEditViewModel>>();
+            services.AddTransient<IDeleteAction<Member>, DeleteAction<Member>>();
+
+            // ProviderController actions
+            services.AddTransient<IIndexAction<Provider>, IndexAction<Provider, ProviderIndexViewModel>>();
+            services.AddTransient<IDetailsAction<Provider>, DetailsAction<Provider, ProviderDetailsViewModel>>();
+            services.AddTransient<ICreateAction<Provider, ProviderCreateViewModel>, CreateAction<Provider, ProviderCreateViewModel>>();
+            services.AddTransient<IEditAction<Provider, ProviderEditViewModel>, EditAction<Provider, ProviderEditViewModel>>();
+            services.AddTransient<IDeleteAction<Provider>, DeleteAction<Provider>>();
+
+            // ProviderServiceController actions
+            services.AddTransient<IIndexAction<ProviderService>, IndexAction<ProviderService, ProviderServiceIndexViewModel>>();
+            services.AddTransient<IDetailsAction<ProviderService>, DetailsAction<ProviderService, ProviderServiceDetailsViewModel>>();
+            services.AddTransient<ICreateAction<ProviderService, ProviderServiceCreateViewModel>, CreateAction<ProviderService, ProviderServiceCreateViewModel>>();
+            services.AddTransient<IEditAction<ProviderService, ProviderServiceEditViewModel>, EditAction<ProviderService, ProviderServiceEditViewModel>>();
+            services.AddTransient<IDeleteAction<ProviderService>, DeleteAction<ProviderService>>();
+
+            // Repositories
             services.AddScoped<IMemberRepository, DefaultMemberRepository>();
             services.AddScoped<IProviderRepository, DefaultProviderRepository>();
             services.AddScoped<IProviderServiceRepository, DefaultProviderServiceRepository>();
