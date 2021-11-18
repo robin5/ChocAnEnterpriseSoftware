@@ -37,12 +37,15 @@ using AutoMapper;
 using ChocAn.ProviderServiceRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
+using ChocAn.GenericRepository;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
     public class ProviderServiceController : Controller
     {
         private readonly ILogger<ProviderServiceController> logger;
+        private readonly IGenericRepository<ProviderService> repository;
+        private readonly IMapper mapper;
 
         private readonly IIndexAction<ProviderService> indexAction;
         private readonly IDetailsAction<ProviderService> detailsAction;
@@ -63,7 +66,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="deleteAction"></param>
         public ProviderServiceController(
             ILogger<ProviderServiceController> logger,
-            IProviderServiceRepository repository,
+            IGenericRepository<ProviderService> repository,
             IMapper mapper,
             IIndexAction<ProviderService> indexAction,
             IDetailsAction<ProviderService> detailsAction,
@@ -72,111 +75,104 @@ namespace ChocAn.DataCenterConsole.Controllers
             IDeleteAction<ProviderService> deleteAction)
         {
             this.logger = logger;
+            this.repository = repository;
+            this.mapper = mapper;
 
-            // Configure Index action
             this.indexAction = indexAction;
-            this.indexAction.Controller = this;
-            this.indexAction.Repository = repository;
-
-            // Configure Details action
             this.detailsAction = detailsAction;
-            this.detailsAction.Controller = this;
-            this.detailsAction.Repository = repository;
-            this.detailsAction.Mapper = mapper;
-
-            // Configure Create action
             this.createAction = createAction;
-            this.createAction.Controller = this;
-            this.createAction.Repository = repository;
-            this.createAction.Mapper = mapper;
-
-            // Configure Edit action
             this.editAction = editAction;
-            this.editAction.Controller = this;
-            this.editAction.Repository = repository;
-            this.editAction.Mapper = mapper;
-
-            // Configure Delete action
             this.deleteAction = deleteAction;
-            this.deleteAction.Controller = this;
-            this.deleteAction.Repository = repository;
         }
 
         /// <summary>
-        /// 
+        /// HttpGet endpoint for providerService/
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Index view</returns>
         [HttpGet]
         public async Task<IActionResult> Index(string find)
         {
+            indexAction.Controller = this;
+            indexAction.Repository = repository;
             return await indexAction.ActionResult(find);
         }
 
         /// <summary>
-        /// 
+        /// HttpGet endpoint for providerService/details/{id}
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">ID of providerService</param>
+        /// <returns>Details view</returns>
         [HttpGet]
         public async Task<IActionResult> DetailsAsync(int id)
         {
+            detailsAction.Controller = this;
+            detailsAction.Repository = repository;
+            detailsAction.Mapper = mapper;
             return await detailsAction.ActionResult(id);
         }
 
         /// <summary>
-        /// 
+        /// HttpGet endpoint for providerService/create
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Create view</returns>
         [HttpGet]
-        public ActionResult Create()
-        {
-            return View();
-        }
+        public ActionResult Create() => View();
 
         /// <summary>
-        /// 
+        /// HttpPost endpoint for providerService/create/{form-data}
         /// </summary>
-        /// <param name="collection"></param>
-        /// <returns></returns>
+        /// <param name="viewModel">Create form data</param>
+        /// <returns>Create view or redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(ProviderServiceCreateViewModel viewModel)
         {
+            createAction.Controller = this;
+            createAction.Repository = repository;
+            createAction.Mapper = mapper;
             return await createAction.ActionResult(viewModel, nameof(Index));
         }
 
         /// <summary>
-        /// 
+        /// HttpGet endpoint for providerService/edit/{id}
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">ID of providerService</param>
+        /// <returns>Edit view</returns>
         [HttpGet]
         public async Task<IActionResult> EditAsync(int id)
         {
+            editAction.Controller = this;
+            editAction.Repository = repository;
+            editAction.Mapper = mapper;
             return await editAction.ActionResult(id);
         }
 
         /// <summary>
-        /// 
+        /// HttpPost endpoint for providerService/edit/{form-data}
         /// </summary>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
+        /// <param name="viewModel">Edited form data</param>
+        /// <returns>Edit view or redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ProviderServiceEditViewModel viewModel)
+        public async Task<IActionResult> EditAsync(ProviderServiceEditViewModel viewModel)
         {
+            editAction.Controller = this;
+            editAction.Repository = repository;
+            editAction.Mapper = mapper;
             return await editAction.ActionResult(viewModel, nameof(Index));
         }
 
         /// <summary>
-        /// 
+        /// HttpPost endpoint for providerService/delete/{id}
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">ID of providerService</param>
+        /// <returns>Redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
+            deleteAction.Controller = this;
+            deleteAction.Repository = repository;
             return await deleteAction.ActionResult(id, nameof(Index));
         }
     }

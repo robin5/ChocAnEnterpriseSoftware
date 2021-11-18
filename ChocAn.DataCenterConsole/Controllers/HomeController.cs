@@ -45,55 +45,14 @@ namespace ChocAn.DataCenterConsole.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> logger;
-        private readonly IMemberRepository memberService;
-        private readonly IProviderRepository providerService;
-        private readonly IProviderServiceRepository providerServiceService;
 
-        public HomeController(ILogger<HomeController> logger, 
-            IMemberRepository memberService,
-            IProviderRepository providerService,
-            IProviderServiceRepository providerServiceService)
+        public HomeController(ILogger<HomeController> logger)
         {
             this.logger = logger;
-            this.memberService = memberService;
-            this.providerService = providerService;
-            this.providerServiceService = providerServiceService;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            List<Member> listMembers = new List<Member>();
-            await foreach (Member member in memberService.GetAllAsync())
-            {
-                listMembers.Add(member);
-            }
-
-            List<Provider> listProviders = new List<Provider>();
-            await foreach (Provider provider in providerService.GetAllAsync())
-            {
-                listProviders.Add(provider);
-            }
-
-            List<ProviderService> listProviderServices = new List<ProviderService>();
-            await foreach (ProviderService providerService in providerServiceService.GetAllAsync())
-            {
-                listProviderServices.Add(providerService);
-            }
-
-            var vm = new HomeIndexViewModel
-            {
-                Members = listMembers,
-                Providers = listProviders,
-                ProviderServices = listProviderServices,
-            };
-
-            return View(vm);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
+        public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
