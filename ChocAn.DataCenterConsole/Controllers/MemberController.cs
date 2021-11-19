@@ -37,14 +37,14 @@ using AutoMapper;
 using ChocAn.MemberRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
     public class MemberController : Controller
     {
         private readonly ILogger<MemberController> logger;
-        private readonly IGenericRepository<Member> repository;
+        private readonly IRepository<Member> repository;
         private readonly IMapper mapper;
 
         private readonly IIndexAction<Member> indexAction;
@@ -66,7 +66,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="deleteAction"></param>
         public MemberController(
             ILogger<MemberController> logger,
-            IGenericRepository<Member> repository,
+            IRepository<Member> repository,
             IMapper mapper,
             IIndexAction<Member> indexAction,
             IDetailsAction<Member> detailsAction,

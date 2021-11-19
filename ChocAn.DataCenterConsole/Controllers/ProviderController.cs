@@ -37,14 +37,14 @@ using AutoMapper;
 using ChocAn.ProviderRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
     public class ProviderController : Controller
     {
         private readonly ILogger<ProviderController> logger;
-        private readonly IGenericRepository<Provider> repository;
+        private readonly IRepository<Provider> repository;
         private readonly IMapper mapper;
 
         private readonly IIndexAction<Provider> indexAction;
@@ -66,7 +66,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="deleteAction"></param>
         public ProviderController(
             ILogger<ProviderController> logger,
-            IGenericRepository<Provider> repository,
+            IRepository<Provider> repository,
             IMapper mapper,
             IIndexAction<Provider> indexAction,
             IDetailsAction<Provider> detailsAction,

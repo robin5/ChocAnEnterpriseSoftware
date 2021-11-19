@@ -38,6 +38,7 @@ using ChocAn.ProviderRepository;
 using ChocAn.ProviderServiceRepository;
 using ChocAn.TransactionRepository;
 using ChocAn.ProviderTerminal.Api.Resources;
+using ChocAn.Repository;
 
 namespace ChocAn.ProviderTerminal.Api.Controllers
 {
@@ -47,20 +48,20 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
     public class TerminalController : ControllerBase
     {
         private readonly ILogger<TerminalController> logger;
-        private readonly IProviderRepository providerRepository;
-        private readonly IMemberRepository memberRepository;
-        private readonly IProviderServiceRepository providerServiceRepository;
+        private readonly IRepository<Member> memberRepository;
+        private readonly IRepository<Provider> providerRepository;
+        private readonly IRepository<ProviderService> providerServiceRepository;
         private readonly ITransactionRepository transactionRepository;
         public TerminalController(
             ILogger<TerminalController> logger,
-            IProviderRepository providerRepository,
-            IMemberRepository memberRepository,
-            IProviderServiceRepository providerServiceRepsoitory,
+            IRepository<Member> memberRepository,
+            IRepository<Provider> providerRepository,
+            IRepository<ProviderService> providerServiceRepsoitory,
             ITransactionRepository transactionRepository)
         {
             this.logger = logger;
-            this.providerRepository = providerRepository;
             this.memberRepository = memberRepository;
+            this.providerRepository = providerRepository;
             this.providerServiceRepository = providerServiceRepsoitory;
             this.transactionRepository = transactionRepository;
         }

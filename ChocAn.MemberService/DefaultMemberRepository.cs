@@ -33,14 +33,14 @@
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 
 namespace ChocAn.MemberRepository
 {
     /// <summary>
     /// Implements repository pattern for Member entities
     /// </summary>
-    public class DefaultMemberRepository : GenericRepository<Member>, IMemberRepository
+    public class DefaultMemberRepository : Repository<Member>
     {
         /// <summary>
         ///  Constructor for DefaultMemberRepository
@@ -51,7 +51,7 @@ namespace ChocAn.MemberRepository
         {
         }
 
-        override public async IAsyncEnumerable<Member> FindAllByNameAsync(string name)
+        override public async IAsyncEnumerable<Member> GetAllByNameAsync(string name)
         {
             var query = dbSet.Where<Member>(a => a.Name.Contains(name));
             var enumerator = query.AsAsyncEnumerable<Member>().GetAsyncEnumerator();

@@ -31,7 +31,7 @@
 // **********************************************************************************
 
 using System;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 using System.Threading.Tasks;
 
 namespace ChocAn.TransactionRepository
@@ -39,7 +39,7 @@ namespace ChocAn.TransactionRepository
     /// <summary>
     /// Implements repository pattern for Transaction entities
     /// </summary>
-    public class DefaultTransactionRepository : GenericRepository<Transaction>, ITransactionRepository
+    public class DefaultTransactionRepository : Repository<Transaction>, ITransactionRepository
     {
         /// <summary>
         ///  Constructor for DefaultTransactionRepository

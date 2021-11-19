@@ -33,11 +33,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChocAn.Repository;
 using ChocAn.ProviderRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockProviderRepository : IProviderRepository
+    public class MockProviderRepository : IRepository<Provider>
     {
         protected IDictionary<int, Provider> items = new Dictionary<int, Provider>();
         int key = 0;
@@ -87,7 +88,7 @@ namespace ChocAn.MockRepositories
             return Task.FromResult(changes);
         }
 
-        public async IAsyncEnumerable<Provider> FindAllByNameAsync(string name)
+        public async IAsyncEnumerable<Provider> GetAllByNameAsync(string name)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
             Provider item;

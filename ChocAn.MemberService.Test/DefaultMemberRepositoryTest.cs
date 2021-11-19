@@ -30,7 +30,7 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;

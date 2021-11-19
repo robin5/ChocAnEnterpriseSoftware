@@ -43,7 +43,7 @@ using ChocAn.DataCenterConsole.Infrastructure;
 using ChocAn.DataCenterConsole.Actions;
 using Microsoft.AspNetCore.Mvc;
 using ChocAn.DataCenterConsole.Models;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 
 namespace ChocAn.DataCenterConsole
 {
@@ -92,9 +92,9 @@ namespace ChocAn.DataCenterConsole
             services.AddTransient<IDeleteAction<ProviderService>, DeleteAction<ProviderService>>();
 
             // Repositories
-            services.AddScoped<IGenericRepository<Member>, DefaultMemberRepository>();
-            services.AddScoped<IGenericRepository<Provider>, DefaultProviderRepository>();
-            services.AddScoped<IGenericRepository<ProviderService>, DefaultProviderServiceRepository>();
+            services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
+            services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
+            services.AddScoped<IRepository<ProviderService>, DefaultProviderServiceRepository>();
             services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
         }
 

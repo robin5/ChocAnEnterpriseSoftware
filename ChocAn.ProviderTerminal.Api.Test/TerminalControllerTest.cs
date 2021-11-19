@@ -63,42 +63,6 @@ namespace ChocAn.ProviderTerminal.Api.Test
         #endregion
 
         [Fact]
-        public async Task ValidateTerminalProvider_ExistingProvider()
-        {
-            // Arrange
-            var providerService = new MockProviderRepository();
-
-            await providerService.AddAsync(new Provider
-            {
-                Id = PROVIDER_ID
-            });
-
-            // Act
-            var controller = new TerminalController(null, providerService, null, null, null);
-            var result = await controller.Provider(PROVIDER_ID);
-
-            // Assert
-
-            var objectResult = Assert.IsType<OkObjectResult>(result);
-            var resource = Assert.IsType<ProviderResource>(objectResult.Value);
-            Assert.Equal(PROVIDER_ID, resource.Id);
-        }
-
-        [Fact]
-        public async Task ValidateTerminalProvider_NonexistingProvider()
-        {
-            // Arrange
-            var providerService = new MockProviderRepository();
-
-            // Act
-            var controller = new TerminalController(null, providerService, null, null, null);
-            var result = await controller.Provider(PROVIDER_ID);
-
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
-
-        [Fact]
         public async Task ValidateTerminalMember_ExistingMember()
         {
             // Arrange
@@ -111,7 +75,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
             });
 
             // Act
-            var controller = new TerminalController(null, null, memberService, null, null);
+            var controller = new TerminalController(null, memberService, null, null, null);
             var result = await controller.Member(MEMBER_ID);
 
             // Assert
@@ -129,8 +93,44 @@ namespace ChocAn.ProviderTerminal.Api.Test
             var memberService = new MockMemberRepository();
 
             // Act
-            var controller = new TerminalController(null, null, memberService, null, null);
+            var controller = new TerminalController(null, memberService, null, null, null);
             var result = await controller.Member(MEMBER_ID);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task ValidateTerminalProvider_ExistingProvider()
+        {
+            // Arrange
+            var providerService = new MockProviderRepository();
+
+            await providerService.AddAsync(new Provider
+            {
+                Id = PROVIDER_ID
+            });
+
+            // Act
+            var controller = new TerminalController(null, null, providerService, null, null);
+            var result = await controller.Provider(PROVIDER_ID);
+
+            // Assert
+
+            var objectResult = Assert.IsType<OkObjectResult>(result);
+            var resource = Assert.IsType<ProviderResource>(objectResult.Value);
+            Assert.Equal(PROVIDER_ID, resource.Id);
+        }
+
+        [Fact]
+        public async Task ValidateTerminalProvider_NonexistingProvider()
+        {
+            // Arrange
+            var providerService = new MockProviderRepository();
+
+            // Act
+            var controller = new TerminalController(null, null, providerService, null, null);
+            var result = await controller.Provider(PROVIDER_ID);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -209,8 +209,8 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             var terminalTransaction = new TransactionResource
             {
-                ProviderId = PROVIDER_ID,
                 MemberId = MEMBER_ID,
+                ProviderId = PROVIDER_ID,
                 ServiceId = PROVIDER_SERVICE_ID,
                 ServiceDate = TRANSACTION_SERVICE_DATE,
                 ServiceComment = TRANSACTION_SERVICE_COMMENT
@@ -218,9 +218,9 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             // Act
             // Instantiate controller
-            var controller = new TerminalController(null, 
+            var controller = new TerminalController(null,
+                memberService,
                 providerService, 
-                memberService, 
                 providerServiceService,
                 transactionService);
 

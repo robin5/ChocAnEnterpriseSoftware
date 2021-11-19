@@ -31,14 +31,14 @@
 // **********************************************************************************
 
 using System.Threading.Tasks;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 
 namespace ChocAn.TransactionRepository
 {
     /// <summary>
     /// Defines repository pattern for Transaction entities
     /// </summary>
-    public interface ITransactionRepository : IGenericRepository<Transaction>
+    public interface ITransactionRepository : IRepository<Transaction>
     {
     }
 }

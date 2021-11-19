@@ -33,7 +33,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 using AutoMapper;
 
 namespace ChocAn.DataCenterConsole.Actions
@@ -43,7 +43,7 @@ namespace ChocAn.DataCenterConsole.Actions
         where TViewModel : class, new()
     {
         public Controller Controller { get; set; }
-        public IGenericRepository<TModel> Repository { get; set; }
+        public IRepository<TModel> Repository { get; set; }
         public IMapper Mapper { get; set; }
         public async Task<IActionResult> ActionResult(TViewModel viewModel, string indexAction)
         {

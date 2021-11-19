@@ -34,7 +34,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 using ChocAn.DataCenterConsole.Models;
 
 namespace ChocAn.DataCenterConsole.Actions
@@ -44,7 +44,7 @@ namespace ChocAn.DataCenterConsole.Actions
         where TViewModel : IndexViewModel<TModel>, new()
     {
         public Controller Controller { get; set; }
-        public IGenericRepository<TModel> Repository { get; set; }
+        public IRepository<TModel> Repository { get; set; }
         public async Task<IActionResult> ActionResult(string find)
         {
             List<TModel> entities = new List<TModel>();
@@ -60,7 +60,7 @@ namespace ChocAn.DataCenterConsole.Actions
             }
             else
             {
-                await foreach (TModel provider in Repository.FindAllByNameAsync(find))
+                await foreach (TModel provider in Repository.GetAllByNameAsync(find))
                 {
                     entities.Add(provider);
                 }

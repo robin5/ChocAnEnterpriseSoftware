@@ -30,14 +30,9 @@
 // * 
 // **********************************************************************************
 
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProviderServiceRepository;
 using ChocAn.DataCenterConsole.Models;
 
 namespace ChocAn.DataCenterConsole.Controllers

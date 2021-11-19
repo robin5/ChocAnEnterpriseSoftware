@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Linq.Expressions;
 using System;
 
-namespace ChocAn.GenericRepository
+namespace ChocAn.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly DbContext context;
         protected readonly DbSet<T> dbSet;
@@ -17,26 +17,26 @@ namespace ChocAn.GenericRepository
         ///  Constructor for TDbContext
         /// </summary>
         /// <param name="context">DbContext of underlying database</param>
-        public GenericRepository(DbContext context)
+        public Repository(DbContext context)
         {
             this.context = context;
             dbSet = context.Set<T>();
         }
 
         /// <summary>
-        /// Adds entity to the database
+        /// Adds a T entity to the data source
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        virtual public async Task<T> AddAsync(T obj)
+        virtual public async Task<T> AddAsync(T entity)
         {
-            await dbSet.AddAsync(obj);
+            await dbSet.AddAsync(entity);
             context.SaveChanges();
-            return obj;
+            return entity;
         }
 
         /// <summary>
-        /// Retrieves entity from the database
+        /// Retrieves a T entity from the data source
         /// </summary>
         /// <param name="id">ID of T entity to retrieve</param>
         /// <returns></returns>
@@ -46,22 +46,22 @@ namespace ChocAn.GenericRepository
         }
 
         /// <summary>
-        /// Updates entity in the database
+        /// Updates a T entity from the data source
         /// </summary>
         /// <param name="changes">Changes to be applied to T entity</param>
         /// <returns></returns>
         virtual public async Task<T> UpdateAsync(T changes)
         {
-            var member = dbSet.Attach(changes);
-            member.State = EntityState.Modified;
+            var entity = dbSet.Attach(changes);
+            entity.State = EntityState.Modified;
             await context.SaveChangesAsync();
             return changes;
         }
 
         /// <summary>
-        /// Deletes entity from the database
+        /// Deletes a T entity from the data source
         /// </summary>
-        /// <param name="id">ID of member to deleted</param>
+        /// <param name="id">ID of entity to deleted</param>
         /// <returns></returns>
         virtual public async Task<T> DeleteAsync(object id)
         {
@@ -75,9 +75,9 @@ namespace ChocAn.GenericRepository
         }
 
         /// <summary>
-        /// Retrieves all T entities from the database
+        /// Retrieves all T entities from the data source
         /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all T entities in the database</returns>
+        /// <returns>An enumerator that provides asynchronous iteration over all T Entities in the database</returns>
         virtual public async IAsyncEnumerable<T> GetAllAsync()
         {
             var enumerator = dbSet.AsAsyncEnumerable().GetAsyncEnumerator();
@@ -92,10 +92,11 @@ namespace ChocAn.GenericRepository
         }
 
         /// <summary>
-        /// Retrieves all T entities with the given name from the database
+        /// Retrieves all T entities with name from the data source
         /// </summary>
-        /// <returns>An enumerator that provides asynchronous iteration over all T entities in the database</returns>
-        virtual public async IAsyncEnumerable<T> FindAllByNameAsync(string name)
+        /// <param name="name">Name of T entities to retrieve</param>
+        /// <returns>An enumerator that provides asynchronous iteration over all T Entities in the database</returns>
+        virtual public async IAsyncEnumerable<T> GetAllByNameAsync(string name)
         {
             var enumerator = dbSet.AsAsyncEnumerable().GetAsyncEnumerator();
             T entity;

@@ -78,7 +78,7 @@ namespace ChocAn.MockRepositories
             throw new NotImplementedException();
         }
 
-        public async IAsyncEnumerable<T> FindAllByNameAsync(string name)
+        public async IAsyncEnumerable<T> GetAllByNameAsync(string name)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
             T item;

@@ -33,14 +33,14 @@
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using ChocAn.GenericRepository;
+using ChocAn.Repository;
 
 namespace ChocAn.ProviderServiceRepository
 {
     /// <summary>
     /// Implements repository pattern for ProviderService entities
     /// </summary>
-    public class DefaultProviderServiceRepository : GenericRepository<ProviderService>, IProviderServiceRepository
+    public class DefaultProviderServiceRepository : Repository<ProviderService>
     {
         /// <summary>
         ///  Constructor for DefaultProviderServiceRepository
@@ -51,7 +51,7 @@ namespace ChocAn.ProviderServiceRepository
         {
         }
 
-        override public async IAsyncEnumerable<ProviderService> FindAllByNameAsync(string name)
+        override public async IAsyncEnumerable<ProviderService> GetAllByNameAsync(string name)
         {
             var query = dbSet.Where<ProviderService>(a => a.Name.Contains(name));
             var enumerator = query.AsAsyncEnumerable<ProviderService>().GetAsyncEnumerator();
