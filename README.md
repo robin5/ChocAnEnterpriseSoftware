@@ -1,5 +1,5 @@
 # ChocAn Enterprise Software
-ChocAn is an organization dedicated to helping people addicted to chocolate. This repsoitory contains software for managing ChocAn membership and business transactions. The following sections describe the ChocAn enterprise landscape (actors, actions, and expected results).
+ChocAn is an organization dedicated to helping people. This repsoitory contains software for managing ChocAn membership and business transactions. The following sections describe the ChocAn enterprise landscape (actors, actions, and expected results).
 
 ## ChocAn Members
 Members pay a monthly fee to ChocAn. For this fee they are entitled to unlimited consultations and treatments with health care professionals
