@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GenericRepository\ChocAn.GenericRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.GenericRepository\ChocAn.GenericRepository.csproj" />
   </ItemGroup>
 
 </Project>
