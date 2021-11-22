@@ -1,0 +1,9 @@
+## Provider Terminal Operation
+1. When a provider’s terminal is switched on, the provider is asked to enter his or her provider number.
+2. To receive health care services from ChocAn, the member hands his or her card to the provider, who slides the card through the card reader on the terminal. 
+3. The terminal then dials the ChocAn Data Center, and the ChocAn Data Center computer verifies the member number. If the number is valid, the word Validated appears on the one-line display. If the number is not valid, the reason is displayed, such as Invalid number or Member suspended; the latter message indicates that fees are owed (that is, the member has not paid membership fees for at least a month) and member status has been set to suspended.
+4. To bill ChocAn after a health care service has been provided to the member, the provider again passes the card through the card reader or keys in the member number. 
+5. When the word Validated appears, the provider keys in the date the service was provided in the format MM–DD–YYYY. The date of service is needed because hardware or other difficulties may have prevented the provider from billing ChocAn immediately after providing the service. 
+6. Next, the provider uses the Provider Directory to look up the appropriate six-digit service code corresponding to the service provided. For example, 598470 is the code for a session with a dietitian, whereas 883948 is the code for an aerobics exercise session. The provider then keys in the service code. To check that the service code has been correctly looked up and keyed in, the software product then displays the name of the service corresponding to the code (up to 20 characters) and asks the provider to verify that this is indeed the service that was provided. If the provider has entered a nonexistent code, an error message is printed. 
+7. The provider can enter comments about the service provided.
+8. Provider Terminal Transaction Response
