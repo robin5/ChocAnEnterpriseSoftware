@@ -42,6 +42,8 @@ The processing of payments of ChocAn membership fees has been contracted out to 
 
 Your organization has been awarded the contract to write only the ChocAn data processing software; another organization will be responsible for the communications software, for designing the ChocAn provider’s terminal, for the software needed by Acme Accounting Services, and for implementing the EFT component.
 
+![Initial design diagram](/assets/images/ChocAnDesign.png)
+
 ## Acceptance Criteria
 
 The contract states that, at the acceptance test:
