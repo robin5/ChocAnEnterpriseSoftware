@@ -1,6 +1,6 @@
 # ChocAn Enterprise Software
 ChocAn is an organization dedicated to helping people. This repsoitory contains software for managing ChocAn membership and business transactions. The following sections describe the ChocAn enterprise landscape (actors, actions, and expected results).
-![Initial design diagram](/assets/images/ChocAnDesign.png)
+
 ## ChocAn Members
 Members pay a monthly fee to ChocAn. For this fee they are entitled to unlimited consultations and treatments with health care professionals
 
@@ -30,6 +30,8 @@ The processing of payments of ChocAn membership fees has been contracted out to 
 
 ## Task Boundaries
 Your organization has been awarded the contract to write only the ChocAn data processing software; another organization will be responsible for the communications software, for designing the ChocAn provider’s terminal, for the software needed by Acme Accounting Services, and for implementing the EFT component. 
+
+![Initial design diagram](/assets/images/ChocAnDesign.png)
 
 ## Acceptance Criteria
 The contract states that, at the acceptance test:
