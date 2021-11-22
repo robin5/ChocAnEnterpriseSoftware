@@ -1,6 +1,6 @@
 # ChocAn Enterprise Software
 ChocAn is an organization dedicated to helping people. This repsoitory contains software for managing ChocAn membership and business transactions. The following sections describe the ChocAn enterprise landscape (actors, actions, and expected results).
-![Initial design diagram][/assets/images/ChocAnDesign]
+![Initial design diagram](/assets/images/ChocAnDesign.png)
 ## ChocAn Members
 Members pay a monthly fee to ChocAn. For this fee they are entitled to unlimited consultations and treatments with health care professionals
 
