@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "MembershipConsole": {
+    "ChocAn.DataCenterConsole": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

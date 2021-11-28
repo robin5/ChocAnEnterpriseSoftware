@@ -33,7 +33,7 @@
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.MemberRepository;
 using ChocAn.ProviderRepository;
-using ChocAn.ProviderServiceRepository;
+using ChocAn.ProductRepository;
 using AutoMapper;
 
 namespace ChocAn.DataCenterConsole.Infrastructure
@@ -52,10 +52,10 @@ namespace ChocAn.DataCenterConsole.Infrastructure
             CreateMap<ProviderCreateViewModel, Provider>();
             CreateMap<ProviderEditViewModel, Provider>();
 
-            CreateMap<ProviderService, ProviderServiceEditViewModel>();
-            CreateMap<ProviderService, ProviderServiceDetailsViewModel>();
-            CreateMap<ProviderServiceCreateViewModel, ProviderService>();
-            CreateMap<ProviderServiceEditViewModel, ProviderService>();
+            CreateMap<Product, ProductEditViewModel>();
+            CreateMap<Product, ProductDetailsViewModel>();
+            CreateMap<ProductCreateViewModel, Product>();
+            CreateMap<ProductEditViewModel, Product>();
         }
     }
 }

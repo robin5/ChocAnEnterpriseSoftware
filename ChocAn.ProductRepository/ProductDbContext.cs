@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProviderServiceDetailsViewModel.cs
+// * File: Product.cs
 // *
-// * Description: ViewModel for the Details action of the ProviderServiceController.
+// * Description: Defines a DbContext for Product entities
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +30,27 @@
 // * 
 // **********************************************************************************
 
-namespace ChocAn.DataCenterConsole.Models
+using Microsoft.EntityFrameworkCore;
+
+namespace ChocAn.ProductRepository
 {
-    public class ProviderServiceDetailsViewModel
+    /// <summary>
+    /// A ProductDbContext instance represents a session with the database and can be used to
+    /// query and save instances of Product entities. 
+    /// </summary>
+    public class ProductDbContext : DbContext
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Cost { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the ProductDbContext class
+        /// </summary>
+        /// <param name="options">The options to be used by the DbContext</param>
+        public ProductDbContext(DbContextOptions<ProductDbContext> options)
+            : base(options)
+        {
+        }
+        /// <summary>
+        /// Provides access to Product entities in the database
+        /// </summary>
+        public DbSet<Product> Products { get; set; }
     }
 }

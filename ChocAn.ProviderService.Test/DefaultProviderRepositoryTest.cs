@@ -180,8 +180,8 @@ namespace ChocAn.ProviderRepository.Test
             // Act
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Add"))
             {
-                var defaultProviderService = new DefaultProviderRepository(context);
-                var result = await defaultProviderService.AddAsync(provider);
+                var repository = new DefaultProviderRepository(context);
+                var result = await repository.AddAsync(provider);
             }
 
             // Assert
@@ -212,8 +212,8 @@ namespace ChocAn.ProviderRepository.Test
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Get"))
             {
                 // Act
-                var defaultProviderService = new DefaultProviderRepository(context);
-                var result = await defaultProviderService.GetAsync(VALID0_ID);
+                var repository = new DefaultProviderRepository(context);
+                var result = await repository.GetAsync(VALID0_ID);
 
                 // Assert
                 Assert.NotNull(result);
@@ -239,8 +239,8 @@ namespace ChocAn.ProviderRepository.Test
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("ValidateGetProviderAsyncNonExistentProvider"))
             {
                 // Act
-                var defaultProviderService = new DefaultProviderRepository(context);
-                var result = await defaultProviderService.GetAsync(NON_EXISTENT_PROVIDER_ID);
+                var repository = new DefaultProviderRepository(context);
+                var result = await repository.GetAsync(NON_EXISTENT_PROVIDER_ID);
 
                 // Assert
                 Assert.Null(result);
@@ -270,8 +270,8 @@ namespace ChocAn.ProviderRepository.Test
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Update"))
             {
                 // Act
-                var defaultProviderService = new DefaultProviderRepository(context);
-                var result = await defaultProviderService.UpdateAsync(providerChanges);
+                var repository = new DefaultProviderRepository(context);
+                var result = await repository.UpdateAsync(providerChanges);
 
                 // Assert
                 // Validate return value of function call
@@ -308,8 +308,8 @@ namespace ChocAn.ProviderRepository.Test
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Delete"))
             {
                 // Act
-                var defaultProviderService = new DefaultProviderRepository(context);
-                var result = await defaultProviderService.DeleteAsync(VALID0_ID);
+                var repository = new DefaultProviderRepository(context);
+                var result = await repository.DeleteAsync(VALID0_ID);
 
                 // Assert
                 Assert.NotNull(result);
@@ -341,10 +341,10 @@ namespace ChocAn.ProviderRepository.Test
             using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("GetAllProvidersAsync"))
             {
                 // Act
-                var defaultProviderService = new DefaultProviderRepository(context);
+                var repository = new DefaultProviderRepository(context);
 
                 // Assert
-                await foreach (Provider provider in defaultProviderService.GetAllAsync())
+                await foreach (Provider provider in repository.GetAllAsync())
                 {
                     if (VALID0_ID == provider.Id)
                     {

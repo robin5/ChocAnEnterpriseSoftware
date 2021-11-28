@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProviderServiceEditViewModel.cs
+// * File: Product.cs
 // *
-// * Description: ViewModel for the Edit action of the ProviderServiceController.
+// * Description: Defines an entity which describes a product or service given by a Provider
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,17 +30,17 @@
 // * 
 // **********************************************************************************
 
-using System.ComponentModel.DataAnnotations;
+using System;
 
-namespace ChocAn.DataCenterConsole.Models
+namespace ChocAn.ProductRepository
 {
-    public class ProviderServiceEditViewModel
+    /// <summary>
+    /// Represents a ChocAn product or service
+    /// </summary>
+    public class Product
     {
-        [Required]
         public int Id { get; set; }
-        [Required]
         public string Name { get; set; }
-        [Required]
         public decimal Cost { get; set; }
     }
 }

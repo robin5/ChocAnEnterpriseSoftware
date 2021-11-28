@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProviderService.cs
+// * File: DefaultProductRepository.cs
 // *
-// * Description: Defines an entity which describes a service given by a Provider
+// * Description: Provides access to Product items stored in a database context
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,17 +30,39 @@
 // * 
 // **********************************************************************************
 
-using System;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using ChocAn.Repository;
 
-namespace ChocAn.ProviderServiceRepository
+namespace ChocAn.ProductRepository
 {
     /// <summary>
-    /// Represents a ChocAn member
+    /// Implements repository pattern for Product entities
     /// </summary>
-    public class ProviderService
+    public class DefaultProductRepository : Repository<Product>
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Cost { get; set; }
+        /// <summary>
+        ///  Constructor for DefaultProductRepository
+        /// </summary>
+        /// <param name="context">DbContext of underlying database</param>
+        public DefaultProductRepository(ProductDbContext context)
+            : base(context)
+        {
+        }
+
+        override public async IAsyncEnumerable<Product> GetAllByNameAsync(string name)
+        {
+            var query = dbSet.Where<Product>(a => a.Name.Contains(name));
+            var enumerator = query.AsAsyncEnumerable<Product>().GetAsyncEnumerator();
+            Product entity;
+
+            await enumerator.MoveNextAsync();
+            while (null != (entity = enumerator.Current))
+            {
+                yield return entity;
+                await enumerator.MoveNextAsync();
+            }
+        }
     }
 }

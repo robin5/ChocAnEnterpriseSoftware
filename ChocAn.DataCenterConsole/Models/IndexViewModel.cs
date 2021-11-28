@@ -5,7 +5,7 @@
 // * File: IndexViewModel.cs
 // *
 // * Description: Generic ViewModel for the Index action of the Member, Provider, and
-// *     ProviderService controllers.
+// *     Product controllers.
 // *
 // **********************************************************************************
 // * Author: Robin Murray

@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: HomeIndexViewModel.cs
+// * File: ProductEditViewModel.cs
 // *
-// * Description: ViewModel for the Index action of the Home controller.
+// * Description: ViewModel for the Edit action of the ProductController.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,17 +30,17 @@
 // * 
 // **********************************************************************************
 
-using System.Collections.Generic;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProviderServiceRepository;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChocAn.DataCenterConsole.Models
 {
-    public class HomeIndexViewModel
+    public class ProductEditViewModel
     {
-        public IEnumerable<Member> Members { get; set; }
-        public IEnumerable<Provider> Providers { get; set; }
-        public IEnumerable<ProviderService> ProviderServices { get; set; }
+        [Required]
+        public int Id { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public decimal Cost { get; set; }
     }
 }

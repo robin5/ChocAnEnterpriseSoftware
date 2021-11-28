@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ChocAn.ProviderTerminal.Api.Resources
 {
-    public class ProviderServiceResource
+    public class ProductResource
     {
         public int Id { get; set; }
         public string Name { get; set; }

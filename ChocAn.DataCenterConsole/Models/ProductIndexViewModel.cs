@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProviderServiceCreateViewModel.cs
+// * File: ProductIndexViewModel.cs
 // *
-// * Description: ViewModel for the Create action of the ProviderServiceController.
+// * Description: ViewModel for the Index action of the ProductController.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +30,11 @@
 // * 
 // **********************************************************************************
 
+using ChocAn.ProductRepository;
+
 namespace ChocAn.DataCenterConsole.Models
 {
-    public class ProviderServiceCreateViewModel
+    public class ProductIndexViewModel : IndexViewModel<Product>
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Cost { get; set; }
     }
 }

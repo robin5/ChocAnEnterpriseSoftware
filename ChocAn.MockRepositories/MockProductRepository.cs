@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: MockProviderRepository.cs
+// * File: MockProductRepository.cs
 // *
-// * Description: Mocks the ProviderServiceService class
+// * Description: Mocks the ProductRepository class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -28,42 +28,42 @@
 // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // *   THE SOFTWARE.
 // * 
-// **********************************************************************************using System;
+// **********************************************************************************
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChocAn.Repository;
-using ChocAn.ProviderServiceRepository;
+using ChocAn.ProductRepository;
 
 namespace ChocAn.MockRepositories
 {
-    public class MockProviderServiceRepository : IRepository<ProviderService>
+    public class MockProductRepository : IRepository<Product>
     {
-        protected IDictionary<int, ProviderService> items = new Dictionary<int, ProviderService>();
+        protected IDictionary<int, Product> items = new Dictionary<int, Product>();
 
-        public Task<ProviderService> AddAsync(ProviderService item)
+        public Task<Product> AddAsync(Product item)
         {
             items.Add(item.Id, item);
             return Task.FromResult(item);
         }
 
-        public Task<ProviderService> DeleteAsync(object id)
+        public Task<Product> DeleteAsync(object id)
         {
-            ProviderService item = null;
+            Product item = null;
 
             if (items.TryGetValue((int)id, out item))
             {
                 items.Remove((int)id);
                 return Task.FromResult(item);
             }
-            return Task.FromResult((ProviderService)null);
+            return Task.FromResult((Product)null);
         }
 
-        public async IAsyncEnumerable<ProviderService> GetAllAsync()
+        public async IAsyncEnumerable<Product> GetAllAsync()
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
-            ProviderService item;
+            Product item;
 
             enumerator.MoveNext();
             while (null != (item = enumerator.Current.Value))
@@ -73,24 +73,24 @@ namespace ChocAn.MockRepositories
             }
         }
 
-        public Task<ProviderService> GetAsync(object id)
+        public Task<Product> GetAsync(object id)
         {
-            ProviderService item = null;
+            Product item = null;
 
             items.TryGetValue((int)id, out item);
             return Task.FromResult(item);
         }
 
-        public Task<ProviderService> UpdateAsync(ProviderService changes)
+        public Task<Product> UpdateAsync(Product changes)
         {
             items[changes.Id] = changes;
             return Task.FromResult(changes);
         }
 
-        public async IAsyncEnumerable<ProviderService> GetAllByNameAsync(string name)
+        public async IAsyncEnumerable<Product> GetAllByNameAsync(string name)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
-            ProviderService item;
+            Product item;
 
             enumerator.MoveNext();
             while (null != (item = enumerator.Current.Value))

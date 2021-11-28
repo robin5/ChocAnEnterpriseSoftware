@@ -5,7 +5,7 @@
     // *
     // * File: Details.cshtml
     // *
-    // * Description: Details view for ProviderServiceController
+    // * Description: Details view for ProductController
     // *
     // **********************************************************************************
     // * Author: Robin Murray
@@ -31,7 +31,7 @@
     // *
     // **********************************************************************************
 }
-@model ChocAn.DataCenterConsole.Models.ProviderServiceDetailsViewModel
+@model ChocAn.DataCenterConsole.Models.ProductDetailsViewModel
 @{
     ViewData["Title"] = "Service Details";
 }
@@ -51,7 +51,7 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                 <form method="post"
                       asp-area=""
-                      asp-controller="ProviderService"
+                      asp-controller="Product"
                       asp-action="Delete"
                       asp-route-id="@Model.Id">
                     <button type="submit" class="btn btn-danger">Confirm delete</button>
@@ -78,7 +78,7 @@
                 <hr>
                 <a class="card-link"
                    asp-area=""
-                   asp-controller="ProviderService"
+                   asp-controller="Product"
                    asp-action="Edit"
                    asp-route-id="@Model.Id">Edit</a>
                 <a href="#deleteModal" class="card-link" data-toggle="modal">Delete</a>

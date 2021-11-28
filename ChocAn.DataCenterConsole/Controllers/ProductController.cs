@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProviderServiceController.cs
+// * File: ProductController.cs
 // *
-// * Description: Implements the ProviderService controller for the DataCenterConsole app.
+// * Description: Implements the Product controller for the DataCenterConsole app.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -34,27 +34,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
-using ChocAn.ProviderServiceRepository;
+using ChocAn.ProductRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Repository;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
-    public class ProviderServiceController : Controller
+    public class ProductController : Controller
     {
-        private readonly ILogger<ProviderServiceController> logger;
-        private readonly IRepository<ProviderService> repository;
+        private readonly ILogger<ProductController> logger;
+        private readonly IRepository<Product> repository;
         private readonly IMapper mapper;
 
-        private readonly IIndexAction<ProviderService> indexAction;
-        private readonly IDetailsAction<ProviderService> detailsAction;
-        private readonly ICreateAction<ProviderService, ProviderServiceCreateViewModel> createAction;
-        private readonly IEditAction<ProviderService, ProviderServiceEditViewModel> editAction;
-        private readonly IDeleteAction<ProviderService> deleteAction;
+        private readonly IIndexAction<Product> indexAction;
+        private readonly IDetailsAction<Product> detailsAction;
+        private readonly ICreateAction<Product, ProductCreateViewModel> createAction;
+        private readonly IEditAction<Product, ProductEditViewModel> editAction;
+        private readonly IDeleteAction<Product> deleteAction;
 
         /// <summary>
-        /// Constructor for ProviderServiceController
+        /// Constructor for ProductController
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="repository"></param>
@@ -64,15 +64,15 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="createAction"></param>
         /// <param name="editAction"></param>
         /// <param name="deleteAction"></param>
-        public ProviderServiceController(
-            ILogger<ProviderServiceController> logger,
-            IRepository<ProviderService> repository,
+        public ProductController(
+            ILogger<ProductController> logger,
+            IRepository<Product> repository,
             IMapper mapper,
-            IIndexAction<ProviderService> indexAction,
-            IDetailsAction<ProviderService> detailsAction,
-            ICreateAction<ProviderService, ProviderServiceCreateViewModel> createAction,
-            IEditAction<ProviderService, ProviderServiceEditViewModel> editAction,
-            IDeleteAction<ProviderService> deleteAction)
+            IIndexAction<Product> indexAction,
+            IDetailsAction<Product> detailsAction,
+            ICreateAction<Product, ProductCreateViewModel> createAction,
+            IEditAction<Product, ProductEditViewModel> editAction,
+            IDeleteAction<Product> deleteAction)
         {
             this.logger = logger;
             this.repository = repository;
@@ -86,7 +86,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         }
 
         /// <summary>
-        /// HttpGet endpoint for providerService/
+        /// HttpGet endpoint for product/
         /// </summary>
         /// <returns>Index view</returns>
         [HttpGet]
@@ -98,9 +98,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         }
 
         /// <summary>
-        /// HttpGet endpoint for providerService/details/{id}
+        /// HttpGet endpoint for product/details/{id}
         /// </summary>
-        /// <param name="id">ID of providerService</param>
+        /// <param name="id">ID of product</param>
         /// <returns>Details view</returns>
         [HttpGet]
         public async Task<IActionResult> DetailsAsync(int id)
@@ -112,20 +112,20 @@ namespace ChocAn.DataCenterConsole.Controllers
         }
 
         /// <summary>
-        /// HttpGet endpoint for providerService/create
+        /// HttpGet endpoint for product/create
         /// </summary>
         /// <returns>Create view</returns>
         [HttpGet]
         public ActionResult Create() => View();
 
         /// <summary>
-        /// HttpPost endpoint for providerService/create/{form-data}
+        /// HttpPost endpoint for product/create/{form-data}
         /// </summary>
         /// <param name="viewModel">Create form data</param>
         /// <returns>Create view or redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(ProviderServiceCreateViewModel viewModel)
+        public async Task<IActionResult> CreateAsync(ProductCreateViewModel viewModel)
         {
             createAction.Controller = this;
             createAction.Repository = repository;
@@ -134,9 +134,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         }
 
         /// <summary>
-        /// HttpGet endpoint for providerService/edit/{id}
+        /// HttpGet endpoint for product/edit/{id}
         /// </summary>
-        /// <param name="id">ID of providerService</param>
+        /// <param name="id">ID of product</param>
         /// <returns>Edit view</returns>
         [HttpGet]
         public async Task<IActionResult> EditAsync(int id)
@@ -148,13 +148,13 @@ namespace ChocAn.DataCenterConsole.Controllers
         }
 
         /// <summary>
-        /// HttpPost endpoint for providerService/edit/{form-data}
+        /// HttpPost endpoint for product/edit/{form-data}
         /// </summary>
         /// <param name="viewModel">Edited form data</param>
         /// <returns>Edit view or redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(ProviderServiceEditViewModel viewModel)
+        public async Task<IActionResult> EditAsync(ProductEditViewModel viewModel)
         {
             editAction.Controller = this;
             editAction.Repository = repository;
@@ -163,9 +163,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         }
 
         /// <summary>
-        /// HttpPost endpoint for providerService/delete/{id}
+        /// HttpPost endpoint for product/delete/{id}
         /// </summary>
-        /// <param name="id">ID of providerService</param>
+        /// <param name="id">ID of product</param>
         /// <returns>Redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]

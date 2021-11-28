@@ -39,7 +39,7 @@ using ChocAn.ProviderTerminal.Api.Controllers;
 using ChocAn.ProviderTerminal.Api.Resources;
 using ChocAn.ProviderRepository;
 using ChocAn.MemberRepository;
-using ChocAn.ProviderServiceRepository;
+using ChocAn.ProductRepository;
 using ChocAn.TransactionRepository;
 using ChocAn.MockRepositories;
 
@@ -53,9 +53,9 @@ namespace ChocAn.ProviderTerminal.Api.Test
         private readonly int MEMBER_ID = 999999998;
         private const string MEMBER_STATUS_ACTIVE = "active";
 
-        private readonly int PROVIDER_SERVICE_ID = 999999;
-        private const string PROVIDER_SERVICE_NAME = "Dietician";
-        private const decimal PROVIDER_SERVICE_COST = 123.45M;
+        private readonly int PRODUCT_ID = 999999;
+        private const string PRODUCT_NAME = "Dietician";
+        private const decimal PRODUCT_COST = 123.45M;
 
         private readonly DateTime TRANSACTION_SERVICE_DATE = DateTime.Now;
         private const string TRANSACTION_SERVICE_COMMENT = "1234567890";
@@ -104,15 +104,15 @@ namespace ChocAn.ProviderTerminal.Api.Test
         public async Task ValidateTerminalProvider_ExistingProvider()
         {
             // Arrange
-            var providerService = new MockProviderRepository();
+            var Product = new MockProviderRepository();
 
-            await providerService.AddAsync(new Provider
+            await Product.AddAsync(new Provider
             {
                 Id = PROVIDER_ID
             });
 
             // Act
-            var controller = new TerminalController(null, null, providerService, null, null);
+            var controller = new TerminalController(null, null, Product, null, null);
             var result = await controller.Provider(PROVIDER_ID);
 
             // Assert
@@ -126,10 +126,10 @@ namespace ChocAn.ProviderTerminal.Api.Test
         public async Task ValidateTerminalProvider_NonexistingProvider()
         {
             // Arrange
-            var providerService = new MockProviderRepository();
+            var Product = new MockProviderRepository();
 
             // Act
-            var controller = new TerminalController(null, null, providerService, null, null);
+            var controller = new TerminalController(null, null, Product, null, null);
             var result = await controller.Provider(PROVIDER_ID);
 
             // Assert
@@ -137,40 +137,40 @@ namespace ChocAn.ProviderTerminal.Api.Test
         }
 
         [Fact]
-        public async Task ValidateTerminalProviderService_ExistingProviderService()
+        public async Task ValidateTerminalProduct_ExistingProduct()
         {
             // Arrange
-            var providerServiceRepository = new MockProviderServiceRepository();
+            var ProductRepository = new MockProductRepository();
 
-            await providerServiceRepository.AddAsync(new ProviderService
+            await ProductRepository.AddAsync(new Product
             {
-                Id = PROVIDER_SERVICE_ID,
-                Name = PROVIDER_SERVICE_NAME,
-                Cost = PROVIDER_SERVICE_COST
+                Id = PRODUCT_ID,
+                Name = PRODUCT_NAME,
+                Cost = PRODUCT_COST
             });
 
             // Act
-            var controller = new TerminalController(null, null, null, providerServiceRepository, null);
-            var result = await controller.ProviderService(PROVIDER_SERVICE_ID);
+            var controller = new TerminalController(null, null, null, ProductRepository, null);
+            var result = await controller.Product(PRODUCT_ID);
 
             // Assert
 
             var objectResult = Assert.IsType<OkObjectResult>(result);
-            var resource = Assert.IsType<ProviderServiceResource>(objectResult.Value);
-            Assert.Equal(PROVIDER_SERVICE_ID, resource.Id);
-            Assert.Equal(PROVIDER_SERVICE_NAME, resource.Name);
-            Assert.Equal(PROVIDER_SERVICE_COST, resource.Cost);
+            var resource = Assert.IsType<ProductResource>(objectResult.Value);
+            Assert.Equal(PRODUCT_ID, resource.Id);
+            Assert.Equal(PRODUCT_NAME, resource.Name);
+            Assert.Equal(PRODUCT_COST, resource.Cost);
         }
 
         [Fact]
-        public async Task ValidateTerminalProviderService_NonexistingProviderService()
+        public async Task ValidateTerminalProduct_NonexistingProduct()
         {
             // Arrange
-            var providerServiceService = new MockProviderServiceRepository();
+            var ProductService = new MockProductRepository();
 
             // Act
-            var controller = new TerminalController(null, null, null, providerServiceService, null);
-            var result = await controller.ProviderService(PROVIDER_SERVICE_ID);
+            var controller = new TerminalController(null, null, null, ProductService, null);
+            var result = await controller.Product(PRODUCT_ID);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -180,9 +180,9 @@ namespace ChocAn.ProviderTerminal.Api.Test
         public async Task ValidateTransaction_ExistingProviderAndExistingMember()
         {
             // Arrange
-            // Init mocked ProviderService
-            var providerService = new MockProviderRepository();
-            await providerService.AddAsync(new Provider
+            // Init mocked Product
+            var Product = new MockProviderRepository();
+            await Product.AddAsync(new Provider
             {
                 Id = PROVIDER_ID,
             });
@@ -195,23 +195,23 @@ namespace ChocAn.ProviderTerminal.Api.Test
                 Status = MEMBER_STATUS_ACTIVE
             });
 
-            // Init mocked ProviderServiceService
-            var providerServiceService = new MockProviderServiceRepository();
-            await providerServiceService.AddAsync(new ProviderService
+            // Init mocked ProductService
+            var ProductService = new MockProductRepository();
+            await ProductService.AddAsync(new Product
             {
-                Id = PROVIDER_SERVICE_ID,
-                Name = PROVIDER_SERVICE_NAME,
-                Cost = PROVIDER_SERVICE_COST
+                Id = PRODUCT_ID,
+                Name = PRODUCT_NAME,
+                Cost = PRODUCT_COST
             });
 
-            // Init mocked ProviderService
+            // Init mocked Product
             var transactionService = new MockTransactionRepository();
 
             var terminalTransaction = new TransactionResource
             {
                 MemberId = MEMBER_ID,
                 ProviderId = PROVIDER_ID,
-                ServiceId = PROVIDER_SERVICE_ID,
+                ServiceId = PRODUCT_ID,
                 ServiceDate = TRANSACTION_SERVICE_DATE,
                 ServiceComment = TRANSACTION_SERVICE_COMMENT
             };
@@ -220,8 +220,8 @@ namespace ChocAn.ProviderTerminal.Api.Test
             // Instantiate controller
             var controller = new TerminalController(null,
                 memberService,
-                providerService, 
-                providerServiceService,
+                Product, 
+                ProductService,
                 transactionService);
 
             // Call controller
@@ -248,7 +248,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             Assert.Equal(MEMBER_ID, transaction.MemberId);
             Assert.Equal(PROVIDER_ID, transaction.ProviderId);
-            Assert.Equal(PROVIDER_SERVICE_ID, transaction.ServiceId);
+            Assert.Equal(PRODUCT_ID, transaction.ServiceId);
             Assert.Equal(TRANSACTION_SERVICE_DATE, transaction.ServiceDate);
             Assert.Equal(TRANSACTION_SERVICE_COMMENT, transaction.ServiceComment);
         }

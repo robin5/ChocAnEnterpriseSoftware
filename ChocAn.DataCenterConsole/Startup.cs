@@ -38,10 +38,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.MemberRepository;
 using ChocAn.ProviderRepository;
-using ChocAn.ProviderServiceRepository;
+using ChocAn.ProductRepository;
 using ChocAn.DataCenterConsole.Infrastructure;
 using ChocAn.DataCenterConsole.Actions;
-using Microsoft.AspNetCore.Mvc;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.Repository;
 
@@ -65,7 +64,7 @@ namespace ChocAn.DataCenterConsole
             services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("MemberDbConnection")));
             
-            services.AddDbContextPool<ProviderServiceDbContext>(options => options.UseSqlServer(
+            services.AddDbContextPool<ProductDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("MemberDbConnection")));
 
             services.AddControllersWithViews();
@@ -84,17 +83,17 @@ namespace ChocAn.DataCenterConsole
             services.AddTransient<IEditAction<Provider, ProviderEditViewModel>, EditAction<Provider, ProviderEditViewModel>>();
             services.AddTransient<IDeleteAction<Provider>, DeleteAction<Provider>>();
 
-            // ProviderServiceController actions
-            services.AddTransient<IIndexAction<ProviderService>, IndexAction<ProviderService, ProviderServiceIndexViewModel>>();
-            services.AddTransient<IDetailsAction<ProviderService>, DetailsAction<ProviderService, ProviderServiceDetailsViewModel>>();
-            services.AddTransient<ICreateAction<ProviderService, ProviderServiceCreateViewModel>, CreateAction<ProviderService, ProviderServiceCreateViewModel>>();
-            services.AddTransient<IEditAction<ProviderService, ProviderServiceEditViewModel>, EditAction<ProviderService, ProviderServiceEditViewModel>>();
-            services.AddTransient<IDeleteAction<ProviderService>, DeleteAction<ProviderService>>();
+            // ProductController actions
+            services.AddTransient<IIndexAction<Product>, IndexAction<Product, ProductIndexViewModel>>();
+            services.AddTransient<IDetailsAction<Product>, DetailsAction<Product, ProductDetailsViewModel>>();
+            services.AddTransient<ICreateAction<Product, ProductCreateViewModel>, CreateAction<Product, ProductCreateViewModel>>();
+            services.AddTransient<IEditAction<Product, ProductEditViewModel>, EditAction<Product, ProductEditViewModel>>();
+            services.AddTransient<IDeleteAction<Product>, DeleteAction<Product>>();
 
             // Repositories
             services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
             services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
-            services.AddScoped<IRepository<ProviderService>, DefaultProviderServiceRepository>();
+            services.AddScoped<IRepository<Product>, DefaultProductRepository>();
             services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
         }
 

@@ -4,7 +4,7 @@
 // *
 // * File: MockProviderRepository.cs
 // *
-// * Description: Mocks the ProviderService class
+// * Description: Mocks the ProviderRepository class
 // *
 // **********************************************************************************
 // * Author: Robin Murray
