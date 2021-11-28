@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderTerminal.Api", "ChocAn.ProviderTerminal.API\ChocAn.ProviderTerminal.Api.csproj", "{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MockProviderTerminal", "ChocAn.MockProviderTerminal\ChocAn.MockProviderTerminal.csproj", "{79E0E71B-84EA-438C-824A-5C5226A65761}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderTerminal.Api.Test", "ChocAn.ProviderTerminal.Api.Test\ChocAn.ProviderTerminal.Api.Test.csproj", "{4817A60C-AFDE-4FD1-A0E9-716374D8000B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MockRepositories", "ChocAn.MockRepositories\ChocAn.MockRepositories.csproj", "{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}"
 EndProject
@@ -31,24 +27,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionRepositor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderRepository", "ChocAn.ProviderRepository\ChocAn.ProviderRepository.csproj", "{818D6AE4-EAEA-4FE3-AEE9-D1F18C2C8254}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalService", "ChocAn.TerminalService\ChocAn.TerminalService.csproj", "{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalService.Test", "ChocAn.TerminalService.Test\ChocAn.TerminalService.Test.csproj", "{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59D00469-3CAE-4DC1-8C6F-70A22E3B2E12}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79E0E71B-84EA-438C-824A-5C5226A65761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79E0E71B-84EA-438C-824A-5C5226A65761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79E0E71B-84EA-438C-824A-5C5226A65761}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79E0E71B-84EA-438C-824A-5C5226A65761}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4817A60C-AFDE-4FD1-A0E9-716374D8000B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4817A60C-AFDE-4FD1-A0E9-716374D8000B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4817A60C-AFDE-4FD1-A0E9-716374D8000B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4817A60C-AFDE-4FD1-A0E9-716374D8000B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D698B92A-44C0-4DBE-A9CA-A8D3BEED3DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,6 +85,14 @@ Global
 		{818D6AE4-EAEA-4FE3-AEE9-D1F18C2C8254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{818D6AE4-EAEA-4FE3-AEE9-D1F18C2C8254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{818D6AE4-EAEA-4FE3-AEE9-D1F18C2C8254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

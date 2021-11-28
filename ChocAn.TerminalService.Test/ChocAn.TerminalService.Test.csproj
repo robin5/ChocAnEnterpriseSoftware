@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChocAn.MockRepositories\ChocAn.MockRepositories.csproj" />
-    <ProjectReference Include="..\ChocAn.ProviderTerminal.API\ChocAn.ProviderTerminal.Api.csproj" />
+    <ProjectReference Include="..\ChocAn.TerminalService\ChocAn.TerminalService.csproj" />
   </ItemGroup>
 
 </Project>
