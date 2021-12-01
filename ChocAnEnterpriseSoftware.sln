@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalService", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalService.Test", "ChocAn.TerminalService.Test\ChocAn.TerminalService.Test.csproj", "{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.MemberService", "ChocAn.MemberService\ChocAn.MemberService.csproj", "{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
