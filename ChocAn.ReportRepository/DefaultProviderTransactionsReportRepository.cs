@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ITransactionRepository.cs
+// * File: DefaultProviderTransactionsReportRepository.cs
 // *
-// * Description: Defines an interface for storing Transaction objects in a database
+// * Description: Provides access to ProviderTransactionsReport entities stored in a database context
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,33 +30,22 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ChocAn.Repository;
 
-namespace ChocAn.TransactionRepository
+namespace ChocAn.ReportRepository
 {
-    public class MemberReportData
-    {
-
-    }
-    public class ProviderReportData
-    {
-
-    }
-    public class AccountsPayableSummaryReportData
-    {
-
-    }
     /// <summary>
-    /// Defines repository pattern for Transaction entities
+    /// Implements repository pattern for ProviderTransactionsReport entities
     /// </summary>
-    public interface ITransactionRepository : IRepository<Transaction>
+    public class DefaultProviderTransactionsReportRepository : Repository<ProviderTransactionsReport>, IReportRepository<ProviderTransactionsReport>
     {
-        public IAsyncEnumerable<Transaction> GetMemberTransactionsAsync(int memberId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetProviderTransactionsAsync(int providerId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetAccountsPayableTransactionsAsync(DateTime startDate, DateTime endDate);
+        /// <summary>
+        ///  Constructor for DefaultReportRepository
+        /// </summary>
+        /// <param name="context">DbContext of underlying database</param>
+        public DefaultProviderTransactionsReportRepository(ProviderTransactionsReportDbContext context)
+            : base(context)
+        {
+        }
     }
 }

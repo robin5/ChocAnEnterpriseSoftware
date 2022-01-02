@@ -44,6 +44,7 @@ namespace ChocAn.TransactionRepository
         public int ProviderId { get; set; }
         public int MemberId { get; set; }
         public int ServiceId { get; set; }
+        public decimal ProductCost { get; set; }
         public DateTime ServiceDate { get; set; }
         public string ServiceComment { get; set; }
         public DateTime Created { get; set; }

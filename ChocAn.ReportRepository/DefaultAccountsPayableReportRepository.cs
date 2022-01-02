@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ITransactionRepository.cs
+// * File: DefaultAccountsPayableReportRepository.cs
 // *
-// * Description: Defines an interface for storing Transaction objects in a database
+// * Description: Provides access to AccountsPayableReport entities stored in a database context
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,33 +30,22 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ChocAn.Repository;
 
-namespace ChocAn.TransactionRepository
+namespace ChocAn.ReportRepository
 {
-    public class MemberReportData
-    {
-
-    }
-    public class ProviderReportData
-    {
-
-    }
-    public class AccountsPayableSummaryReportData
-    {
-
-    }
     /// <summary>
-    /// Defines repository pattern for Transaction entities
+    /// Implements repository pattern for AccountsPayableReport entities
     /// </summary>
-    public interface ITransactionRepository : IRepository<Transaction>
+    public class DefaultAccountsPayableReportRepository : Repository<AccountsPayableReport>, IReportRepository<AccountsPayableReport>
     {
-        public IAsyncEnumerable<Transaction> GetMemberTransactionsAsync(int memberId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetProviderTransactionsAsync(int providerId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetAccountsPayableTransactionsAsync(DateTime startDate, DateTime endDate);
+        /// <summary>
+        ///  Constructor for DefaultReportRepository
+        /// </summary>
+        /// <param name="context">DbContext of underlying database</param>
+        public DefaultAccountsPayableReportRepository(AccountsPayableReportDbContext context)
+            : base(context)
+        {
+        }
     }
 }

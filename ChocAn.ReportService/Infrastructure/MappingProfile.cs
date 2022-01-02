@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ITransactionRepository.cs
+// * File: MappingProfile.cs
 // *
-// * Description: Defines an interface for storing Transaction objects in a database
+// * Description: Defines Model to Resource mappings.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,33 +30,23 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ChocAn.Repository;
+using AutoMapper;
+using ChocAn.ReportRepository;
+using ChocAn.ReportService.Resources;
 
-namespace ChocAn.TransactionRepository
+namespace ChocAn.ReportService.Infrastructure
 {
-    public class MemberReportData
+    public class MappingProfile : Profile
     {
+        public MappingProfile()
+        {
+            CreateMap<MemberTransactionsReport, MemberTransactionsReportResource>();
+            CreateMap<ProviderTransactionsReport, ProviderTransactionsReportResource>();
+            CreateMap<AccountsPayableReport, AccountsPayableReportResource>();
 
-    }
-    public class ProviderReportData
-    {
-
-    }
-    public class AccountsPayableSummaryReportData
-    {
-
-    }
-    /// <summary>
-    /// Defines repository pattern for Transaction entities
-    /// </summary>
-    public interface ITransactionRepository : IRepository<Transaction>
-    {
-        public IAsyncEnumerable<Transaction> GetMemberTransactionsAsync(int memberId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetProviderTransactionsAsync(int providerId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetAccountsPayableTransactionsAsync(DateTime startDate, DateTime endDate);
+            CreateMap<MemberTransactionsReportResource, MemberTransactionsReport>();
+            CreateMap<ProviderTransactionsReportResource, ProviderTransactionsReport>();
+            CreateMap<AccountsPayableReportResource, AccountsPayableReport>();
+        }
     }
 }

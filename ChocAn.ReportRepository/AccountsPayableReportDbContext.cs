@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ITransactionRepository.cs
+// * File: AccountsPayableReportDbContext.cs
 // *
-// * Description: Defines an interface for storing Transaction objects in a database
+// * Description: Defines a DbContext for AccountsPayableReport entities
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,33 +30,28 @@
 // * 
 // **********************************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ChocAn.Repository;
+using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.TransactionRepository
+namespace ChocAn.ReportRepository
 {
-    public class MemberReportData
-    {
-
-    }
-    public class ProviderReportData
-    {
-
-    }
-    public class AccountsPayableSummaryReportData
-    {
-
-    }
     /// <summary>
-    /// Defines repository pattern for Transaction entities
+    /// A ReportDbContext instance represents a session with the database and can be used to
+    /// query and save instances of Report entities. 
     /// </summary>
-    public interface ITransactionRepository : IRepository<Transaction>
+    public class AccountsPayableReportDbContext : DbContext
     {
-        public IAsyncEnumerable<Transaction> GetMemberTransactionsAsync(int memberId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetProviderTransactionsAsync(int providerId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetAccountsPayableTransactionsAsync(DateTime startDate, DateTime endDate);
+        /// <summary>
+        /// Initializes a new instance of the ReportDbContext class
+        /// </summary>
+        /// <param name="options">The options to be used by the DbContext</param>
+        public AccountsPayableReportDbContext(DbContextOptions<AccountsPayableReportDbContext> options)
+            : base(options)
+        {
+        }
+
+        /// <summary>
+        /// Provides access to Report entities in the database
+        /// </summary>
+        public DbSet<AccountsPayableReport> AccountsPayableReports { get; set; }
     }
 }

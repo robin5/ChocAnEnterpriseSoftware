@@ -31,6 +31,8 @@
 // **********************************************************************************using System;
 
 using ChocAn.TransactionRepository;
+using System;
+using System.Collections.Generic;
 
 namespace ChocAn.MockRepositories
 {
@@ -38,5 +40,19 @@ namespace ChocAn.MockRepositories
         MockRepository<Transaction>,
         ITransactionRepository
     {
+        IAsyncEnumerable<Transaction> ITransactionRepository.GetAccountsPayableTransactionsAsync(DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        IAsyncEnumerable<Transaction> ITransactionRepository.GetMemberTransactionsAsync(int memberId, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        IAsyncEnumerable<Transaction> ITransactionRepository.GetProviderTransactionsAsync(int providerId, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

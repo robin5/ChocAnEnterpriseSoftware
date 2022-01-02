@@ -41,7 +41,6 @@ namespace ChocAn.MockRepositories
     public class MockProviderRepository : IRepository<Provider>
     {
         protected IDictionary<int, Provider> items = new Dictionary<int, Provider>();
-        int key = 0;
 
         public Task<Provider> AddAsync(Provider item)
         {

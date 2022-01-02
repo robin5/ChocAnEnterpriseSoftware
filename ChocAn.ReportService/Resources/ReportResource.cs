@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ITransactionRepository.cs
+// * File: ReportResource.cs
 // *
-// * Description: Defines an interface for storing Transaction objects in a database
+// * Description: Defines an resource which describes a ChocAn report
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -31,32 +31,29 @@
 // **********************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ChocAn.Repository;
+using System.ComponentModel.DataAnnotations;
 
-namespace ChocAn.TransactionRepository
+namespace ChocAn.ReportService.Resources
 {
-    public class MemberReportData
+    public class ReportResource
     {
-
+        [MaxLength(25)]
+        public string Name { get; set; }
+        public Guid OwnerId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int Status { get; set; }
+        public DateTime Created { get; set; }
     }
-    public class ProviderReportData
+    public class MemberTransactionsReportResource : ReportResource
     {
-
+        public int MemberId { get; set; }
     }
-    public class AccountsPayableSummaryReportData
+    public class ProviderTransactionsReportResource : ReportResource
     {
-
+        public int ProviderId { get; set; }
     }
-    /// <summary>
-    /// Defines repository pattern for Transaction entities
-    /// </summary>
-    public interface ITransactionRepository : IRepository<Transaction>
+    public class AccountsPayableReportResource : ReportResource
     {
-        public IAsyncEnumerable<Transaction> GetMemberTransactionsAsync(int memberId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetProviderTransactionsAsync(int providerId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetAccountsPayableTransactionsAsync(DateTime startDate, DateTime endDate);
     }
 }

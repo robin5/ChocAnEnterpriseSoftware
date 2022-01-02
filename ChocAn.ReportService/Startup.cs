@@ -1,10 +1,10 @@
-  // **********************************************************************************
+// **********************************************************************************
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
 // * File: Startup.cs
 // *
-// * Description: Application startup class
+// * Description: Application startup class for ChocAn.ReportService project.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,23 +30,26 @@
 // * 
 // **********************************************************************************using System;
 
+using ChocAn.ReportRepository;
+using ChocAn.TransactionRepository;
+using ChocAn.ReportService.Infrastructure;
+using ChocAn.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProductRepository;
-using ChocAn.TransactionRepository;
-using Microsoft.EntityFrameworkCore;
-using ChocAn.ProviderTerminal.Api.Filters;
-using ChocAn.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ChocAn.ProviderTerminal.Api
+namespace ChocAn.ReportService
 {
     public class Startup
     {
@@ -60,57 +63,30 @@ namespace ChocAn.ProviderTerminal.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-            {
-                options.Filters.Add<RequireHttpsOrCloseAttribute>();
-            });
-            // Add database contexts and services
-            services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<MemberTransactionsReportDbContext>(options => options.UseSqlServer(
+                Configuration.GetConnectionString("MemberTransactionsReportConnection")));
 
-            services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<ProviderTransactionsReportDbContext>(options => options.UseSqlServer(
+                Configuration.GetConnectionString("ProviderTransactionsReportConnection")));
 
-            services.AddDbContextPool<ProductDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<AccountsPayableReportDbContext>(options => options.UseSqlServer(
+                Configuration.GetConnectionString("AccountsPayableReportConnection")));
 
             services.AddDbContextPool<TransactionDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+                Configuration.GetConnectionString("TransactionsConnection")));
 
-            services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
-            services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
-            services.AddScoped<IRepository<Product>, DefaultProductRepository>();
             services.AddScoped<ITransactionRepository, DefaultTransactionRepository>();
-
-            // Add API versioning services
-            services.AddApiVersioning(options =>
-            {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.ApiVersionReader = new MediaTypeApiVersionReader();
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ReportApiVersions = true;
-                options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
-            });
-
-            // Add Cross site
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowTesting", policy => policy
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
-                options.AddPolicy("AllowProviderTerminal", policy => policy
-                .WithOrigins("https://localhost:44380")
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-            });
+            services.AddScoped<IReportRepository<MemberTransactionsReport>, DefaultMemberTransactionsReportRepository>();
+            services.AddScoped<IReportRepository<ProviderTransactionsReport>, DefaultProviderTransactionsReportRepository>();
+            services.AddScoped<IReportRepository<AccountsPayableReport>, DefaultAccountsPayableReportRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChocAn.ProviderTerminal.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChocAn.ReportService", Version = "v1" });
             });
+
+            services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,15 +96,10 @@ namespace ChocAn.ProviderTerminal.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChocAn.ProviderTerminal.API v1"));
-                app.UseCors("AllowTesting");
-            }
-            else
-            {
-                app.UseHsts();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChocAn.ReportService v1"));
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

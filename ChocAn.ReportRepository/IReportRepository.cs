@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ITransactionRepository.cs
+// * File: IReportRepository.cs
 // *
-// * Description: Defines an interface for storing Transaction objects in a database
+// * Description: Defines an interface for Report objects in a database
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -31,32 +31,15 @@
 // **********************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ChocAn.Repository;
 
-namespace ChocAn.TransactionRepository
+namespace ChocAn.ReportRepository
 {
-    public class MemberReportData
-    {
-
-    }
-    public class ProviderReportData
-    {
-
-    }
-    public class AccountsPayableSummaryReportData
-    {
-
-    }
     /// <summary>
-    /// Defines repository pattern for Transaction entities
+    /// Defines repository pattern for Report entities
     /// </summary>
-    public interface ITransactionRepository : IRepository<Transaction>
+    public interface IReportRepository<T> : IRepository<T> where T : Report
     {
-        public IAsyncEnumerable<Transaction> GetMemberTransactionsAsync(int memberId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetProviderTransactionsAsync(int providerId, DateTime startDate, DateTime endDate);
-        public IAsyncEnumerable<Transaction> GetAccountsPayableTransactionsAsync(DateTime startDate, DateTime endDate);
     }
 }
