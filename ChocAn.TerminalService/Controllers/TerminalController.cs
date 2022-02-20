@@ -50,19 +50,19 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         private readonly ILogger<TerminalController> logger;
         private readonly IRepository<Member> memberRepository;
         private readonly IRepository<Provider> providerRepository;
-        private readonly IRepository<Product> ProductRepository;
+        private readonly IRepository<Product> productRepository;
         private readonly ITransactionRepository transactionRepository;
         public TerminalController(
             ILogger<TerminalController> logger,
             IRepository<Member> memberRepository,
             IRepository<Provider> providerRepository,
-            IRepository<Product> ProductRepsoitory,
+            IRepository<Product> productRepsoitory,
             ITransactionRepository transactionRepository)
         {
             this.logger = logger;
             this.memberRepository = memberRepository;
             this.providerRepository = providerRepository;
-            this.ProductRepository = ProductRepsoitory;
+            this.productRepository = productRepsoitory;
             this.transactionRepository = transactionRepository;
         }
 
@@ -123,17 +123,17 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> Product(int id)
         {
-            var Product = await ProductRepository.GetAsync(id);
-            if (null == Product)
+            var product = await productRepository.GetAsync(id);
+            if (null == product)
             {
                 return NotFound();
             }
 
             return Ok(new ProductResource
             {
-                Id = Product.Id,
-                Name = Product.Name,
-                Cost = Product.Cost
+                Id = product.Id,
+                Name = product.Name,
+                Cost = product.Cost
             });
         }
 
@@ -145,9 +145,9 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         {
             var provider = await providerRepository.GetAsync(transactionResource.ProviderId);
             var member = await memberRepository.GetAsync(transactionResource.MemberId);
-            var Product = await ProductRepository.GetAsync(transactionResource.ServiceId);
+            var product = await productRepository.GetAsync(transactionResource.ServiceId);
 
-            if ((null == provider) || (null == member) || (null == Product))
+            if ((null == provider) || (null == member) || (null == product))
             {
                 return BadRequest();
             }
@@ -156,7 +156,7 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
             {
                 ProviderId = provider.Id,
                 MemberId = member.Id,
-                ServiceId = Product.Id,
+                ServiceId = product.Id,
                 ServiceDate = transactionResource.ServiceDate,
                 ServiceComment = transactionResource.ServiceComment
             };
