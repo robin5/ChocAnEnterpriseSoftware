@@ -3,6 +3,7 @@
 }
 
 <div class="container">
+
     <section>
         <p id="instructions">Enter provider number.</p>
         <form id="input-form" class="d-flex">
@@ -12,11 +13,34 @@
                    aria-label="Input" autofocus>
         </form>
     </section>
-    <section style="margin-top: 20px" id="data-display">
+
+    <section class="mt-4" id="data-display">
         <textarea id="json-responses" class="form-control me-2" rows="5"></textarea>
     </section>
+
+    <section class="mt-4" id="settings">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#settings-group" aria-expanded="false" aria-controls="collapseExample">
+            Settings
+        </button>
+        <div class="collapse mt-4" id="settings-group">
+            <div class="card card-body">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text" id="btnGroupAddon">API</div>
+                    </div>
+                    <input id="api-url"
+                           class="form-control me-2"
+                           type="text"
+                           placeholder="Input group example"
+                           aria-label="Input"
+                           value="https://localhost:44380/api/">
+                </div>
+            </div>
+        </div>
+    </section>
+
 </div>
 
 @section Scripts {
-    <script src="~/js/terminal.js" asp-append-version="true"></script>
+<script type="module" src="~/js/terminal.js" asp-append-version="true"></script>
 }

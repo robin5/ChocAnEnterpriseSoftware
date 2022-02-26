@@ -1,4 +1,40 @@
-﻿// Transaction states
+﻿// **********************************************************************************
+// * Copyright (c) 2022 Robin Murray
+// **********************************************************************************
+// *
+// * File: terminal.js
+// *
+// * Description: Implements the provider's terminal state machine
+// *
+// **********************************************************************************
+// * Author: Robin Murray
+// **********************************************************************************
+// *
+// * Granting License: The MIT License (MIT)
+// * 
+// *   Permission is hereby granted, free of charge, to any person obtaining a copy
+// *   of this software and associated documentation files (the "Software"), to deal
+// *   in the Software without restriction, including without limitation the rights
+// *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// *   copies of the Software, and to permit persons to whom the Software is
+// *   furnished to do so, subject to the following conditions:
+// *   The above copyright notice and this permission notice shall be included in
+// *   all copies or substantial portions of the Software.
+// *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// *   THE SOFTWARE.
+// * 
+// **********************************************************************************using System;
+
+import ChocAnApi from "./chocanapi.js";
+
+const api = new ChocAnApi();
+
+// Terminal states
 const STATE_INPUT_PROVIDER_ID = 0;
 const STATE_INPUT_MEMBER_ID = 1;
 const STATE_INPUT_SERVICE_DATE = 2;
@@ -20,27 +56,45 @@ let serviceComment;
 
 // Set first state
 let state = STATE_INPUT_PROVIDER_ID;
-let transactionTimeout;
+let dateEntryTimeout;
 
-// Once the page is loaded, immediately execute the following
+/// <summary>
+/// Initializes page by:
+/// - Adding eventlistener to input-form element for form submission
+/// - Adding eventlistener to api url setting element and setting  default value
+/// </summary>
 (function () {
 
     // Attach an event listener to handle input from the form
     document
         .getElementById('input-form')
         .addEventListener("submit", event => onSubmit(event));
+
+    // Attach an event listener for url setting and set value
+    const baseUrlElement = document.getElementById('api-url');
+    baseUrlElement.addEventListener("keyup", event => onApiUrlChange(event));
+    baseUrlElement.value = api.url;
+
 })();
 
 /// <summary>
-/// Submit event handler for input box
+/// Event handler for API URL setting
+/// </summary>
+function onApiUrlChange(event) {
+    api.url = document.getElementById('api-url').value;
+}
+
+/// <summary>
+/// Event handler for terminal entries.  This function executes the terminal's
+/// state machine state transitions.
 /// </summary>
 function onSubmit(event) {
 
     // Prevent default submit operation
     event.preventDefault();
 
-    // Get trimmed text from input box
-    let input = document.getElementById('input-element').value;
+    // Get trimmed text from terminal's input element
+    let input = document.getElementById('input-element').value || "";
     if (null != input)
         input = input.trim();
 
@@ -68,7 +122,7 @@ function onSubmit(event) {
             break;
 
         case STATE_INPUT_SERVICE_DATE:
-            StopTransactionTimeout();
+            ClearDateEntryTimeout();
             EnterServiceDate(input);
             break;
 
@@ -86,41 +140,61 @@ function onSubmit(event) {
             break;
 
         case STATE_WAIT_FOR_ENTER:
-            ResetStateForNextTransaction();
+            ResetToInputMemberIdState();
             break;
     }
 
-    // Clear input line for next input
+    // Clear the terminal's input element
     ClearInputline();
 }
 
+/// <summary>
+/// Clears the terminal's input element
+/// </summary>
 function ClearInputline() {
     document.getElementById('input-element').value = "";
 }
 
-function StartTransactionTimeout() {
-    transactionTimeout = setTimeout(HandleTransactionTimeout, 60000);
+/// <summary>
+/// Starts the timeout for entering the transaction's date
+/// </summary>
+function startDateEntryTimeout() {
+    dateEntryTimeout = setTimeout(HandleDateEntryTimeout, 60000);
 }
 
-function StopTransactionTimeout() {
-    clearTimeout(transactionTimeout);
+/// <summary>
+/// Clears the timeout for entering the transaction's date
+/// </summary>
+function ClearDateEntryTimeout() {
+    clearTimeout(dateEntryTimeout);
 }
 
-function HandleTransactionTimeout() {
-    ResetStateForNextTransaction();
+/// <summary>
+/// Handles the timeout event for entering the transaction date by clearing
+/// the input box and resetting the state machine to it's initial state
+/// </summary>
+function HandleDateEntryTimeout() {
+    ResetToInputMemberIdState();
     ClearInputline();
 }
 
+/// <summary>
+/// Fetches the provider's ID from the ChocAn API and delegates the response
+/// </summary>
 function FetchProviderId(id) {
 
-    let href = `https://localhost:44380/api/terminal/provider/${id}`;
-
-    fetch(href)
+    fetch(api.provider(id))
         .then(response => DecodeJsonResponse(response))
         .then(data => HandleProviderIdResponse(data))
         .catch(error => HandleError(error));
 }
 
+/// <summary>
+/// Processes the response from the api/terminal/provider/id endpoint.  If valid
+/// data is returned the provider's ID and name are recorded for the
+/// subsequent transaction and the state machine advances to the STATE_INPUT_MEMBER_ID
+/// state.  If provider was not found the state machine advances to the STATE_INPUT_PROVIDER_ID.
+/// </summary>
 function HandleProviderIdResponse(data) {
 
     DisplayJson(data);
@@ -135,16 +209,23 @@ function HandleProviderIdResponse(data) {
     }
 }
 
+/// <summary>
+/// Fetches the member's ID from the ChocAn API and delegates the response
+/// </summary>
 function FetchMemberId(id) {
 
-    let href = `https://localhost:44317/api/terminal/member/${id}`;
-
-    fetch(href)
+    fetch(api.member(id))
         .then(response => DecodeJsonResponse(response))
         .then(data => HandleMemberResponse(data))
         .catch(error => HandleError(error));
 }
 
+/// <summary>
+/// Processes the response from the api/terminal/member/id endpoint.  If the
+/// member is not active or not found it is displayed to the user and the 
+/// state machine advances to the STATE_WAIT_FOR_ENTER.  If the member is active
+/// the state machine advances to the STATE_INPUT_SERVICE_DATE.
+/// </summary>
 function HandleMemberResponse(data) {
 
     DisplayJson(data);
@@ -156,7 +237,7 @@ function HandleMemberResponse(data) {
             state = STATE_WAIT_FOR_ENTER;
         } else {
             DisplayInstructions("Enter service date: MM–DD–YYYY");
-            StartTransactionTimeout();
+            startDateEntryTimeout();
             state = STATE_INPUT_SERVICE_DATE;
         }
     } else {
@@ -165,6 +246,10 @@ function HandleMemberResponse(data) {
     }
 }
 
+/// <summary>
+/// Translates the input parameter into an ISO date for the subsequent 
+/// transaction, then advances the state machine to STATE_INPUT_SERVICE_CODE.
+/// </summary>
 function EnterServiceDate(input) {
 
     serviceDate = (new Date(input)).toISOString();
@@ -175,16 +260,23 @@ function EnterServiceDate(input) {
     state = STATE_INPUT_SERVICE_CODE;
 }
 
+/// <summary>
+/// Fetches the service's ID from the ChocAn API and delegates the response
+/// </summary>
 function FetchServiceCode(id) {
 
-    let href = `https://localhost:44317/api/terminal/service/${id}`;
-
-    fetch(href)
+    fetch(api.service(id))
         .then(response => DecodeJsonResponse(response))
         .then(data => HandelServiceCodeResponse(data))
         .catch(error => HandleError(error));
 }
 
+/// <summary>
+/// Processes the response from the api/terminal/service/id endpoint.  If valid
+/// data is returned the service's ID, name, and cost are recorded for the
+/// subsequent transaction and the state machine advances to the STATE_ACCEPT_OR_REJECT_SERVICE_CODE
+/// state.  If the service was not found the state machine advances to the STATE_INPUT_SERVICE_CODE.
+/// </summary>
 function HandelServiceCodeResponse(data) {
 
     DisplayJson(data);
@@ -201,6 +293,14 @@ function HandelServiceCodeResponse(data) {
     console.log(`Service code: ${serviceId}`);
 }
 
+/// <summary>
+/// Processes the yes or no answer from the STATE_ACCEPT_OR_REJECT_SERVICE_CODE state.
+/// if "yes" or "y" is entered (case insensitive) the state machine advances to the 
+/// STATE_ENTER_COMMENT_AND_SUBMIT_TRANSACTION state
+/// if "no" or "n" is entered (case insensitive) the state machine advances to the 
+/// STATE_INPUT_SERVICE_CODE state
+/// Any other answer is rejected and the state advances to STATE_ACCEPT_OR_REJECT_SERVICE_CODE
+/// </summary>
 function AcceptOrRejectServiceCode(text) {
 
     let answer = text.toLowerCase();
@@ -217,10 +317,16 @@ function AcceptOrRejectServiceCode(text) {
     }
 }
 
+/// <summary>
+/// Records service comment for later incorporation into service transaction
+/// </summary>
 function EnterServiceComment(text) {
     serviceComment = text;
 }
 
+/// <summary>
+/// Posts the transaction to the ChocAn transaction API
+/// </summary>
 function PostTransaction() {
 
     let transaction = {};
@@ -233,9 +339,7 @@ function PostTransaction() {
     console.log(`Post Transaction:`)
     console.log(transaction)
 
-    let href = "https://localhost:44317/api/terminal/transaction";
-
-    fetch(href, {
+    fetch(api.transaction, {
         method: "POST",
         headers: new Headers({ "content-type": "application/json" }),
         body: JSON.stringify(transaction)
@@ -245,6 +349,12 @@ function PostTransaction() {
         .catch(error => HandleError(error));
 }
 
+/// <summary>
+/// Processes the response from the api/terminal/transaction endpoint.  If the
+/// transaction was accepted the user is told so and the state advances to
+/// STATE_WAIT_FOR_ENTER.  If the transaction was not accepted the user is told 
+/// so and the state advances to STATE_WAIT_FOR_ENTER
+/// </summary>
 function HandleTransactionResponse(data) {
 
     DisplayJson(data);
@@ -258,18 +368,20 @@ function HandleTransactionResponse(data) {
     }
 }
 
-/*
-function DisplayServiceCost(data) {
-    DisplayInstructions(`Service cost $${serviceCost}. Press <strong>enter</strong> to continue.`);
-    state = STATE_WAIT_FOR_ENTER;
-}
-*/
-
-function ResetStateForNextTransaction() {
+/// <summary>
+/// Displays instructions to enter member's ID and then advances state machine to
+/// STATE_INPUT_MEMBER_ID
+/// </summary>
+function ResetToInputMemberIdState() {
     DisplayInstructions("Enter member number.");
     state = STATE_INPUT_MEMBER_ID;
 }
 
+/// <summary>
+/// 1) Appends JSON response to responses text box.  
+/// 2) If response status was OK(i.e. 200) then the JSON data is returned for 
+///    processing by the next handler.  Otherwise null is returned.
+/// </summary>
 function DecodeJsonResponse(response) {
 
     console.log(response.status);
@@ -281,26 +393,40 @@ function DecodeJsonResponse(response) {
     return null;
 }
 
+/// <summary>
+/// Displays instructions in the instructions element
+/// </summary>
 function DisplayInstructions(instructions) {
     document.getElementById('instructions').innerHTML = instructions;
 }
 
+/// <summary>
+/// Appends JSON responses to the JSON response textbox
+/// </summary>
 function DisplayResponseStatus(response) {
     document.getElementById('json-responses').innerHTML += `(${response.status})`;
 }
 
+/// <summary>
+/// Appends the stringified version of the JSON responses to the JSON response textbox
+/// </summary>
 function DisplayJson(json) {
     document.getElementById('json-responses').innerHTML += ` -- ${JSON.stringify(json)}\n`;
 }
 
+/// <summary>
+/// Logs error to the console
+/// </summary>
 function HandleError(error) {
     console.log(`error: ${error}`);
 }
 
+/// <summary>
+/// Logs response headers to the console
+/// </summary>
 function PrintHeader(response) {
     console.log(response.status);
     for (let [name, value] of response.headers) {
         console.log(`----${name}: ${value}\n`);
     }
 }
-

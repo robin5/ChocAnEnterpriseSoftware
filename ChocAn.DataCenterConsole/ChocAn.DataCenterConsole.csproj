@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChocAn.MemberRepository.Test\ChocAn.MemberRepository.Test.csproj" />
     <ProjectReference Include="..\ChocAn.MemberRepository\ChocAn.MemberRepository.csproj" />
     <ProjectReference Include="..\ChocAn.ProductRepository\ChocAn.ProductRepository.csproj" />
     <ProjectReference Include="..\ChocAn.ProviderRepository\ChocAn.ProviderRepository.csproj" />
