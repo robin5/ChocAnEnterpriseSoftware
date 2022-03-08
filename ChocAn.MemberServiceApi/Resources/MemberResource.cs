@@ -32,7 +32,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace ChocAn.MemberService.Resources
+namespace ChocAn.MemberServiceApi.Resources
 {
     /// <summary>
     /// Represents a resource designating a ChocAn member
@@ -41,24 +41,24 @@ namespace ChocAn.MemberService.Resources
     {
         [Required]
         [MaxLength(25)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         [Required]
         [MaxLength(256)]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         [Required]
         [MaxLength(25)]
-        public string StreetAddress { get; set; }
+        public string StreetAddress { get; set; } = string.Empty;
         [Required]
         [MaxLength(14)]
-        public string City { get; set; }
+        public string City { get; set; } = string.Empty;
         [Required]
         [MaxLength(2)]
-        public string State { get; set; }
+        public string State { get; set; } = string.Empty;
         [Required]
-        [Range(0,99999)]
+        [Range(0, 99999)]
         public int ZipCode { get; set; }
         [Required]
         [MaxLength(14)]
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
     }
 }

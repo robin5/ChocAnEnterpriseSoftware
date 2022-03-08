@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: MappingProfile.cs
+// * File: IMemberService.cs
 // *
-// * Description: Defines Model to Resource mappings.
+// * Description: Defines service interface for Members from the Member repository 
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,18 +30,12 @@
 // * 
 // **********************************************************************************
 
-using AutoMapper;
 using ChocAn.MemberRepository;
-using ChocAn.MemberService.Resources;
 
-namespace ChocAn.MemberService.Infrastructure
+namespace ChocAn.Services
 {
-    public class MappingProfile : Profile
+    public interface IMemberService
     {
-        public MappingProfile()
-        {
-            CreateMap<Member, MemberResource>();
-            CreateMap<MemberResource, Member>();
-        }
+        Task<(bool isSuccess, Member? member, string? errorMessage)> GetAsync(int id);
     }
 }

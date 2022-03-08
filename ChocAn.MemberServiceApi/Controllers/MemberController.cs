@@ -2,7 +2,7 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: MemberController.cs
+// * File: MembersController.cs
 // *
 // * Description: Implements the Member controller for the MemberService API.
 // *
@@ -37,11 +37,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChocAn.MemberRepository;
 using Microsoft.Extensions.Logging;
-using ChocAn.MemberService.Resources;
+using ChocAn.MemberServiceApi.Resources;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.MemberService.Controllers
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace ChocAn.MemberServiceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -72,7 +74,7 @@ namespace ChocAn.MemberService.Controllers
         {
             try
             {
-                List<Member> members = new List<Member>();
+                List<Member> members = new();
                 await foreach (Member member in memberRepository.GetAllAsync())
                 {
                     members.Add(member);
@@ -82,11 +84,10 @@ namespace ChocAn.MemberService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAllAsync), null);
+                logger.LogError(ex, nameof(GetAllAsync));
                 return Problem();
             }
         }
-
         /// <summary>
         /// Retrieves an individual member from the Member repository.
         /// </summary>
@@ -110,7 +111,7 @@ namespace ChocAn.MemberService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAsync), null);
+                logger.LogError(ex, nameof(GetAsync));
                 return Problem();
             }
         }
@@ -134,7 +135,7 @@ namespace ChocAn.MemberService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PostAsync), null);
+                logger.LogError(ex, nameof(PostAsync));
                 return Problem();
             }
         }
@@ -162,12 +163,12 @@ namespace ChocAn.MemberService.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                logger.LogError(ex, nameof(PutAsync), null);
+                logger.LogError(ex, nameof(PutAsync));
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PutAsync), null);
+                logger.LogError(ex, nameof(PutAsync));
                 return Problem();
             }
         }
@@ -194,7 +195,7 @@ namespace ChocAn.MemberService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(DeleteAsync), null);
+                logger.LogError(ex, nameof(DeleteAsync));
                 return Problem();
             }
         }

@@ -1,4 +1,4 @@
-  // **********************************************************************************
+// **********************************************************************************
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
@@ -30,6 +30,7 @@
 // * 
 // **********************************************************************************using System;
 
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,11 @@ using ChocAn.TransactionRepository;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.ProviderTerminal.Api.Filters;
 using ChocAn.Repository;
+using ChocAn.Services;
+using ChocAn.Services.DefaultMemberService;
+using ChocAn.Services.DefaultProviderService;
+using ChocAn.Services.DefaultProductService;
+using ChocAn.Services.DefaultTransactionService;
 
 namespace ChocAn.ProviderTerminal.Api
 {
@@ -64,23 +70,37 @@ namespace ChocAn.ProviderTerminal.Api
             {
                 options.Filters.Add<RequireHttpsOrCloseAttribute>();
             });
-            // Add database contexts and services
-            services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            string tmp = Configuration["Services:ChocAn.MemberServiceApi"];
+            tmp = Configuration["Services:ChocAn.ProviderServiceApi"];
 
-            services.AddDbContextPool<ProductDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            // Define dependencies for IMemberService
+            services.AddHttpClient<IMemberService, DefaultMemberService>(DefaultMemberService.Name, client =>
+            {
+                client.BaseAddress = new Uri(Configuration["Services:ChocAn.MemberServiceApi"]);
+            }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+            services.AddScoped<IMemberService, DefaultMemberService>();
 
-            services.AddDbContextPool<TransactionDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            // Define dependencies for IProviderService
+            services.AddHttpClient<IProviderService, DefaultProviderService>(DefaultProviderService.Name, client =>
+            {
+                client.BaseAddress = new Uri(Configuration["Services:ChocAn.ProviderServiceApi"]);
+            }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+            services.AddScoped<IProviderService, DefaultProviderService>();
 
-            services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
-            services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
-            services.AddScoped<IRepository<Product>, DefaultProductRepository>();
-            services.AddScoped<ITransactionRepository, DefaultTransactionRepository>();
+            // Define dependencies for IProductService
+            services.AddHttpClient<IProductService, DefaultProductService>(DefaultProductService.Name, client =>
+            {
+                client.BaseAddress = new Uri(Configuration["Services:ChocAn.ProductServiceApi"]);
+            }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+            services.AddScoped<IProductService, DefaultProductService>();
+
+            // Define dependencies for ITransactionService
+            services.AddHttpClient<ITransactionService, DefaultTransactionService>(DefaultTransactionService.Name, client =>
+            {
+                client.BaseAddress = new Uri(Configuration["Services:ChocAn.TransactionServiceApi"]);
+            }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+            services.AddScoped<ITransactionService, DefaultTransactionService>();
 
             // Add API versioning services
             services.AddApiVersioning(options =>

@@ -39,6 +39,7 @@ using ChocAn.ProductRepository;
 using ChocAn.TransactionRepository;
 using ChocAn.ProviderTerminal.Api.Resources;
 using ChocAn.Repository;
+using ChocAn.Services;
 
 namespace ChocAn.ProviderTerminal.Api.Controllers
 {
@@ -48,45 +49,23 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
     public class TerminalController : ControllerBase
     {
         private readonly ILogger<TerminalController> logger;
-        private readonly IRepository<Member> memberRepository;
-        private readonly IRepository<Provider> providerRepository;
-        private readonly IRepository<Product> productRepository;
-        private readonly ITransactionRepository transactionRepository;
+        private readonly IMemberService memberService;
+        private readonly IProviderService providerService;
+        private readonly IProductService productService;
+        private readonly ITransactionService transactionService;
         public TerminalController(
             ILogger<TerminalController> logger,
-            IRepository<Member> memberRepository,
-            IRepository<Provider> providerRepository,
-            IRepository<Product> productRepsoitory,
-            ITransactionRepository transactionRepository)
+            IMemberService memberService,
+            IProviderService providerService,
+            IProductService productService,
+            ITransactionService transactionService
+            )
         {
             this.logger = logger;
-            this.memberRepository = memberRepository;
-            this.providerRepository = providerRepository;
-            this.productRepository = productRepsoitory;
-            this.transactionRepository = transactionRepository;
-        }
-
-        /// <summary>
-        /// Verifis existance of a provider
-        /// </summary>
-        /// <param name="id">Provider's identification number</param>
-        /// <returns></returns>
-        [HttpGet("provider/{id}", Name = nameof(Provider))]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> Provider(int id)
-        {
-            var provider = await providerRepository.GetAsync(id);
-            if (null == provider)
-            {
-                return NotFound();
-            }
-
-            return Ok(new ProviderResource
-            {
-                Id = provider.Id,
-                Name = provider.Name
-            });
+            this.memberService = memberService;
+            this.providerService = providerService;
+            this.productService = productService;
+            this.transactionService = transactionService;
         }
 
         /// <summary>
@@ -99,17 +78,40 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> Member(int id)
         {
-            var member = await memberRepository.GetAsync(id);
-            if (null == member)
+            var (success, member, error) = await memberService.GetAsync(id);
+            if (success)
             {
-                return NotFound();
+                return Ok(new MemberResource
+                {
+                    Id = id,
+                    Status = member.Status
+                });
             }
 
-            return Ok(new MemberResource
+            return NotFound(error);
+        }
+
+        /// <summary>
+        /// Verifis existance of a provider
+        /// </summary>
+        /// <param name="id">Provider's identification number</param>
+        /// <returns></returns>
+        [HttpGet("provider/{id}", Name = nameof(Provider))]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Provider(int id)
+        {
+            var (success, provider, error) = await providerService.GetAsync(id);
+            if (success)
             {
-                Id = member.Id,
-                Status = member.Status
-            });
+                return Ok(new ProviderResource
+                {
+                    Id = provider.Id,
+                    Name = provider.Name
+                });
+            }
+
+            return NotFound(error);
         }
 
         /// <summary>
@@ -123,18 +125,18 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> Product(int id)
         {
-            var product = await productRepository.GetAsync(id);
-            if (null == product)
+            var (success, product, error) = await productService.GetAsync(id);
+            if (success)
             {
-                return NotFound();
+                return Ok(new ProductResource
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Cost = product.Cost
+                });
             }
 
-            return Ok(new ProductResource
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Cost = product.Cost
-            });
+            return NotFound(error);
         }
 
         // POST api/<Transaction>
@@ -143,13 +145,22 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> Transaction([FromBody] TransactionResource transactionResource)
         {
-            var provider = await providerRepository.GetAsync(transactionResource.ProviderId);
-            var member = await memberRepository.GetAsync(transactionResource.MemberId);
-            var product = await productRepository.GetAsync(transactionResource.ServiceId);
-
-            if ((null == provider) || (null == member) || (null == product))
+            var (providerSuccess, provider, providerError) = await providerService.GetAsync(transactionResource.ProviderId);
+            if (!providerSuccess || provider == null)
             {
-                return BadRequest();
+                return BadRequest(providerError);
+            }
+
+            var (memberSuccess, member, memberError) = await memberService.GetAsync(transactionResource.MemberId);
+            if (!memberSuccess || member == null)
+            {
+                return BadRequest(memberError);
+            }
+
+            var (productSuccess, product, productError) = await productService.GetAsync(transactionResource.ServiceId);
+            if (!productSuccess || product == null)
+            {
+                return BadRequest(productError);
             }
 
             var transaction = new Transaction
@@ -161,10 +172,14 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
                 ServiceComment = transactionResource.ServiceComment
             };
 
-            await transactionRepository.AddAsync(transaction);
+            var(transactionSuccess, transactionError) = await transactionService.AddAsync(transaction);
+            if (!transactionSuccess)
+            {
+                return BadRequest(transactionError);
+            }
 
             // Tell terminal transaction was accepted
-            return Created("", transactionResource);
+            return Created(string.Empty, transactionResource);
         }
     }
 }

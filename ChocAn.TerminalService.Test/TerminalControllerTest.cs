@@ -66,16 +66,16 @@ namespace ChocAn.ProviderTerminal.Api.Test
         public async Task ValidateTerminalMember_ExistingMember()
         {
             // Arrange
-            var memberService = new MockMemberRepository();
+            var memberRepository = new MockMemberRepository();
 
-            await memberService.AddAsync(new Member
+            await memberRepository.AddAsync(new Member
             {
                 Id = MEMBER_ID,
                 Status = MEMBER_STATUS_ACTIVE
             });
 
             // Act
-            var controller = new TerminalController(null, memberService, null, null, null);
+            var controller = new TerminalController(null, memberRepository, null, null, null, null);
             var result = await controller.Member(MEMBER_ID);
 
             // Assert
@@ -90,10 +90,10 @@ namespace ChocAn.ProviderTerminal.Api.Test
         public async Task ValidateTerminalMember_NonexistingMember()
         {
             // Arrange
-            var memberService = new MockMemberRepository();
+            var memberRepository = new MockMemberRepository();
 
             // Act
-            var controller = new TerminalController(null, memberService, null, null, null);
+            var controller = new TerminalController(null, memberRepository, null, null, null, null);
             var result = await controller.Member(MEMBER_ID);
 
             // Assert
@@ -112,7 +112,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
             });
 
             // Act
-            var controller = new TerminalController(null, null, Product, null, null);
+            var controller = new TerminalController(null, null, Product, null, null, null);
             var result = await controller.Provider(PROVIDER_ID);
 
             // Assert
@@ -129,7 +129,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
             var Product = new MockProviderRepository();
 
             // Act
-            var controller = new TerminalController(null, null, Product, null, null);
+            var controller = new TerminalController(null, null, Product, null, null, null);
             var result = await controller.Provider(PROVIDER_ID);
 
             // Assert
@@ -150,7 +150,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
             });
 
             // Act
-            var controller = new TerminalController(null, null, null, ProductRepository, null);
+            var controller = new TerminalController(null, null, null, ProductRepository, null, null);
             var result = await controller.Product(PRODUCT_ID);
 
             // Assert
@@ -169,7 +169,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
             var ProductService = new MockProductRepository();
 
             // Act
-            var controller = new TerminalController(null, null, null, ProductService, null);
+            var controller = new TerminalController(null, null, null, ProductService, null, null);
             var result = await controller.Product(PRODUCT_ID);
 
             // Assert
@@ -222,7 +222,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
                 memberService,
                 Product, 
                 ProductService,
-                transactionService);
+                transactionService, null);
 
             // Call controller
             var result = await controller.Transaction(terminalTransaction);

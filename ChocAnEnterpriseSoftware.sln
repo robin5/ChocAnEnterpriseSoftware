@@ -31,11 +31,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalService", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalService.Test", "ChocAn.TerminalService.Test\ChocAn.TerminalService.Test.csproj", "{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MemberService", "ChocAn.MemberService\ChocAn.MemberService.csproj", "{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ReportService", "ChocAn.ReportService\ChocAn.ReportService.csproj", "{E6A58FD8-19E1-41A0-A74D-C5E67E9C4B63}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ReportRepository", "ChocAn.ReportRepository\ChocAn.ReportRepository.csproj", "{07C17AA3-EB33-4A8B-853E-C26EC00B9F67}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.MemberServiceApi", "ChocAn.MemberServiceApi\ChocAn.MemberServiceApi.csproj", "{06218C48-2EDC-448A-B1BD-DB163CBCBF79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.Services", "ChocAn.Services\ChocAn.Services.csproj", "{34BF3175-DAB1-4368-910E-258DFE16645F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,10 +101,6 @@ Global
 		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EE865C6-B90A-4B6B-BC87-EEF312AAD0D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6A58FD8-19E1-41A0-A74D-C5E67E9C4B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6A58FD8-19E1-41A0-A74D-C5E67E9C4B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6A58FD8-19E1-41A0-A74D-C5E67E9C4B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -111,6 +109,14 @@ Global
 		{07C17AA3-EB33-4A8B-853E-C26EC00B9F67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07C17AA3-EB33-4A8B-853E-C26EC00B9F67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07C17AA3-EB33-4A8B-853E-C26EC00B9F67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06218C48-2EDC-448A-B1BD-DB163CBCBF79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06218C48-2EDC-448A-B1BD-DB163CBCBF79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06218C48-2EDC-448A-B1BD-DB163CBCBF79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06218C48-2EDC-448A-B1BD-DB163CBCBF79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34BF3175-DAB1-4368-910E-258DFE16645F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34BF3175-DAB1-4368-910E-258DFE16645F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34BF3175-DAB1-4368-910E-258DFE16645F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34BF3175-DAB1-4368-910E-258DFE16645F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
