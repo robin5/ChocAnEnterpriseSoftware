@@ -116,7 +116,7 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
         /// </summary>
         /// <param name="id">Provider service's identification code</param>
         /// <returns></returns>
-        [HttpGet("service/{id}", Name = nameof(Product))]
+        [HttpGet("product/{id}", Name = nameof(Product))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> Product(int id)
