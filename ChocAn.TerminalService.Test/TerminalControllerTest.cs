@@ -248,7 +248,7 @@ namespace ChocAn.ProviderTerminal.Api.Test
 
             Assert.Equal(MEMBER_ID, transaction.MemberId);
             Assert.Equal(PROVIDER_ID, transaction.ProviderId);
-            Assert.Equal(PRODUCT_ID, transaction.ServiceId);
+            Assert.Equal(PRODUCT_ID, transaction.ProductId);
             Assert.Equal(TRANSACTION_SERVICE_DATE, transaction.ServiceDate);
             Assert.Equal(TRANSACTION_SERVICE_COMMENT, transaction.ServiceComment);
         }

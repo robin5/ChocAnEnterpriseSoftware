@@ -35,11 +35,11 @@ import ChocAnApi from "./chocanapi.js";
 const api = new ChocAnApi();
 
 // Terminal states
-const STATE_INPUT_PROVIDER_ID = 0;
-const STATE_INPUT_MEMBER_ID = 1;
-const STATE_INPUT_SERVICE_DATE = 2;
-const STATE_INPUT_SERVICE_CODE = 3;
-const STATE_ACCEPT_OR_REJECT_SERVICE_CODE = 4;
+const STATE_INPUT_PROVIDER = 0;
+const STATE_INPUT_MEMBER = 1;
+const STATE_INPUT_PRODUCT = 2;
+const STATE_INPUT_SERVICE_DATE = 3;
+const STATE_ACCEPT_OR_REJECT_PRODUCT = 4;
 const STATE_ENTER_COMMENT_AND_SUBMIT_TRANSACTION = 5;
 const STATE_WAIT_FOR_ENTER = 6;
 
@@ -48,14 +48,14 @@ let providerId;
 let providerName;
 let memberId;
 let memberStatus;
-let serviceId;
+let productId;
+let productName;
+let productCost;
 let serviceDate;
-let serviceName;
-let serviceCost;
 let serviceComment;
 
 // Set first state
-let state = STATE_INPUT_PROVIDER_ID;
+let state = STATE_INPUT_PROVIDER;
 let dateEntryTimeout;
 
 /// <summary>
@@ -113,12 +113,12 @@ function onSubmit(event) {
     // Execute the state
     switch (state) {
 
-        case STATE_INPUT_PROVIDER_ID: // submit provider ID
-            FetchProviderId(input);
+        case STATE_INPUT_PROVIDER: // submit provider ID
+            FetchProvider(input);
             break;
 
-        case STATE_INPUT_MEMBER_ID:
-            FetchMemberId(input);
+        case STATE_INPUT_MEMBER:
+            FetchMember(input);
             break;
 
         case STATE_INPUT_SERVICE_DATE:
@@ -126,11 +126,11 @@ function onSubmit(event) {
             EnterServiceDate(input);
             break;
 
-        case STATE_INPUT_SERVICE_CODE:
-            FetchServiceCode(input);
+        case STATE_INPUT_PRODUCT:
+            FetchProduct(input);
             break;
 
-        case STATE_ACCEPT_OR_REJECT_SERVICE_CODE:
+        case STATE_ACCEPT_OR_REJECT_PRODUCT:
             AcceptOrRejectServiceCode(input);
             break;
 
@@ -181,38 +181,38 @@ function HandleDateEntryTimeout() {
 /// <summary>
 /// Fetches the provider's ID from the ChocAn API and delegates the response
 /// </summary>
-function FetchProviderId(id) {
+function FetchProvider(id) {
 
     fetch(api.provider(id))
         .then(response => DecodeJsonResponse(response))
-        .then(data => HandleProviderIdResponse(data))
+        .then(data => HandleProviderResponse(data))
         .catch(error => HandleError(error));
 }
 
 /// <summary>
 /// Processes the response from the api/terminal/provider/id endpoint.  If valid
 /// data is returned the provider's ID and name are recorded for the
-/// subsequent transaction and the state machine advances to the STATE_INPUT_MEMBER_ID
-/// state.  If provider was not found the state machine advances to the STATE_INPUT_PROVIDER_ID.
+/// subsequent transaction and the state machine advances to the STATE_INPUT_MEMBER
+/// state.  If provider was not found the state machine advances to the STATE_INPUT_PROVIDER.
 /// </summary>
-function HandleProviderIdResponse(data) {
+function HandleProviderResponse(data) {
 
     DisplayJson(data);
     if (data) {
         providerId = data.id;
         providerName = data.name;
         DisplayInstructions("Enter member number.");
-        state = STATE_INPUT_MEMBER_ID;
+        state = STATE_INPUT_MEMBER;
     } else {
         DisplayInstructions("Provider number not found, re-enter provider number.");
-        state = STATE_INPUT_PROVIDER_ID;
+        state = STATE_INPUT_PROVIDER;
     }
 }
 
 /// <summary>
 /// Fetches the member's ID from the ChocAn API and delegates the response
 /// </summary>
-function FetchMemberId(id) {
+function FetchMember(id) {
 
     fetch(api.member(id))
         .then(response => DecodeJsonResponse(response))
@@ -248,7 +248,7 @@ function HandleMemberResponse(data) {
 
 /// <summary>
 /// Translates the input parameter into an ISO date for the subsequent 
-/// transaction, then advances the state machine to STATE_INPUT_SERVICE_CODE.
+/// transaction, then advances the state machine to STATE_INPUT_PRODUCT.
 /// </summary>
 function EnterServiceDate(input) {
 
@@ -256,50 +256,50 @@ function EnterServiceDate(input) {
 
     console.log(`Service Date: ${serviceDate}`)
 
-    DisplayInstructions("Enter service code.");
-    state = STATE_INPUT_SERVICE_CODE;
+    DisplayInstructions("Enter product code.");
+    state = STATE_INPUT_PRODUCT;
 }
 
 /// <summary>
 /// Fetches the service's ID from the ChocAn API and delegates the response
 /// </summary>
-function FetchServiceCode(id) {
+function FetchProduct(id) {
 
-    fetch(api.service(id))
+    fetch(api.product(id))
         .then(response => DecodeJsonResponse(response))
-        .then(data => HandelServiceCodeResponse(data))
+        .then(data => HandelProductResponse(data))
         .catch(error => HandleError(error));
 }
 
 /// <summary>
 /// Processes the response from the api/terminal/service/id endpoint.  If valid
 /// data is returned the service's ID, name, and cost are recorded for the
-/// subsequent transaction and the state machine advances to the STATE_ACCEPT_OR_REJECT_SERVICE_CODE
-/// state.  If the service was not found the state machine advances to the STATE_INPUT_SERVICE_CODE.
+/// subsequent transaction and the state machine advances to the STATE_ACCEPT_OR_REJECT_PRODUCT
+/// state.  If the service was not found the state machine advances to the STATE_INPUT_PRODUCT.
 /// </summary>
-function HandelServiceCodeResponse(data) {
+function HandelProductResponse(data) {
 
     DisplayJson(data);
     if (data) {
-        serviceId = data.id;
-        serviceName = data.name;
-        serviceCost = data.cost;
-        DisplayInstructions(`<strong>${serviceName}</strong>: enter <strong>Yes</strong> to accept service code or <strong>No</strong> to re-enter service code`);
-        state = STATE_ACCEPT_OR_REJECT_SERVICE_CODE;
+        productId = data.id;
+        productName = data.name;
+        productCost = data.cost;
+        DisplayInstructions(`<strong>${productName}</strong>: enter <strong>Yes</strong> to accept product code or <strong>No</strong> to re-enter product code`);
+        state = STATE_ACCEPT_OR_REJECT_PRODUCT;
     } else {
-        DisplayInstructions("Service code not found, re-enter service code.");
-        state = STATE_INPUT_SERVICE_CODE;
+        DisplayInstructions("Product code not found, re-enter product code.");
+        state = STATE_INPUT_PRODUCT;
     }
-    console.log(`Service code: ${serviceId}`);
+    console.log(`Product code: ${productId}`);
 }
 
 /// <summary>
-/// Processes the yes or no answer from the STATE_ACCEPT_OR_REJECT_SERVICE_CODE state.
+/// Processes the yes or no answer from the STATE_ACCEPT_OR_REJECT_PRODUCT state.
 /// if "yes" or "y" is entered (case insensitive) the state machine advances to the 
 /// STATE_ENTER_COMMENT_AND_SUBMIT_TRANSACTION state
 /// if "no" or "n" is entered (case insensitive) the state machine advances to the 
-/// STATE_INPUT_SERVICE_CODE state
-/// Any other answer is rejected and the state advances to STATE_ACCEPT_OR_REJECT_SERVICE_CODE
+/// STATE_INPUT_PRODUCT state
+/// Any other answer is rejected and the state advances to STATE_ACCEPT_OR_REJECT_PRODUCT
 /// </summary>
 function AcceptOrRejectServiceCode(text) {
 
@@ -309,11 +309,11 @@ function AcceptOrRejectServiceCode(text) {
         DisplayInstructions("Enter comment about service or just press enter for no comment");
         state = STATE_ENTER_COMMENT_AND_SUBMIT_TRANSACTION;
     } else if ((answer == "no") || (answer == "n")) {
-        DisplayInstructions("Re-enter service code...");
-        state = STATE_INPUT_SERVICE_CODE;
+        DisplayInstructions("Re-enter product code...");
+        state = STATE_INPUT_PRODUCT;
     } else {
-        DisplayInstructions(`Did not understand answer. <strong>${serviceName}</strong>: enter <strong>Yes</strong> to accept service code or <strong>No</strong> to re-enter service code`);
-        state = STATE_ACCEPT_OR_REJECT_SERVICE_CODE;
+        DisplayInstructions(`Did not understand answer. <strong>${productName}</strong>: enter <strong>Yes</strong> to accept product code or <strong>No</strong> to re-enter product code`);
+        state = STATE_ACCEPT_OR_REJECT_PRODUCT;
     }
 }
 
@@ -332,7 +332,7 @@ function PostTransaction() {
     let transaction = {};
     transaction.providerId = providerId;
     transaction.memberId = memberId;
-    transaction.serviceId = serviceId;
+    transaction.productId = productId;
     transaction.serviceDate = serviceDate;
     transaction.serviceComment = serviceComment;
 
@@ -360,7 +360,7 @@ function HandleTransactionResponse(data) {
     DisplayJson(data);
 
     if (data) {
-        DisplayInstructions(`Transaction accepted: Service cost $${serviceCost}. Press <strong>enter</strong> to continue.`);
+        DisplayInstructions(`Transaction accepted: Service cost $${productCost}. Press <strong>enter</strong> to continue.`);
         state = STATE_WAIT_FOR_ENTER;
     } else {
         DisplayInstructions("Transaction was not accepted by server. Press <strong>enter</strong> to continue.");
@@ -370,11 +370,11 @@ function HandleTransactionResponse(data) {
 
 /// <summary>
 /// Displays instructions to enter member's ID and then advances state machine to
-/// STATE_INPUT_MEMBER_ID
+/// STATE_INPUT_MEMBER
 /// </summary>
 function ResetToInputMemberIdState() {
     DisplayInstructions("Enter member number.");
-    state = STATE_INPUT_MEMBER_ID;
+    state = STATE_INPUT_MEMBER;
 }
 
 /// <summary>

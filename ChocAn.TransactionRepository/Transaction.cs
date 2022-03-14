@@ -43,7 +43,7 @@ namespace ChocAn.TransactionRepository
         public int Id { get; set; }
         public int ProviderId { get; set; }
         public int MemberId { get; set; }
-        public int ServiceId { get; set; }
+        public int ProductId { get; set; }
         public decimal ProductCost { get; set; }
         public DateTime ServiceDate { get; set; }
         public string ServiceComment { get; set; }

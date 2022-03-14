@@ -76,10 +76,10 @@ export default class ChocAnApi {
     }
 
     /// <summary>
-    /// Returns a URL representing the {chocan.domain/api/}terminal/service/{id}
+    /// Returns a URL representing the {chocan.domain/api/}terminal/product/{id}
     /// </summary>
-    service = (id) => {
-        return `${this.url_}terminal/service/${id}`;
+    product = (id) => {
+        return `${this.url_}terminal/product/${id}`;
     }
 
     /// <summary>

@@ -51,7 +51,7 @@ namespace ChocAn.TransactionRepository.Test
         private const int T0_PROVIDER_ID = 20;
         private const int T0_MEMBER_ID = 30;
         private static readonly DateTime T0_SERVICE_DATETIME = new DateTime(2021, 1, 1);
-        private const int T0_SERVICE_ID = 999999;
+        private const int T0_PRODUCT_ID = 999999;
         private const string T0_SERVICE_COMMENT = "1234567890123456789012345";
         private static readonly DateTime T0_CREATED = new DateTime(2021, 1, 2);
 
@@ -59,7 +59,7 @@ namespace ChocAn.TransactionRepository.Test
         private const int T1_PROVIDER_ID = 21;
         private const int T1_MEMBER_ID = 31;
         private static readonly DateTime T1_SERVICE_DATETIME = new DateTime(2021, 1, 3);
-        private const int T1_SERVICE_ID = 1;
+        private const int T1_PRODUCT_ID = 1;
         private const string T1_SERVICE_COMMENT = "1234567890123456789012345";
         private static readonly DateTime T1_CREATED = new DateTime(2021, 1, 4);
 
@@ -67,14 +67,14 @@ namespace ChocAn.TransactionRepository.Test
         private const int T2_PROVIDER_ID = 22;
         private const int T2_MEMBER_ID = 32;
         private static readonly DateTime T2_SERVICE_DATETIME = new DateTime(2021, 1, 5);
-        private const int T2_SERVICE_ID = 2;
+        private const int T2_PRODUCT_ID = 2;
         private const string T2_SERVICE_COMMENT = "1234567890123456789012345";
         private static readonly DateTime T2_CREATED = new DateTime(2021, 1, 6);
 
         private const int T_UPDATE_PROVIDER_ID = 23;
         private const int T_UPDATE_MEMBER_ID = 33;
         private static readonly DateTime T_UPDATE_SERVICE_DATETIME = new DateTime(2021, 1, 7);
-        private const int T_UPDATE_SERVICE_ID = 3;
+        private const int T_UPDATE_PRODUCT_ID = 3;
         private const string T_UPDATE_SERVICE_COMMENT = "1234567890123456789012345";
         private static readonly DateTime T_UPDATE_CREATED = new DateTime(2021, 1, 8);
         #endregion
@@ -107,7 +107,7 @@ namespace ChocAn.TransactionRepository.Test
                     Id = T0_ID,
                     ProviderId = T0_PROVIDER_ID,
                     MemberId = T0_MEMBER_ID,
-                    ServiceId = T0_SERVICE_ID,
+                    ProductId = T0_PRODUCT_ID,
                     ServiceDate = T0_SERVICE_DATETIME,
                     ServiceComment = T0_SERVICE_COMMENT,
                     Created = T0_CREATED
@@ -133,7 +133,7 @@ namespace ChocAn.TransactionRepository.Test
                     Id = T0_ID,
                     ProviderId = T0_PROVIDER_ID,
                     MemberId = T0_MEMBER_ID,
-                    ServiceId = T0_SERVICE_ID,
+                    ProductId = T0_PRODUCT_ID,
                     ServiceDate = T0_SERVICE_DATETIME,
                     ServiceComment = T0_SERVICE_COMMENT,
                     Created = T0_CREATED
@@ -143,7 +143,7 @@ namespace ChocAn.TransactionRepository.Test
                     Id = T1_ID,
                     ProviderId = T1_PROVIDER_ID,
                     MemberId = T1_MEMBER_ID,
-                    ServiceId = T1_SERVICE_ID,
+                    ProductId = T1_PRODUCT_ID,
                     ServiceDate = T1_SERVICE_DATETIME,
                     ServiceComment = T1_SERVICE_COMMENT,
                     Created = T1_CREATED
@@ -153,7 +153,7 @@ namespace ChocAn.TransactionRepository.Test
                     Id = T2_ID,
                     ProviderId = T2_PROVIDER_ID,
                     MemberId = T2_MEMBER_ID,
-                    ServiceId = T2_SERVICE_ID,
+                    ProductId = T2_PRODUCT_ID,
                     ServiceDate = T2_SERVICE_DATETIME,
                     ServiceComment = T2_SERVICE_COMMENT,
                     Created = T2_CREATED
@@ -177,7 +177,7 @@ namespace ChocAn.TransactionRepository.Test
                 Id = T0_ID,
                 ProviderId = T0_PROVIDER_ID,
                 MemberId = T0_MEMBER_ID,
-                ServiceId = T0_SERVICE_ID,
+                ProductId = T0_PRODUCT_ID,
                 ServiceDate = T0_SERVICE_DATETIME,
                 ServiceComment = T0_SERVICE_COMMENT,
                 // Note: Created is set by database
@@ -199,7 +199,7 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, result.Id);
                 Assert.Equal(T0_PROVIDER_ID, result.ProviderId);
                 Assert.Equal(T0_MEMBER_ID, result.MemberId);
-                Assert.Equal(T0_SERVICE_ID, result.ServiceId);
+                Assert.Equal(T0_PRODUCT_ID, result.ProductId);
                 Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
                 Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
                 Assert.True(beforeTransactionTime <= result.Created);
@@ -227,7 +227,7 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, result.Id);
                 Assert.Equal(T0_PROVIDER_ID, result.ProviderId);
                 Assert.Equal(T0_MEMBER_ID, result.MemberId);
-                Assert.Equal(T0_SERVICE_ID, result.ServiceId);
+                Assert.Equal(T0_PRODUCT_ID, result.ProductId);
                 Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
                 Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
                 Assert.Equal(T0_CREATED, result.Created);
@@ -271,7 +271,7 @@ namespace ChocAn.TransactionRepository.Test
                 Id = T0_ID,
                 ProviderId = T_UPDATE_PROVIDER_ID,
                 MemberId = T_UPDATE_MEMBER_ID,
-                ServiceId = T_UPDATE_SERVICE_ID,
+                ProductId = T_UPDATE_PRODUCT_ID,
                 ServiceDate = T_UPDATE_SERVICE_DATETIME,
                 ServiceComment = T_UPDATE_SERVICE_COMMENT,
                 Created = T_UPDATE_CREATED
@@ -289,7 +289,7 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, result.Id);
                 Assert.Equal(T_UPDATE_PROVIDER_ID, result.ProviderId);
                 Assert.Equal(T_UPDATE_MEMBER_ID, result.MemberId);
-                Assert.Equal(T_UPDATE_SERVICE_ID, result.ServiceId);
+                Assert.Equal(T_UPDATE_PRODUCT_ID, result.ProductId);
                 Assert.Equal(T_UPDATE_SERVICE_DATETIME, result.ServiceDate);
                 Assert.Equal(T_UPDATE_SERVICE_COMMENT, result.ServiceComment);
                 Assert.Equal(T_UPDATE_CREATED, result.Created);
@@ -300,7 +300,7 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, transaction.Id);
                 Assert.Equal(T_UPDATE_PROVIDER_ID, transaction.ProviderId);
                 Assert.Equal(T_UPDATE_MEMBER_ID, transaction.MemberId);
-                Assert.Equal(T_UPDATE_SERVICE_ID, transaction.ServiceId);
+                Assert.Equal(T_UPDATE_PRODUCT_ID, transaction.ProductId);
                 Assert.Equal(T_UPDATE_SERVICE_DATETIME, transaction.ServiceDate);
                 Assert.Equal(T_UPDATE_SERVICE_COMMENT, transaction.ServiceComment);
                 Assert.Equal(T_UPDATE_CREATED, transaction.Created);
@@ -328,7 +328,7 @@ namespace ChocAn.TransactionRepository.Test
                 Assert.Equal(T0_ID, result.Id);
                 Assert.Equal(T0_PROVIDER_ID, result.ProviderId);
                 Assert.Equal(T0_MEMBER_ID, result.MemberId);
-                Assert.Equal(T0_SERVICE_ID, result.ServiceId);
+                Assert.Equal(T0_PRODUCT_ID, result.ProductId);
                 Assert.Equal(T0_SERVICE_DATETIME, result.ServiceDate);
                 Assert.Equal(T0_SERVICE_COMMENT, result.ServiceComment);
                 Assert.Equal(T0_CREATED, result.Created);
@@ -364,7 +364,7 @@ namespace ChocAn.TransactionRepository.Test
                         transaction0Found = true;
                         Assert.Equal(T0_PROVIDER_ID, transaction.ProviderId);
                         Assert.Equal(T0_MEMBER_ID, transaction.MemberId);
-                        Assert.Equal(T0_SERVICE_ID, transaction.ServiceId);
+                        Assert.Equal(T0_PRODUCT_ID, transaction.ProductId);
                         Assert.Equal(T0_SERVICE_DATETIME, transaction.ServiceDate);
                         Assert.Equal(T0_SERVICE_COMMENT, transaction.ServiceComment);
                         Assert.Equal(T0_CREATED, transaction.Created);
@@ -374,7 +374,7 @@ namespace ChocAn.TransactionRepository.Test
                         transaction1Found = true;
                         Assert.Equal(T1_PROVIDER_ID, transaction.ProviderId);
                         Assert.Equal(T1_MEMBER_ID, transaction.MemberId);
-                        Assert.Equal(T1_SERVICE_ID, transaction.ServiceId);
+                        Assert.Equal(T1_PRODUCT_ID, transaction.ProductId);
                         Assert.Equal(T1_SERVICE_DATETIME, transaction.ServiceDate);
                         Assert.Equal(T1_SERVICE_COMMENT, transaction.ServiceComment);
                         Assert.Equal(T1_CREATED, transaction.Created);
@@ -384,7 +384,7 @@ namespace ChocAn.TransactionRepository.Test
                         transaction2Found = true;
                         Assert.Equal(T2_PROVIDER_ID, transaction.ProviderId);
                         Assert.Equal(T2_MEMBER_ID, transaction.MemberId);
-                        Assert.Equal(T2_SERVICE_ID, transaction.ServiceId);
+                        Assert.Equal(T2_PRODUCT_ID, transaction.ProductId);
                         Assert.Equal(T2_SERVICE_DATETIME, transaction.ServiceDate);
                         Assert.Equal(T2_SERVICE_COMMENT, transaction.ServiceComment);
                         Assert.Equal(T2_CREATED, transaction.Created);

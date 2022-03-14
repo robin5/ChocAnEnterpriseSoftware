@@ -163,7 +163,7 @@ namespace ChocAn.ProviderTerminal.Api.Controllers
             {
                 ProviderId = provider.Id,
                 MemberId = member.Id,
-                ServiceId = product.Id,
+                ProductId = product.Id,
                 ServiceDate = transactionResource.ServiceDate,
                 ServiceComment = transactionResource.ServiceComment
             };
