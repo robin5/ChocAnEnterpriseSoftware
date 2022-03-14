@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: MembersController.cs
+// * File: ProductsController.cs
 // *
-// * Description: Implements the Member controller for the MemberService API.
+// * Description: Implements the Product controller for the ProductService API.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -32,34 +32,34 @@
 
 using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.MemberRepository;
-using ChocAn.MemberServiceApi.Resources;
+using ChocAn.ProductRepository;
+using ChocAn.ProductServiceApi.Resources;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.MemberServiceApi.Controllers
+namespace ChocAn.ProductServiceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MemberController : ControllerBase
+    public class ProductController : ControllerBase
     {
-        private readonly ILogger<MemberController> logger;
+        private readonly ILogger<ProductController> logger;
         private readonly IMapper mapper;
-        private readonly IRepository<MemberRepository.Member> memberRepository;
-        public MemberController(
-            ILogger<MemberController> logger,
+        private readonly IRepository<ProductRepository.Product> productRepository;
+        public ProductController(
+            ILogger<ProductController> logger,
             IMapper mapper,
-            IRepository<MemberRepository.Member> memberRepository)
+            IRepository<ProductRepository.Product> productRepository)
         {
             this.logger = logger;
             this.mapper = mapper;
-            this.memberRepository = memberRepository;
+            this.productRepository = productRepository;
         }
 
         /// <summary>
-        /// Retrieves all members from Member repository.
+        /// Retrieves all products from Product repository.
         /// </summary>
-        /// <param name="id">Member's identification number</param>
+        /// <param name="id">Product's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
         [HttpGet(Name = nameof(GetAllAsync))]
         [ProducesResponseType(200)]
@@ -68,13 +68,13 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                List<Member> members = new();
-                await foreach (Member member in memberRepository.GetAllAsync())
+                List<Product> products = new();
+                await foreach (Product product in productRepository.GetAllAsync())
                 {
-                    members.Add(member);
+                    products.Add(product);
                 }
 
-                return Ok(members);
+                return Ok(products);
             }
             catch (Exception ex)
             {
@@ -83,10 +83,10 @@ namespace ChocAn.MemberServiceApi.Controllers
             }
         }
         /// <summary>
-        /// Retrieves an individual member from the Member repository.
+        /// Retrieves an individual product from the Product repository.
         /// </summary>
-        /// <param name="id">Member's identification number</param>
-        /// <returns>200 on success. 404 if member does not exist. 500 on exception</returns>
+        /// <param name="id">Product's identification number</param>
+        /// <returns>200 on success. 404 if product does not exist. 500 on exception</returns>
         [HttpGet("{id}", Name = nameof(GetAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -95,13 +95,13 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                var member = await memberRepository.GetAsync(id);
-                if (null == member)
+                var product = await productRepository.GetAsync(id);
+                if (null == product)
                 {
                     return NotFound();
                 }
 
-                return Ok(mapper.Map<MemberResource>(member));
+                return Ok(product);
             }
             catch (Exception ex)
             {
@@ -111,21 +111,21 @@ namespace ChocAn.MemberServiceApi.Controllers
         }
 
         /// <summary>
-        /// Inserts a new member into the Member repository.
+        /// Inserts a new product into the Product repository.
         /// </summary>
-        /// <param name="memberResource"></param>
+        /// <param name="productResource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost(Name = nameof(PostAsync))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] MemberResource memberResource)
+        public async Task<IActionResult> PostAsync([FromBody] ProductResource productResource)
         {
             try
             {
-                var member = mapper.Map<Member>(memberResource);
-                await memberRepository.AddAsync(member);
-                return Created("", memberResource);
+                var product = mapper.Map<Product>(productResource);
+                await productRepository.AddAsync(product);
+                return Created("", productResource);
             }
             catch (Exception ex)
             {
@@ -136,24 +136,24 @@ namespace ChocAn.MemberServiceApi.Controllers
 
 
         /// <summary>
-        /// Updates a member in the Member repository.
+        /// Updates a product in the Product repository.
         /// </summary>
-        /// <param name="id">Member's identification number</param>
-        /// <param name="memberResource">Member updates</param>
+        /// <param name="id">Product's identification number</param>
+        /// <param name="productResource">Product updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}", Name = nameof(PutAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] MemberResource memberResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] ProductResource productResource)
         {
             try
             {
-                var member = mapper.Map<Member>(memberResource);
-                member.Id = id;
-                await memberRepository.UpdateAsync(member);
+                var product = mapper.Map<Product>(productResource);
+                product.Id = id;
+                await productRepository.UpdateAsync(product);
 
-                return Ok(memberResource);
+                return Ok(productResource);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -168,10 +168,10 @@ namespace ChocAn.MemberServiceApi.Controllers
         }
 
         /// <summary>
-        /// Deletes a member from the Member respoitory.
+        /// Deletes a product from the Product respoitory.
         /// </summary>
-        /// <param name="id">Member's identification number</param>
-        /// <returns>200 on success. 404 if member does not exist. 500 on exception</returns>
+        /// <param name="id">Product's identification number</param>
+        /// <returns>200 on success. 404 if product does not exist. 500 on exception</returns>
         [HttpDelete("{id}", Name = nameof(DeleteAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -180,12 +180,12 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                var member = await memberRepository.DeleteAsync(id);
-                if (null == member)
+                var product = await productRepository.DeleteAsync(id);
+                if (null == product)
                 {
                     return NotFound();
                 }
-                return Ok(mapper.Map<MemberResource>(member));
+                return Ok(product);
             }
             catch (Exception ex)
             {

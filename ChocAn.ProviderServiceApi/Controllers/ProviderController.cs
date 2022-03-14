@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: MembersController.cs
+// * File: ProvidersController.cs
 // *
-// * Description: Implements the Member controller for the MemberService API.
+// * Description: Implements the Provider controller for the ProviderService API.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -32,34 +32,34 @@
 
 using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.MemberRepository;
-using ChocAn.MemberServiceApi.Resources;
+using ChocAn.ProviderRepository;
+using ChocAn.ProviderServiceApi.Resources;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.MemberServiceApi.Controllers
+namespace ChocAn.ProviderServiceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MemberController : ControllerBase
+    public class ProviderController : ControllerBase
     {
-        private readonly ILogger<MemberController> logger;
+        private readonly ILogger<ProviderController> logger;
         private readonly IMapper mapper;
-        private readonly IRepository<MemberRepository.Member> memberRepository;
-        public MemberController(
-            ILogger<MemberController> logger,
+        private readonly IRepository<ProviderRepository.Provider> providerRepository;
+        public ProviderController(
+            ILogger<ProviderController> logger,
             IMapper mapper,
-            IRepository<MemberRepository.Member> memberRepository)
+            IRepository<ProviderRepository.Provider> providerRepository)
         {
             this.logger = logger;
             this.mapper = mapper;
-            this.memberRepository = memberRepository;
+            this.providerRepository = providerRepository;
         }
 
         /// <summary>
-        /// Retrieves all members from Member repository.
+        /// Retrieves all providers from Provider repository.
         /// </summary>
-        /// <param name="id">Member's identification number</param>
+        /// <param name="id">Provider's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
         [HttpGet(Name = nameof(GetAllAsync))]
         [ProducesResponseType(200)]
@@ -68,13 +68,13 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                List<Member> members = new();
-                await foreach (Member member in memberRepository.GetAllAsync())
+                List<Provider> providers = new();
+                await foreach (Provider provider in providerRepository.GetAllAsync())
                 {
-                    members.Add(member);
+                    providers.Add(provider);
                 }
 
-                return Ok(members);
+                return Ok(providers);
             }
             catch (Exception ex)
             {
@@ -83,10 +83,10 @@ namespace ChocAn.MemberServiceApi.Controllers
             }
         }
         /// <summary>
-        /// Retrieves an individual member from the Member repository.
+        /// Retrieves an individual provider from the Provider repository.
         /// </summary>
-        /// <param name="id">Member's identification number</param>
-        /// <returns>200 on success. 404 if member does not exist. 500 on exception</returns>
+        /// <param name="id">Provider's identification number</param>
+        /// <returns>200 on success. 404 if provider does not exist. 500 on exception</returns>
         [HttpGet("{id}", Name = nameof(GetAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -95,13 +95,13 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                var member = await memberRepository.GetAsync(id);
-                if (null == member)
+                var provider = await providerRepository.GetAsync(id);
+                if (null == provider)
                 {
                     return NotFound();
                 }
 
-                return Ok(mapper.Map<MemberResource>(member));
+                return Ok(mapper.Map<ProviderResource>(provider));
             }
             catch (Exception ex)
             {
@@ -111,21 +111,21 @@ namespace ChocAn.MemberServiceApi.Controllers
         }
 
         /// <summary>
-        /// Inserts a new member into the Member repository.
+        /// Inserts a new provider into the Provider repository.
         /// </summary>
-        /// <param name="memberResource"></param>
+        /// <param name="providerResource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost(Name = nameof(PostAsync))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] MemberResource memberResource)
+        public async Task<IActionResult> PostAsync([FromBody] ProviderResource providerResource)
         {
             try
             {
-                var member = mapper.Map<Member>(memberResource);
-                await memberRepository.AddAsync(member);
-                return Created("", memberResource);
+                var provider = mapper.Map<Provider>(providerResource);
+                await providerRepository.AddAsync(provider);
+                return Created("", providerResource);
             }
             catch (Exception ex)
             {
@@ -136,24 +136,24 @@ namespace ChocAn.MemberServiceApi.Controllers
 
 
         /// <summary>
-        /// Updates a member in the Member repository.
+        /// Updates a provider in the Provider repository.
         /// </summary>
-        /// <param name="id">Member's identification number</param>
-        /// <param name="memberResource">Member updates</param>
+        /// <param name="id">Provider's identification number</param>
+        /// <param name="providerResource">Provider updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}", Name = nameof(PutAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] MemberResource memberResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] ProviderResource providerResource)
         {
             try
             {
-                var member = mapper.Map<Member>(memberResource);
-                member.Id = id;
-                await memberRepository.UpdateAsync(member);
+                var provider = mapper.Map<Provider>(providerResource);
+                provider.Id = id;
+                await providerRepository.UpdateAsync(provider);
 
-                return Ok(memberResource);
+                return Ok(providerResource);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -168,10 +168,10 @@ namespace ChocAn.MemberServiceApi.Controllers
         }
 
         /// <summary>
-        /// Deletes a member from the Member respoitory.
+        /// Deletes a provider from the Provider respoitory.
         /// </summary>
-        /// <param name="id">Member's identification number</param>
-        /// <returns>200 on success. 404 if member does not exist. 500 on exception</returns>
+        /// <param name="id">Provider's identification number</param>
+        /// <returns>200 on success. 404 if provider does not exist. 500 on exception</returns>
         [HttpDelete("{id}", Name = nameof(DeleteAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -180,12 +180,12 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                var member = await memberRepository.DeleteAsync(id);
-                if (null == member)
+                var provider = await providerRepository.DeleteAsync(id);
+                if (null == provider)
                 {
                     return NotFound();
                 }
-                return Ok(mapper.Map<MemberResource>(member));
+                return Ok(mapper.Map<ProviderResource>(provider));
             }
             catch (Exception ex)
             {

@@ -70,7 +70,7 @@ namespace ChocAn.Services.DefaultProviderService
         {
             try
             {
-                var client = httpClientFactory.CreateClient("DefaultProviderService");
+                var client = httpClientFactory.CreateClient(Name);
                 var response = await client.GetAsync($"api/Provider/{id}");
                 if (response.IsSuccessStatusCode)
                 {

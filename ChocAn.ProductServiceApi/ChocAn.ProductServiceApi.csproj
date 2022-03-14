@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChocAn.MemberRepository\ChocAn.MemberRepository.csproj" />
+    <ProjectReference Include="..\ChocAn.ProductRepository\ChocAn.ProductRepository.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@
 // *
 // * File: Program.cs
 // *
-// * Description: Application startup file for ChocAn.MemberServiceApi project.
+// * Description: Application startup file for ChocAn.ProductServiceApi project.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,8 +30,8 @@
 // * 
 // **********************************************************************************using System;
 
-using ChocAn.MemberRepository;
-using ChocAn.MemberServiceApi.Infrastructure;
+using ChocAn.ProductRepository;
+using ChocAn.ProductServiceApi.Infrastructure;
 using ChocAn.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,11 +41,11 @@ var builder = WebApplication.CreateBuilder(args);
 // * Add services to the container.
 // **************************************************************************
 
-// DbContext for accessing Member repository
-builder.Services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
+// DbContext for accessing Product repository
+builder.Services.AddDbContextPool<ProductDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IRepository<ChocAn.MemberRepository.Member>, DefaultMemberRepository>();
+builder.Services.AddScoped<IRepository<ChocAn.ProductRepository.Product>, DefaultProductRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

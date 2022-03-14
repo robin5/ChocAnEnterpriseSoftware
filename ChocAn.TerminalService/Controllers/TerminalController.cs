@@ -33,12 +33,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProductRepository;
 using ChocAn.TransactionRepository;
 using ChocAn.ProviderTerminal.Api.Resources;
-using ChocAn.Repository;
 using ChocAn.Services;
 
 namespace ChocAn.ProviderTerminal.Api.Controllers

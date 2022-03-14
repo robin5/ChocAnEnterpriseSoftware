@@ -39,13 +39,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProductRepository;
-using ChocAn.TransactionRepository;
-using Microsoft.EntityFrameworkCore;
 using ChocAn.ProviderTerminal.Api.Filters;
-using ChocAn.Repository;
 using ChocAn.Services;
 using ChocAn.Services.DefaultMemberService;
 using ChocAn.Services.DefaultProviderService;
@@ -71,31 +65,40 @@ namespace ChocAn.ProviderTerminal.Api
                 options.Filters.Add<RequireHttpsOrCloseAttribute>();
             });
 
-            string tmp = Configuration["Services:ChocAn.MemberServiceApi"];
-            tmp = Configuration["Services:ChocAn.ProviderServiceApi"];
-
+            // --------------------------------------
             // Define dependencies for IMemberService
+            // --------------------------------------
+
             services.AddHttpClient<IMemberService, DefaultMemberService>(DefaultMemberService.Name, client =>
             {
                 client.BaseAddress = new Uri(Configuration["Services:ChocAn.MemberServiceApi"]);
             }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
             services.AddScoped<IMemberService, DefaultMemberService>();
 
+            // ----------------------------------------
             // Define dependencies for IProviderService
+            // ----------------------------------------
+
             services.AddHttpClient<IProviderService, DefaultProviderService>(DefaultProviderService.Name, client =>
             {
                 client.BaseAddress = new Uri(Configuration["Services:ChocAn.ProviderServiceApi"]);
             }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
             services.AddScoped<IProviderService, DefaultProviderService>();
 
+            // ---------------------------------------
             // Define dependencies for IProductService
+            // ---------------------------------------
+ 
             services.AddHttpClient<IProductService, DefaultProductService>(DefaultProductService.Name, client =>
             {
                 client.BaseAddress = new Uri(Configuration["Services:ChocAn.ProductServiceApi"]);
             }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
             services.AddScoped<IProductService, DefaultProductService>();
 
+            // -------------------------------------------
             // Define dependencies for ITransactionService
+            // -------------------------------------------
+
             services.AddHttpClient<ITransactionService, DefaultTransactionService>(DefaultTransactionService.Name, client =>
             {
                 client.BaseAddress = new Uri(Configuration["Services:ChocAn.TransactionServiceApi"]);
@@ -129,7 +132,7 @@ namespace ChocAn.ProviderTerminal.Api
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChocAn.ProviderTerminal.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChocAn.TerminalService", Version = "v1" });
             });
         }
 

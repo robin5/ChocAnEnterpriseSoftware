@@ -4,7 +4,9 @@
 // *
 // * File: Program.cs
 // *
-// * Description: Application startup file for ChocAn.MemberServiceApi project.
+// * Description: Application startup file for ChocAn.ProviderServiceApi project.
+// *
+// *   Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,8 +32,8 @@
 // * 
 // **********************************************************************************using System;
 
-using ChocAn.MemberRepository;
-using ChocAn.MemberServiceApi.Infrastructure;
+using ChocAn.ProviderRepository;
+using ChocAn.ProviderServiceApi.Infrastructure;
 using ChocAn.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,11 +43,11 @@ var builder = WebApplication.CreateBuilder(args);
 // * Add services to the container.
 // **************************************************************************
 
-// DbContext for accessing Member repository
-builder.Services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
+// DbContext for accessing Provider repository
+builder.Services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IRepository<ChocAn.MemberRepository.Member>, DefaultMemberRepository>();
+builder.Services.AddScoped<IRepository<ChocAn.ProviderRepository.Provider>, DefaultProviderRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
