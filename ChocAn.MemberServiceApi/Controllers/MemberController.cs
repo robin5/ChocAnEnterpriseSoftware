@@ -101,7 +101,7 @@ namespace ChocAn.MemberServiceApi.Controllers
                     return NotFound();
                 }
 
-                return Ok(mapper.Map<MemberResource>(member));
+                return Ok(member);
             }
             catch (Exception ex)
             {
@@ -185,7 +185,7 @@ namespace ChocAn.MemberServiceApi.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(mapper.Map<MemberResource>(member));
+                return Ok(member);
             }
             catch (Exception ex)
             {

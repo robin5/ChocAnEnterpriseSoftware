@@ -27,10 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionRepositor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderRepository", "ChocAn.ProviderRepository\ChocAn.ProviderRepository.csproj", "{818D6AE4-EAEA-4FE3-AEE9-D1F18C2C8254}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalService", "ChocAn.TerminalService\ChocAn.TerminalService.csproj", "{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalService.Test", "ChocAn.TerminalService.Test\ChocAn.TerminalService.Test.csproj", "{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ReportService", "ChocAn.ReportService\ChocAn.ReportService.csproj", "{E6A58FD8-19E1-41A0-A74D-C5E67E9C4B63}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ReportRepository", "ChocAn.ReportRepository\ChocAn.ReportRepository.csproj", "{07C17AA3-EB33-4A8B-853E-C26EC00B9F67}"
@@ -41,7 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.Services", "ChocAn.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProviderServiceApi", "ChocAn.ProviderServiceApi\ChocAn.ProviderServiceApi.csproj", "{8A52B783-7516-4D25-840A-3DAE215AC3CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.ProductServiceApi", "ChocAn.ProductServiceApi\ChocAn.ProductServiceApi.csproj", "{93E5FD29-EF35-499B-AE4F-74C05FAF31AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProductServiceApi", "ChocAn.ProductServiceApi\ChocAn.ProductServiceApi.csproj", "{93E5FD29-EF35-499B-AE4F-74C05FAF31AF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalServiceApi", "ChocAn.TerminalServiceApi\ChocAn.TerminalServiceApi.csproj", "{BD25ECB5-3D50-44FD-9C6F-9C70358C23F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.TransactionServiceApi", "ChocAn.TransactionServiceApi\ChocAn.TransactionServiceApi.csproj", "{C7B89F3C-7E51-463E-A47F-ED6D6A888998}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,14 +97,6 @@ Global
 		{818D6AE4-EAEA-4FE3-AEE9-D1F18C2C8254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{818D6AE4-EAEA-4FE3-AEE9-D1F18C2C8254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{818D6AE4-EAEA-4FE3-AEE9-D1F18C2C8254}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B8FF8FA0-73A1-4A65-AAAB-2F7637D2D8C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6F42E67-C5D4-42E3-B93D-7BEAA28BA61A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6A58FD8-19E1-41A0-A74D-C5E67E9C4B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6A58FD8-19E1-41A0-A74D-C5E67E9C4B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6A58FD8-19E1-41A0-A74D-C5E67E9C4B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -129,6 +121,14 @@ Global
 		{93E5FD29-EF35-499B-AE4F-74C05FAF31AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93E5FD29-EF35-499B-AE4F-74C05FAF31AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93E5FD29-EF35-499B-AE4F-74C05FAF31AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD25ECB5-3D50-44FD-9C6F-9C70358C23F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD25ECB5-3D50-44FD-9C6F-9C70358C23F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD25ECB5-3D50-44FD-9C6F-9C70358C23F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD25ECB5-3D50-44FD-9C6F-9C70358C23F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7B89F3C-7E51-463E-A47F-ED6D6A888998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7B89F3C-7E51-463E-A47F-ED6D6A888998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7B89F3C-7E51-463E-A47F-ED6D6A888998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7B89F3C-7E51-463E-A47F-ED6D6A888998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

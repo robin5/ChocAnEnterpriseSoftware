@@ -2,7 +2,7 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProductsController.cs
+// * File: ProductController.cs
 // *
 // * Description: Implements the Product controller for the ProductService API.
 // *

@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: RequireHttpsOrCloseAttribute.cs
+// * File: TransactionResource.cs
 // *
-// * Description: Middleware filter that immediately rejects any http request.
+// * Description: Defines an resource which describes a ChocAn member
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -28,23 +28,23 @@
 // *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // *   THE SOFTWARE.
 // * 
-// **********************************************************************************using System;
+// **********************************************************************************
 
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
-namespace ChocAn.ProviderTerminal.Api.Filters
+namespace ChocAn.TransactionServiceApi.Resources
 {
-    public class RequireHttpsOrCloseAttribute
-        : RequireHttpsAttribute
+    /// <summary>
+    /// Represents a resource designating a ChocAn transaction
+    /// </summary>
+    public class TransactionResource
     {
-        protected override void HandleNonHttpsRequest(AuthorizationFilterContext filterContext)
-        {
-            filterContext.Result = new StatusCodeResult(400);
-        }
+        public int ProviderId { get; init; }
+        public int MemberId { get; init; }
+        public int ProductId { get; init; }
+        public decimal ProductCost { get; init; }
+        public DateTime ServiceDate { get; init; }
+        public string? ServiceComment { get; init; }
+        public DateTime Created { get; init; }
     }
 }

@@ -31,6 +31,7 @@
 // * 
 // **********************************************************************************
 
+using System.Text;
 using System.Text.Json;
 using ChocAn.TransactionRepository;
 using Microsoft.Extensions.Logging;
@@ -71,7 +72,7 @@ namespace ChocAn.Services.DefaultTransactionService
             try
             {
                 var client = httpClientFactory.CreateClient("DefaultTransactionService");
-                var content = new StringContent(JsonSerializer.Serialize<Transaction>(transaction));
+                var content = new StringContent(JsonSerializer.Serialize<Transaction>(transaction), Encoding.UTF8, "application/json");
                 var response = await client.PostAsync($"api/Transaction/", content);
                 if (response.IsSuccessStatusCode)
                 {

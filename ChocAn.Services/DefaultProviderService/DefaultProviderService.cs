@@ -31,6 +31,7 @@
 // * 
 // **********************************************************************************
 
+using System.Net;
 using System.Text.Json;
 using ChocAn.ProviderRepository;
 using Microsoft.Extensions.Logging;
@@ -78,6 +79,10 @@ namespace ChocAn.Services.DefaultProviderService
                     var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
                     var provider = JsonSerializer.Deserialize<Provider>(content, options);
                     return (true, provider, null);
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return (true, null, response.ReasonPhrase);
                 }
                 return (false, null, response.ReasonPhrase);
             }

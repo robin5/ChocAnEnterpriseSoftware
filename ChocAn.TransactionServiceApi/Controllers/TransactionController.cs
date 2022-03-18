@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProvidersController.cs
+// * File: TransactionsController.cs
 // *
-// * Description: Implements the Provider controller for the ProviderService API.
+// * Description: Implements the Transaction controller for the TransactionService API.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -32,34 +32,34 @@
 
 using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.ProviderRepository;
-using ChocAn.ProviderServiceApi.Resources;
+using ChocAn.TransactionRepository;
+using ChocAn.TransactionServiceApi.Resources;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChocAn.ProviderServiceApi.Controllers
+namespace ChocAn.TransactionServiceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProviderController : ControllerBase
+    public class TransactionController : ControllerBase
     {
-        private readonly ILogger<ProviderController> logger;
+        private readonly ILogger<TransactionController> logger;
         private readonly IMapper mapper;
-        private readonly IRepository<ProviderRepository.Provider> providerRepository;
-        public ProviderController(
-            ILogger<ProviderController> logger,
+        private readonly IRepository<TransactionRepository.Transaction> transactionRepository;
+        public TransactionController(
+            ILogger<TransactionController> logger,
             IMapper mapper,
-            IRepository<ProviderRepository.Provider> providerRepository)
+            IRepository<TransactionRepository.Transaction> transactionRepository)
         {
             this.logger = logger;
             this.mapper = mapper;
-            this.providerRepository = providerRepository;
+            this.transactionRepository = transactionRepository;
         }
 
         /// <summary>
-        /// Retrieves all providers from Provider repository.
+        /// Retrieves all transactions from Transaction repository.
         /// </summary>
-        /// <param name="id">Provider's identification number</param>
+        /// <param name="id">Transaction's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
         [HttpGet(Name = nameof(GetAllAsync))]
         [ProducesResponseType(200)]
@@ -68,13 +68,13 @@ namespace ChocAn.ProviderServiceApi.Controllers
         {
             try
             {
-                List<Provider> providers = new();
-                await foreach (Provider provider in providerRepository.GetAllAsync())
+                List<Transaction> transactions = new();
+                await foreach (Transaction transaction in transactionRepository.GetAllAsync())
                 {
-                    providers.Add(provider);
+                    transactions.Add(transaction);
                 }
 
-                return Ok(providers);
+                return Ok(transactions);
             }
             catch (Exception ex)
             {
@@ -82,11 +82,12 @@ namespace ChocAn.ProviderServiceApi.Controllers
                 return Problem();
             }
         }
+        
         /// <summary>
-        /// Retrieves an individual provider from the Provider repository.
+        /// Retrieves an individual transaction from the Transaction repository.
         /// </summary>
-        /// <param name="id">Provider's identification number</param>
-        /// <returns>200 on success. 404 if provider does not exist. 500 on exception</returns>
+        /// <param name="id">Transaction's identification number</param>
+        /// <returns>200 on success. 404 if transaction does not exist. 500 on exception</returns>
         [HttpGet("{id}", Name = nameof(GetAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -95,13 +96,13 @@ namespace ChocAn.ProviderServiceApi.Controllers
         {
             try
             {
-                var provider = await providerRepository.GetAsync(id);
-                if (null == provider)
+                var transaction = await transactionRepository.GetAsync(id);
+                if (null == transaction)
                 {
                     return NotFound();
                 }
 
-                return Ok(provider);
+                return Ok(transaction);
             }
             catch (Exception ex)
             {
@@ -111,24 +112,30 @@ namespace ChocAn.ProviderServiceApi.Controllers
         }
 
         /// <summary>
-        /// Inserts a new provider into the Provider repository.
+        /// Inserts a new transaction into the Transaction repository.
         /// </summary>
-        /// <param name="providerResource"></param>
+        /// <param name="transactionResource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost(Name = nameof(PostAsync))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] ProviderResource providerResource)
+        public async Task<IActionResult> PostAsync([FromBody] TransactionResource transactionResource)
         {
             try
             {
-                var provider = mapper.Map<Provider>(providerResource);
-                await providerRepository.AddAsync(provider);
-                return Created("", providerResource);
+                var transaction = mapper.Map<Transaction>(transactionResource);
+                await transactionRepository.AddAsync(transaction);
+                return Created("", transactionResource);
+            }
+            catch (DbUpdateException ex)
+            {
+                logger.LogError(ex, nameof(PostAsync));
+                return BadRequest();
             }
             catch (Exception ex)
             {
+                
                 logger.LogError(ex, nameof(PostAsync));
                 return Problem();
             }
@@ -136,24 +143,24 @@ namespace ChocAn.ProviderServiceApi.Controllers
 
 
         /// <summary>
-        /// Updates a provider in the Provider repository.
+        /// Updates a transaction in the Transaction repository.
         /// </summary>
-        /// <param name="id">Provider's identification number</param>
-        /// <param name="providerResource">Provider updates</param>
+        /// <param name="id">Transaction's identification number</param>
+        /// <param name="transactionResource">Transaction updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}", Name = nameof(PutAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] ProviderResource providerResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] TransactionResource transactionResource)
         {
             try
             {
-                var provider = mapper.Map<Provider>(providerResource);
-                provider.Id = id;
-                await providerRepository.UpdateAsync(provider);
+                var transaction = mapper.Map<Transaction>(transactionResource);
+                transaction.Id = id;
+                await transactionRepository.UpdateAsync(transaction);
 
-                return Ok(providerResource);
+                return Ok(transactionResource);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -168,10 +175,10 @@ namespace ChocAn.ProviderServiceApi.Controllers
         }
 
         /// <summary>
-        /// Deletes a provider from the Provider respoitory.
+        /// Deletes a transaction from the Transaction respoitory.
         /// </summary>
-        /// <param name="id">Provider's identification number</param>
-        /// <returns>200 on success. 404 if provider does not exist. 500 on exception</returns>
+        /// <param name="id">Transaction's identification number</param>
+        /// <returns>200 on success. 404 if transaction does not exist. 500 on exception</returns>
         [HttpDelete("{id}", Name = nameof(DeleteAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -180,12 +187,12 @@ namespace ChocAn.ProviderServiceApi.Controllers
         {
             try
             {
-                var provider = await providerRepository.DeleteAsync(id);
-                if (null == provider)
+                var transaction = await transactionRepository.DeleteAsync(id);
+                if (null == transaction)
                 {
                     return NotFound();
                 }
-                return Ok(provider);
+                return Ok(transaction);
             }
             catch (Exception ex)
             {
