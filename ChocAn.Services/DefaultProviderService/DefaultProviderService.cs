@@ -40,6 +40,9 @@ namespace ChocAn.Services.DefaultProviderService
 {
     public class DefaultProviderService : IProviderService
     {
+        public const string ProviderErrorMessage = "Error while processing request for api/provider/{id}";
+        public const string ProviderExceptionMessage = "Exception while processing request for api/provider/{id}";
+
         private readonly IHttpClientFactory httpClientFactory;
         private readonly ILogger<DefaultProviderService> logger;
 
@@ -84,11 +87,13 @@ namespace ChocAn.Services.DefaultProviderService
                 {
                     return (true, null, response.ReasonPhrase);
                 }
+
+                logger?.LogError(ProviderErrorMessage, response.ReasonPhrase);
                 return (false, null, response.ReasonPhrase);
             }
             catch (Exception ex)
             {
-                logger?.LogError(ex.ToString());
+                logger?.LogError(ex, ProviderExceptionMessage, id);
                 return (false, null, ex.Message);
             }
         }

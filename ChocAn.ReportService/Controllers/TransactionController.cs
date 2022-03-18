@@ -48,6 +48,10 @@ namespace ChocAn.TransactionService.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
+        public const string MemberExceptionMessage = "Exception while processing request for api/member/{id}";
+        public const string ProviderExceptionMessage = "Exception while processing request for api/provider/{id}";
+        public const string AccountsPayableExceptionMessage = "Exception while processing request for api/accountspayable/{id}";
+
         private readonly ILogger<TransactionController> logger;
         private readonly IMapper mapper;
         private readonly IReportRepository<MemberTransactionsReport> memberTransactionsReportRepository;
@@ -103,10 +107,11 @@ namespace ChocAn.TransactionService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetMemberReportAsync), null);
+                logger?.LogError(ex, MemberExceptionMessage, id);
                 return Problem();
             }
         }
+
         /// <summary>
         /// Retrieves an individual transaction from the Transaction repository.
         /// </summary>
@@ -135,10 +140,11 @@ namespace ChocAn.TransactionService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetProviderReportAsync), null);
+                logger?.LogError(ex, ProviderExceptionMessage, id);
                 return Problem();
             }
         }
+        
         /// <summary>
         /// Retrieves an individual transaction from the Transaction repository.
         /// </summary>
@@ -156,7 +162,6 @@ namespace ChocAn.TransactionService.Controllers
                 var transactions = transactionRepository.GetAccountsPayableTransactionsAsync(
                     report.StartDate,
                     report.EndDate);
-
 
                 var transactionsByProvider = new Dictionary<int, List<Transaction>>();
 
@@ -176,7 +181,7 @@ namespace ChocAn.TransactionService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetProviderReportAsync), null);
+                logger?.LogError(ex, AccountsPayableExceptionMessage, id);
                 return Problem();
             }
         }

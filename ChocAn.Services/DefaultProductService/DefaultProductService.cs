@@ -40,6 +40,9 @@ namespace ChocAn.Services.DefaultProductService
 {
     public class DefaultProductService : IProductService
     {
+        public const string ProductErrorMessage = "Error while processing request for api/product/{id}";
+        public const string ProductExceptionMessage = "Exception while processing request for api/product/{id}";
+
         private readonly IHttpClientFactory httpClientFactory;
         private readonly ILogger<DefaultProductService> logger;
 
@@ -84,11 +87,13 @@ namespace ChocAn.Services.DefaultProductService
                 {
                     return (true, null, response.ReasonPhrase);
                 }
+
+                logger?.LogError(ProductErrorMessage, response.ReasonPhrase);
                 return (false, null, response.ReasonPhrase);
             }
             catch (Exception ex)
             {
-                logger?.LogError(ex.ToString());
+                logger?.LogError(ex, ProductExceptionMessage, id);
                 return (false, null, ex.Message);
             }
         }

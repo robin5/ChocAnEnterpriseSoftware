@@ -48,20 +48,24 @@ namespace ChocAn.ReportService.Controllers
     [ApiController]
     public class MemberTransactionsReportController : ControllerBase
     {
+        public const string GetAllAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/GetAllAsync";
+        public const string GetAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/GetAllAsync/{id}";
+        public const string PostAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/PostAsync";
+        public const string PutAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/PutAsync";
+        public const string DeleteAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/DeleteAsync";
+
         private readonly ILogger<MemberTransactionsReportController> logger;
         private readonly IMapper mapper;
         private readonly IReportRepository<MemberTransactionsReport> reportRepository;
-        private readonly ITransactionRepository transactionRepository;
+
         public MemberTransactionsReportController(
             ILogger<MemberTransactionsReportController> logger,
             IMapper mapper,
-            IReportRepository<MemberTransactionsReport> reportRepository,
-            ITransactionRepository transactionRepository)
+            IReportRepository<MemberTransactionsReport> reportRepository)
         {
             this.logger = logger;
             this.mapper = mapper;
             this.reportRepository = reportRepository;
-            this.transactionRepository = transactionRepository;
         }
 
         /// <summary>
@@ -76,7 +80,7 @@ namespace ChocAn.ReportService.Controllers
         {
             try
             {
-                List<Report> reports = new List<Report>();
+                List<Report> reports = new();
                 await foreach (Report report in reportRepository.GetAllAsync())
                 {
                     reports.Add(report);
@@ -86,7 +90,7 @@ namespace ChocAn.ReportService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAllAsync), null);
+                logger?.LogError(ex, GetAllAsyncExceptionMessage);
                 return Problem();
             }
         }
@@ -114,7 +118,7 @@ namespace ChocAn.ReportService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAsync), null);
+                logger?.LogError(ex, GetAsyncExceptionMessage, id);
                 return Problem();
             }
         }
@@ -138,7 +142,7 @@ namespace ChocAn.ReportService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PostAsync), null);
+                logger?.LogError(ex, PostAsyncExceptionMessage);
                 return Problem();
             }
         }
@@ -165,12 +169,12 @@ namespace ChocAn.ReportService.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                logger.LogError(ex, nameof(PutAsync), null);
+                logger?.LogError(ex, PutAsyncExceptionMessage);
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PutAsync), null);
+                logger?.LogError(ex, PutAsyncExceptionMessage);
                 return Problem();
             }
         }
@@ -197,7 +201,7 @@ namespace ChocAn.ReportService.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(DeleteAsync), null);
+                logger?.LogError(ex, DeleteAsyncExceptionMessage);
                 return Problem();
             }
         }

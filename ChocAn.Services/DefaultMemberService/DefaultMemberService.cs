@@ -40,6 +40,9 @@ namespace ChocAn.Services.DefaultMemberService
 {
     public class DefaultMemberService : IMemberService
     {
+        public const string MemberErrorMessage = "Error while processing request for api/member/{id}";
+        public const string MemberExceptionMessage = "Exception while processing request for api/member/{id}";
+
         private readonly IHttpClientFactory httpClientFactory;
         private readonly ILogger<DefaultMemberService> logger;
 
@@ -84,11 +87,13 @@ namespace ChocAn.Services.DefaultMemberService
                 {
                     return (true, null, response.ReasonPhrase);
                 }
+
+                logger?.LogError(MemberErrorMessage, response.ReasonPhrase);
                 return (false, null, response.ReasonPhrase);
             }
             catch (Exception ex)
             {
-                logger?.LogError(ex.ToString());
+                logger?.LogError(ex, MemberExceptionMessage, id);
                 return (false, null, ex.Message);
             }
         }

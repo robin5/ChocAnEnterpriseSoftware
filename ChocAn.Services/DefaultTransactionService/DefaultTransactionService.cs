@@ -40,6 +40,9 @@ namespace ChocAn.Services.DefaultTransactionService
 {
     public class DefaultTransactionService : ITransactionService
     {
+        public const string TransactionErrorMessage = "Error while processing request for api/transaction";
+        public const string TransactionExceptionMessage = "Exception while processing request for api/transaction";
+
         private readonly IHttpClientFactory httpClientFactory;
         private readonly ILogger<DefaultTransactionService> logger;
 
@@ -78,11 +81,13 @@ namespace ChocAn.Services.DefaultTransactionService
                 {
                     return (true, null);
                 }
+
+                logger?.LogError(TransactionErrorMessage, response.ReasonPhrase);
                 return (false, response.ReasonPhrase);
             }
             catch (Exception ex)
             {
-                logger?.LogError(ex.ToString());
+                logger?.LogError(ex, TransactionExceptionMessage);
                 return (false, ex.Message);
             }
         }
