@@ -50,9 +50,7 @@ namespace ChocAn.MockRepositories
 
         public Task<Member> DeleteAsync(object id)
         {
-            Member item = null;
-
-            if (items.TryGetValue((int)id, out item))
+            if (items.TryGetValue((int)id, out Member item))
             {
                 items.Remove((int)id);
                 return Task.FromResult(item);
@@ -75,9 +73,7 @@ namespace ChocAn.MockRepositories
 
         public Task<Member> GetAsync(object id)
         {
-            Member item = null;
-
-            items.TryGetValue((int)id, out item);
+            items.TryGetValue((int)id, out Member item);
             return Task.FromResult(item);
         }
 

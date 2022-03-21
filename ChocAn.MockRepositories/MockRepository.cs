@@ -40,7 +40,7 @@ namespace ChocAn.MockRepositories
 {
     public class MockRepository<T>
     {
-        protected List<T> items = new List<T>();
+        protected List<T> items = new();
 
         public Task<T> AddAsync(T item)
         {

@@ -41,7 +41,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.ProductServiceApi", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TerminalServiceApi", "ChocAn.TerminalServiceApi\ChocAn.TerminalServiceApi.csproj", "{BD25ECB5-3D50-44FD-9C6F-9C70358C23F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.TransactionServiceApi", "ChocAn.TransactionServiceApi\ChocAn.TransactionServiceApi.csproj", "{C7B89F3C-7E51-463E-A47F-ED6D6A888998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChocAn.TransactionServiceApi", "ChocAn.TransactionServiceApi\ChocAn.TransactionServiceApi.csproj", "{C7B89F3C-7E51-463E-A47F-ED6D6A888998}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChocAn.MemberServiceApi.Test", "ChocAn.MemberServiceApi.Test\ChocAn.MemberServiceApi.Test.csproj", "{5B5808F6-DC3E-40A4-92C3-E58C90F6ACBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +131,10 @@ Global
 		{C7B89F3C-7E51-463E-A47F-ED6D6A888998}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7B89F3C-7E51-463E-A47F-ED6D6A888998}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7B89F3C-7E51-463E-A47F-ED6D6A888998}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B5808F6-DC3E-40A4-92C3-E58C90F6ACBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B5808F6-DC3E-40A4-92C3-E58C90F6ACBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B5808F6-DC3E-40A4-92C3-E58C90F6ACBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B5808F6-DC3E-40A4-92C3-E58C90F6ACBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
