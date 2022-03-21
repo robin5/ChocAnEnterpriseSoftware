@@ -41,7 +41,6 @@ using Xunit;
 using ChocAn.Repository;
 using ChocAn.MemberRepository;
 using ChocAn.MemberServiceApi.Controllers;
-using ChocAn.MockRepositories;
 using ChocAn.MemberServiceApi.Resources;
 using Microsoft.EntityFrameworkCore;
 
@@ -104,6 +103,37 @@ namespace ChocAn.MemberServiceApi.Test
         }
 
         /// <summary>
+        /// A class that implements an Asynchronous generator for mocking 
+        /// the memberRepository.GetAllAsync() method
+        /// </summary>
+        private class MemberGenerator
+        {
+            private readonly IEnumerable<Member> members;
+
+            /// <summary>
+            /// Constructor initializes members to be returnd by Members property
+            /// </summary>
+            /// <param name="members"></param>
+            public MemberGenerator(IEnumerable<Member> members)
+            {
+                this.members = members;
+            }
+
+            /// <summary>
+            /// Asynchronous return of each member from the members list
+            /// </summary>
+            /// <returns>Member from members list</returns>
+            public async IAsyncEnumerable<Member> Members()
+            {
+                foreach (Member member in members)
+                {
+                    await Task.Delay(0);
+                    yield return member;
+                }
+            }
+        }
+
+        /// <summary>
         /// Verifies MemberController.GetAllAsync()
         /// 1) returns an OkObjectResult
         /// 2) the OkObjectResult contains a list of the 3 members from the repository
@@ -113,19 +143,24 @@ namespace ChocAn.MemberServiceApi.Test
         public async Task ValidateGetAllAsync()
         {
             // Arrange
-            var repository = new MockMemberRepository();
-            var logger = (new Mock<ILogger<MemberController>>()).Object;
-            var mapper = (new Mock<IMapper>()).Object;
-
             var (_, member1) = CreateResourceAndMember(1);
             var (_, member2) = CreateResourceAndMember(2);
             var (_, member3) = CreateResourceAndMember(3);
-            await repository.AddAsync(member1);
-            await repository.AddAsync(member2);
-            await repository.AddAsync(member3);
+
+            var generator = new MemberGenerator(
+                new List<Member> { member1, member2, member3 });
+
+            var mockLogger = new Mock<ILogger<MemberController>>();
+
+            var mockMapper = new Mock<IMapper>();
+
+            var mockRepository = new Mock<IRepository<Member>>();
+            mockRepository
+                .Setup(repository => repository.GetAllAsync())
+                .Returns(generator.Members);
 
             // Act
-            var controller = new MemberController(logger, mapper, repository);
+            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
             var result = await controller.GetAllAsync();
 
             // Assert
@@ -177,7 +212,7 @@ namespace ChocAn.MemberServiceApi.Test
         }
 
         /// <summary>
-        /// Verifies MemberController.GetAllAsync() handles exception thrown by repository by:
+        /// Verifies MemberController.GetAllAsync() handles an Exception thrown by repository by:
         /// 1) logging the exception
         /// 2) returning an ObjectResult with StatusCode value of 500
         /// </summary>
@@ -223,6 +258,7 @@ namespace ChocAn.MemberServiceApi.Test
 
         /// <summary>
         /// Verifies MemberController.GetAsync(id) returns an OkObjectResult if the member is found
+        /// Verifies the value of the OkObjectResult is the found member entity
         /// </summary>
         /// <returns></returns>
         [Fact]
@@ -293,8 +329,8 @@ namespace ChocAn.MemberServiceApi.Test
         }
 
         /// <summary>
-        /// Verifies MemberController.GetAsync() handles exception thrown by repository by: 
-        /// 1) logging the exception with the specidied message
+        /// Verifies MemberController.GetAsync() handles an Exception thrown by repository by: 
+        /// 1) logging the exception with the specified message
         /// 2) returning an ObjectResult with StatusCode value of 500
         /// </summary>
         /// <returns></returns>
@@ -340,9 +376,9 @@ namespace ChocAn.MemberServiceApi.Test
         }
 
         /// <summary>
-        /// Verifies that 
-        /// 1) the memberResource was added to the repository
-        /// 2) a created was returned with a copy of the provided resource
+        /// Verifies MemberController.AddAsync() adds a member to the repository returns an OkObjectResult 
+        /// Verifies that an OkObjectResult is returned
+        /// Verifies that the OkObjectResult's value property is that of the member
         /// </summary>
         /// <returns></returns>
         [Fact]
@@ -400,6 +436,12 @@ namespace ChocAn.MemberServiceApi.Test
             Assert.Equal(resource.Status, value.Status);
         }
 
+        /// <summary>
+        /// Verifies MemberController.PostAsync() handles an Exception thrown by repository by: 
+        /// 1) logging the exception with the specified message
+        /// 2) returning an ObjectResult with StatusCode value of 500
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task ValidatePostAsyncException()
         {
@@ -458,6 +500,12 @@ namespace ChocAn.MemberServiceApi.Test
                 Times.Once);
         }
 
+        /// <summary>
+        /// Verifies MemberController.PutAsync() updates a member in the repository 
+        /// Verifies that an OkObjectResult is returned
+        /// Verifies that the OkObjectResult's value property is that of the member resource
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task ValidatePutAsync()
         {
@@ -513,6 +561,12 @@ namespace ChocAn.MemberServiceApi.Test
             Assert.Equal(resource.Status, value.Status);
         }
 
+        /// <summary>
+        /// Verifies MemberController.PutAsync() handles a DbConcurrencyException thrown by repository by: 
+        /// 1) logging the exception with the specified message
+        /// 2) returning a BadRequestResult
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task ValidatePutAsyncConcurrencyException()
         {
@@ -540,17 +594,14 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Assert *
 
-            // 1) Verify repository's AddAsync method was called once with the specified resource data
+            // Verify repository's UpdateAsync method was called once with the specified resource data
             mockRepository.Verify(repository => repository.UpdateAsync(It.IsAny<Member>()), Times.Once());
 
-            // 1) Verify controller returned an ObjectResult whose status code is 500
-
+            // Verify controller returned an BadRequestResult
             Assert.NotNull(result);
+            Assert.IsType<BadRequestResult>(result);
 
-            var objectResult = Assert.IsType<BadRequestResult>(result);
-            Assert.Equal(400, objectResult.StatusCode);
-
-            // 2) verify exception was logged
+            // Verify exception was logged
             mockLogger.Verify(logger => logger.Log(
                 It.Is<LogLevel>(logLevel => logLevel == LogLevel.Error),
                 It.Is<EventId>(eventId => eventId.Id == 0),
@@ -560,6 +611,12 @@ namespace ChocAn.MemberServiceApi.Test
                 Times.Once);
         }
 
+        /// <summary>
+        /// Verifies MemberController.PutAsync() handles an Exception thrown by repository by: 
+        /// 1) logging the exception with the specified message
+        /// 2) returning an ObjectResult with StatusCode value of 500
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task ValidatePutAsyncException()
         {
@@ -606,6 +663,12 @@ namespace ChocAn.MemberServiceApi.Test
                 Times.Once);
         }
 
+        /// <summary>
+        /// Verifies MemberController.DeleteAsync(id) returns an OkObjectResult if the member is found
+        /// Verifies the value of the OkObjectResult is the found member entity
+        /// Verifies that the repository was called once to delete the member
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task DeleteAsync()
         {
@@ -643,6 +706,11 @@ namespace ChocAn.MemberServiceApi.Test
             Assert.Equal(member.ZipCode, value.ZipCode);
             Assert.Equal(member.Status, value.Status);
         }
+        
+        /// <summary>
+        /// Verifies MemberController.DeleteAsync(id) returns NotFoundResult if repository cannot find member 
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task DeleteAsyncNotFound()
         {
@@ -669,6 +737,13 @@ namespace ChocAn.MemberServiceApi.Test
             // Verify call returns OkObjectResult
             Assert.IsType<NotFoundResult>(result);
         }
+
+        /// <summary>
+        /// Verifies MemberController.DeleteAsync() handles exception thrown by repository by: 
+        /// 1) logging the exception with the specified message
+        /// 2) returning an ObjectResult with StatusCode value of 500
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task DeleteAsyncException()
         {
