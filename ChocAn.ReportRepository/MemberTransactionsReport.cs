@@ -36,6 +36,6 @@ namespace ChocAn.ReportRepository
 {
     public class MemberTransactionsReport : Report
     {
-        public int MemberId { get; set; }
+        public int MemberId { get; init; }
     }
 }

@@ -34,7 +34,6 @@ using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
 using ChocAn.ProviderRepository;
 using ChocAn.ProviderServiceApi.Resources;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.ProviderServiceApi.Controllers
@@ -44,15 +43,12 @@ namespace ChocAn.ProviderServiceApi.Controllers
     public class ProviderController : ControllerBase
     {
         private readonly ILogger<ProviderController> logger;
-        private readonly IMapper mapper;
         private readonly IRepository<ProviderRepository.Provider> providerRepository;
         public ProviderController(
             ILogger<ProviderController> logger,
-            IMapper mapper,
             IRepository<ProviderRepository.Provider> providerRepository)
         {
             this.logger = logger;
-            this.mapper = mapper;
             this.providerRepository = providerRepository;
         }
 
@@ -73,7 +69,6 @@ namespace ChocAn.ProviderServiceApi.Controllers
                 {
                     providers.Add(provider);
                 }
-
                 return Ok(providers);
             }
             catch (Exception ex)
@@ -100,7 +95,6 @@ namespace ChocAn.ProviderServiceApi.Controllers
                 {
                     return NotFound();
                 }
-
                 return Ok(provider);
             }
             catch (Exception ex)
@@ -113,19 +107,28 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// <summary>
         /// Inserts a new provider into the Provider repository.
         /// </summary>
-        /// <param name="providerResource"></param>
+        /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost(Name = nameof(PostAsync))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] ProviderResource providerResource)
+        public async Task<IActionResult> PostAsync([FromBody] ProviderResource resource)
         {
             try
             {
-                var provider = mapper.Map<Provider>(providerResource);
+                var provider = new Provider()
+                {
+                    Id  = 0,
+                    Name = resource.Name,
+                    Email = resource.Email,
+                    StreetAddress = resource.StreetAddress,
+                    City = resource.City,
+                    State = resource.State,
+                    ZipCode = resource.ZipCode
+                };
                 await providerRepository.AddAsync(provider);
-                return Created("", providerResource);
+                return Created("", resource);
             }
             catch (Exception ex)
             {
@@ -139,21 +142,28 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// Updates a provider in the Provider repository.
         /// </summary>
         /// <param name="id">Provider's identification number</param>
-        /// <param name="providerResource">Provider updates</param>
+        /// <param name="resource">Provider updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}", Name = nameof(PutAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] ProviderResource providerResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] ProviderResource resource)
         {
             try
             {
-                var provider = mapper.Map<Provider>(providerResource);
-                provider.Id = id;
+                var provider = new Provider()
+                {
+                    Id = id,
+                    Name = resource.Name,
+                    Email = resource.Email,
+                    StreetAddress = resource.StreetAddress,
+                    City = resource.City,
+                    State = resource.State,
+                    ZipCode = resource.ZipCode
+                };
                 await providerRepository.UpdateAsync(provider);
-
-                return Ok(providerResource);
+                return Ok(resource);
             }
             catch (DbUpdateConcurrencyException ex)
             {

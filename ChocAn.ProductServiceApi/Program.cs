@@ -31,7 +31,6 @@
 // **********************************************************************************using System;
 
 using ChocAn.ProductRepository;
-using ChocAn.ProductServiceApi.Infrastructure;
 using ChocAn.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -50,8 +49,6 @@ builder.Services.AddScoped<IRepository<ChocAn.ProductRepository.Product>, Defaul
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
 
 var app = builder.Build();
 

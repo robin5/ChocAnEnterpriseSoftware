@@ -54,16 +54,13 @@ namespace ChocAn.ReportService.Controllers
         public const string DeleteAsyncExceptionMessage = "Exception while processing request for api/ProviderTransactionsReport/DeleteAsync";
 
         private readonly ILogger<ProviderTransactionsReportController> logger;
-        private readonly IMapper mapper;
         private readonly IReportRepository<ProviderTransactionsReport> reportRepository;
 
         public ProviderTransactionsReportController(
             ILogger<ProviderTransactionsReportController> logger,
-            IMapper mapper,
             IReportRepository<ProviderTransactionsReport> reportRepository)
         {
             this.logger = logger;
-            this.mapper = mapper;
             this.reportRepository = reportRepository;
         }
 
@@ -112,8 +109,7 @@ namespace ChocAn.ReportService.Controllers
                 {
                     return NotFound();
                 }
-
-                return Ok(mapper.Map<ProviderTransactionsReportResource>(report));
+                return Ok(report);
             }
             catch (Exception ex)
             {
@@ -131,13 +127,23 @@ namespace ChocAn.ReportService.Controllers
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] ProviderTransactionsReportResource reportResource)
+        public async Task<IActionResult> PostAsync([FromBody] ProviderTransactionsReportResource resource)
         {
             try
             {
-                var report = mapper.Map<ProviderTransactionsReport>(reportResource);
+                var report = new ProviderTransactionsReport()
+                {
+                    Id = 0,
+                    Name = resource.Name,
+                    OwnerId = resource.OwnerId,
+                    StartDate = resource.StartDate,
+                    EndDate = resource.EndDate,
+                    Status = resource.Status,
+                    Created = resource.Created,
+                    ProviderId = resource.ProviderId
+                };
                 await reportRepository.AddAsync(report);
-                return Created("", reportResource);
+                return Created("", resource);
             }
             catch (Exception ex)
             {
@@ -160,10 +166,17 @@ namespace ChocAn.ReportService.Controllers
         {
             try
             {
-                var report = mapper.Map<ProviderTransactionsReport>(reportResource);
-                report.Id = id;
+                var report = new ProviderTransactionsReport()
+                {
+                    Id = id,
+                    Name = reportResource.Name,
+                    OwnerId = reportResource.OwnerId,
+                    StartDate = reportResource.StartDate,
+                    EndDate = reportResource.EndDate,
+                    Status = reportResource.Status,
+                    Created = reportResource.Created
+                };
                 await reportRepository.UpdateAsync(report);
-
                 return Ok(reportResource);
             }
             catch (DbUpdateConcurrencyException ex)
@@ -196,7 +209,7 @@ namespace ChocAn.ReportService.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(mapper.Map<ProviderTransactionsReportResource>(report));
+                return Ok(report);
             }
             catch (Exception ex)
             {

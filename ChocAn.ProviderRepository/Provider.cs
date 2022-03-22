@@ -41,12 +41,12 @@ namespace ChocAn.ProviderRepository
     public class Provider
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string StreetAddress { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public int ZipCode { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public string Email { get; init; }
+        public string StreetAddress { get; init; }
+        public string City { get; init; }
+        public string State { get; init; }
+        public int ZipCode { get; init; }
     }
 }

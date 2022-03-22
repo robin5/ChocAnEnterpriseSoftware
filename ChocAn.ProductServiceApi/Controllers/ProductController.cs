@@ -34,7 +34,6 @@ using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
 using ChocAn.ProductRepository;
 using ChocAn.ProductServiceApi.Resources;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.ProductServiceApi.Controllers
@@ -44,15 +43,12 @@ namespace ChocAn.ProductServiceApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> logger;
-        private readonly IMapper mapper;
         private readonly IRepository<ProductRepository.Product> productRepository;
         public ProductController(
             ILogger<ProductController> logger,
-            IMapper mapper,
             IRepository<ProductRepository.Product> productRepository)
         {
             this.logger = logger;
-            this.mapper = mapper;
             this.productRepository = productRepository;
         }
 
@@ -73,7 +69,6 @@ namespace ChocAn.ProductServiceApi.Controllers
                 {
                     products.Add(product);
                 }
-
                 return Ok(products);
             }
             catch (Exception ex)
@@ -100,7 +95,6 @@ namespace ChocAn.ProductServiceApi.Controllers
                 {
                     return NotFound();
                 }
-
                 return Ok(product);
             }
             catch (Exception ex)
@@ -113,19 +107,24 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// <summary>
         /// Inserts a new product into the Product repository.
         /// </summary>
-        /// <param name="productResource"></param>
+        /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost(Name = nameof(PostAsync))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] ProductResource productResource)
+        public async Task<IActionResult> PostAsync([FromBody] ProductResource resource)
         {
             try
             {
-                var product = mapper.Map<Product>(productResource);
+                var product = new Product()
+                {
+                    Id = 0,
+                    Name = resource.Name,
+                    Cost = resource.Cost,
+                };
                 await productRepository.AddAsync(product);
-                return Created("", productResource);
+                return Created("", resource);
             }
             catch (Exception ex)
             {
@@ -139,21 +138,24 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// Updates a product in the Product repository.
         /// </summary>
         /// <param name="id">Product's identification number</param>
-        /// <param name="productResource">Product updates</param>
+        /// <param name="resource">Product updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}", Name = nameof(PutAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] ProductResource productResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] ProductResource resource)
         {
             try
             {
-                var product = mapper.Map<Product>(productResource);
-                product.Id = id;
+                var product = new Product()
+                {
+                    Id = id,
+                    Name = resource.Name,
+                    Cost = resource.Cost
+                };
                 await productRepository.UpdateAsync(product);
-
-                return Ok(productResource);
+                return Ok(resource);
             }
             catch (DbUpdateConcurrencyException ex)
             {

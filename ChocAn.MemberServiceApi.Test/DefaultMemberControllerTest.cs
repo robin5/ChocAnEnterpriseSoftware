@@ -35,7 +35,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using AutoMapper;
 using Moq;
 using Xunit;
 using ChocAn.Repository;
@@ -152,15 +151,13 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.GetAllAsync())
                 .Returns(generator.Members);
 
             // Act
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.GetAllAsync();
 
             // Assert
@@ -224,8 +221,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.GetAllAsync())
@@ -233,7 +228,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.GetAllAsync();
 
             // * Assert *
@@ -270,8 +265,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.GetAsync(member.Id))
@@ -279,7 +272,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.GetAsync(member.Id);
 
             // * Assert *
@@ -310,8 +303,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.GetAsync(It.IsAny<int>()))
@@ -319,7 +310,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.GetAsync(1);
 
             // * Assert *
@@ -341,8 +332,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.GetAsync(It.IsAny<int>()))
@@ -350,7 +339,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             // Note: any Id value can be used because any 
             // call to the repository will throw an exception
             var result = await controller.GetAsync(1);
@@ -389,11 +378,6 @@ namespace ChocAn.MemberServiceApi.Test
             var (resource, _) = CreateResourceAndMember();
 
             var mockLogger = new Mock<ILogger<MemberController>>();
-            var mockMapper = new Mock<IMapper>();
-
-            mockMapper
-                .Setup(mapper => mapper.Map<Member>(It.IsAny<MemberResource>()))
-                .Returns(MemberFromResource(resource));
 
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
@@ -401,7 +385,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.PostAsync(resource);
 
             // * Assert *
@@ -450,11 +434,6 @@ namespace ChocAn.MemberServiceApi.Test
             var (resource, _) = CreateResourceAndMember();
 
             var mockLogger = new Mock<ILogger<MemberController>>();
-            var mockMapper = new Mock<IMapper>();
-
-            mockMapper
-                .Setup(mapper => mapper.Map<Member>(It.IsAny<MemberResource>()))
-                .Returns(MemberFromResource(resource));
 
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
@@ -463,7 +442,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.PostAsync(resource);
 
             // * Assert *
@@ -515,18 +494,13 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-            mockMapper
-                .Setup(mapper => mapper.Map<Member>(It.IsAny<MemberResource>()))
-                .Returns(MemberFromResource(resource));
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()));
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.PutAsync(member.Id, resource);
 
             // * Assert *
@@ -576,11 +550,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-            mockMapper
-                .Setup(mapper => mapper.Map<Member>(It.IsAny<MemberResource>()))
-                .Returns(MemberFromResource(resource));
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()))
@@ -589,7 +558,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.PutAsync(member.Id, resource);
 
             // * Assert *
@@ -626,11 +595,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-            mockMapper
-                .Setup(mapper => mapper.Map<Member>(It.IsAny<MemberResource>()))
-                .Returns(MemberFromResource(resource));
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()))
@@ -638,7 +602,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.PutAsync(member.Id, resource);
 
             // * Assert *
@@ -678,8 +642,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.DeleteAsync(member.Id))
@@ -687,7 +649,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.DeleteAsync(member.Id);
 
             // * Assert *
@@ -720,8 +682,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.DeleteAsync(member.Id))
@@ -729,7 +689,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.DeleteAsync(member.Id);
 
             // * Assert *
@@ -751,8 +711,6 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
-            var mockMapper = new Mock<IMapper>();
-
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
                 .Setup(repository => repository.DeleteAsync(It.IsAny<int>()))
@@ -760,7 +718,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockMapper.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
             var result = await controller.DeleteAsync(1);
 
             // * Assert *

@@ -36,12 +36,12 @@ namespace ChocAn.ReportRepository
 {
     public abstract class Report
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public Guid OwnerId { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int Status { get; set; }
-        public DateTime Created { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public Guid OwnerId { get; init; }
+        public DateTime StartDate { get; init; }
+        public DateTime EndDate { get; init; }
+        public int Status { get; init; }
+        public DateTime Created { get; init; }
     }
 }

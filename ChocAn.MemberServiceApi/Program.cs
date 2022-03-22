@@ -31,7 +31,6 @@
 // **********************************************************************************using System;
 
 using ChocAn.MemberRepository;
-using ChocAn.MemberServiceApi.Infrastructure;
 using ChocAn.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,13 +44,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IRepository<ChocAn.MemberRepository.Member>, DefaultMemberRepository>();
+builder.Services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
 
 var app = builder.Build();
 

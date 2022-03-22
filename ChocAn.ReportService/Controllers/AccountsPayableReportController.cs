@@ -38,7 +38,6 @@ using ChocAn.ReportRepository;
 using ChocAn.TransactionRepository;
 using Microsoft.Extensions.Logging;
 using ChocAn.ReportService.Resources;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.ReportService.Controllers
@@ -54,17 +53,14 @@ namespace ChocAn.ReportService.Controllers
         public const string DeleteAsyncExceptionMessage = "Exception while processing request for api/AccountsPayableReport/DeleteAsync";
 
         private readonly ILogger<AccountsPayableReportController> logger;
-        private readonly IMapper mapper;
         private readonly IReportRepository<AccountsPayableReport> reportRepository;
         private readonly ITransactionRepository transactionRepository;
         public AccountsPayableReportController(
             ILogger<AccountsPayableReportController> logger,
-            IMapper mapper,
             IReportRepository<AccountsPayableReport> reportRepository,
             ITransactionRepository transactionRepository)
         {
             this.logger = logger;
-            this.mapper = mapper;
             this.reportRepository = reportRepository;
             this.transactionRepository = transactionRepository;
         }
@@ -86,7 +82,6 @@ namespace ChocAn.ReportService.Controllers
                 {
                     reports.Add(report);
                 }
-
                 return Ok(reports);
             }
             catch (Exception ex)
@@ -114,8 +109,7 @@ namespace ChocAn.ReportService.Controllers
                 {
                     return NotFound();
                 }
-
-                return Ok(mapper.Map<AccountsPayableReportResource>(report));
+                return Ok(report);
             }
             catch (Exception ex)
             {
@@ -127,19 +121,28 @@ namespace ChocAn.ReportService.Controllers
         /// <summary>
         /// Inserts a new report into the Report repository.
         /// </summary>
-        /// <param name="reportResource"></param>
+        /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost(Name = nameof(PostAsync))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] AccountsPayableReportResource reportResource)
+        public async Task<IActionResult> PostAsync([FromBody] AccountsPayableReportResource resource)
         {
             try
             {
-                var report = mapper.Map<AccountsPayableReport>(reportResource);
+                var report = new AccountsPayableReport()
+                {
+                    Id = 0,
+                    Name = resource.Name,
+                    OwnerId = resource.OwnerId,
+                    StartDate = resource.StartDate,
+                    EndDate = resource.EndDate,
+                    Status = resource.Status,
+                    Created = resource.Created
+                };
                 await reportRepository.AddAsync(report);
-                return Created("", reportResource);
+                return Created("", resource);
             }
             catch (Exception ex)
             {
@@ -152,21 +155,28 @@ namespace ChocAn.ReportService.Controllers
         /// Updates a report in the Report repository.
         /// </summary>
         /// <param name="id">Report's identification number</param>
-        /// <param name="reportResource">Report updates</param>
+        /// <param name="resource">Report updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}", Name = nameof(PutAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] AccountsPayableReportResource reportResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] AccountsPayableReportResource resource)
         {
             try
             {
-                var report = mapper.Map<AccountsPayableReport>(reportResource);
-                report.Id = id;
+                var report = new AccountsPayableReport()
+                {
+                    Id = id,
+                    Name = resource.Name,
+                    OwnerId = resource.OwnerId,
+                    StartDate = resource.StartDate,
+                    EndDate = resource.EndDate,
+                    Status = resource.Status,
+                    Created = resource.Created,
+                };
                 await reportRepository.UpdateAsync(report);
-
-                return Ok(reportResource);
+                return Ok(resource);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -198,7 +208,7 @@ namespace ChocAn.ReportService.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(mapper.Map<AccountsPayableReportResource>(report));
+                return Ok(report);
             }
             catch (Exception ex)
             {

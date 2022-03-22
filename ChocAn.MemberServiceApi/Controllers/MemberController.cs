@@ -34,7 +34,6 @@ using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
 using ChocAn.MemberRepository;
 using ChocAn.MemberServiceApi.Resources;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.MemberServiceApi.Controllers
@@ -44,16 +43,13 @@ namespace ChocAn.MemberServiceApi.Controllers
     public class MemberController : ControllerBase
     {
         private readonly ILogger<MemberController> logger;
-        private readonly IMapper mapper;
-        private readonly IRepository<MemberRepository.Member> memberRepository;
+        private readonly IRepository<Member> repository;
         public MemberController(
             ILogger<MemberController> logger,
-            IMapper mapper,
-            IRepository<MemberRepository.Member> memberRepository)
+            IRepository<Member> repository)
         {
             this.logger = logger;
-            this.mapper = mapper;
-            this.memberRepository = memberRepository;
+            this.repository = repository;
         }
 
         /// <summary>
@@ -69,11 +65,10 @@ namespace ChocAn.MemberServiceApi.Controllers
             try
             {
                 List<Member> members = new();
-                await foreach (Member member in memberRepository.GetAllAsync())
+                await foreach (Member member in repository.GetAllAsync())
                 {
                     members.Add(member);
                 }
-
                 return Ok(members);
             }
             catch (Exception ex)
@@ -95,12 +90,11 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                var member = await memberRepository.GetAsync(id);
+                var member = await repository.GetAsync(id);
                 if (null == member)
                 {
                     return NotFound();
                 }
-
                 return Ok(member);
             }
             catch (Exception ex)
@@ -113,19 +107,28 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// <summary>
         /// Inserts a new member into the Member repository.
         /// </summary>
-        /// <param name="memberResource"></param>
+        /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost(Name = nameof(PostAsync))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] MemberResource memberResource)
+        public async Task<IActionResult> PostAsync([FromBody] MemberResource resource)
         {
             try
             {
-                var member = mapper.Map<Member>(memberResource);
-                await memberRepository.AddAsync(member);
-                return Created("", memberResource);
+                var member = new Member()
+                {
+                    Name = resource.Name,
+                    Email = resource.Email,
+                    StreetAddress = resource.StreetAddress,
+                    City = resource.City,
+                    State = resource.State,
+                    ZipCode = resource.ZipCode,
+                    Status = resource.Status
+                };
+                await repository.AddAsync(member);
+                return Created("", resource);
             }
             catch (Exception ex)
             {
@@ -139,21 +142,29 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// Updates a member in the Member repository.
         /// </summary>
         /// <param name="id">Member's identification number</param>
-        /// <param name="memberResource">Member updates</param>
+        /// <param name="resource">Member updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}", Name = nameof(PutAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] MemberResource memberResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] MemberResource resource)
         {
             try
             {
-                var member = mapper.Map<Member>(memberResource);
-                member.Id = id;
-                await memberRepository.UpdateAsync(member);
-
-                return Ok(memberResource);
+                var member = new Member()
+                {
+                    Id = id,
+                    Name = resource.Name,
+                    Email = resource.Email,
+                    StreetAddress = resource.StreetAddress,
+                    City = resource.City,
+                    State = resource.State,
+                    ZipCode = resource.ZipCode,
+                    Status = resource.Status
+                };
+                await repository.UpdateAsync(member);
+                return Ok(resource);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -180,7 +191,7 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                var member = await memberRepository.DeleteAsync(id);
+                var member = await repository.DeleteAsync(id);
                 if (null == member)
                 {
                     return NotFound();

@@ -30,7 +30,7 @@
 // * 
 // **********************************************************************************
 
-using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ChocAn.ProductRepository
 {
@@ -39,8 +39,9 @@ namespace ChocAn.ProductRepository
     /// </summary>
     public class Product
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Cost { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public decimal Cost { get; init; }
     }
 }
