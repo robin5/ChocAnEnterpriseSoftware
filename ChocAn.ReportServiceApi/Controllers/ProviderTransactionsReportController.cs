@@ -2,7 +2,7 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: MemberTransactionsReportController.cs
+// * File: ProviderTransactionsReportController.cs
 // *
 // * Description: Implements the Report controller for the ReportService API.
 // *
@@ -31,38 +31,31 @@
 // **********************************************************************************
 
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ChocAn.ReportRepository;
-using ChocAn.TransactionRepository;
-using Microsoft.Extensions.Logging;
 using ChocAn.ReportService.Resources;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using ChocAn.Repository;
 
 namespace ChocAn.ReportService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MemberTransactionsReportController : ControllerBase
+    public class ProviderTransactionsReportController : ControllerBase
     {
-        public const string GetAllAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/GetAllAsync";
-        public const string GetAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/GetAllAsync/{id}";
-        public const string PostAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/PostAsync";
-        public const string PutAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/PutAsync";
-        public const string DeleteAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/DeleteAsync";
+        public const string GetAllAsyncExceptionMessage = "Exception while processing request for api/ProviderTransactionsReport/GetAllAsync";
+        public const string GetAsyncExceptionMessage = "Exception while processing request for api/ProviderTransactionsReport/GetAllAsync/{id}";
+        public const string PostAsyncExceptionMessage = "Exception while processing request for api/ProviderTransactionsReport/PostAsync";
+        public const string PutAsyncExceptionMessage = "Exception while processing request for api/ProviderTransactionsReport/PutAsync";
+        public const string DeleteAsyncExceptionMessage = "Exception while processing request for api/ProviderTransactionsReport/DeleteAsync";
 
-        private readonly ILogger<MemberTransactionsReportController> logger;
-        private readonly IReportRepository<MemberTransactionsReport> repository;
+        private readonly ILogger<ProviderTransactionsReportController> logger;
+        private readonly IReportRepository<ProviderTransactionsReport> reportRepository;
 
-        public MemberTransactionsReportController(
-            ILogger<MemberTransactionsReportController> logger,
-            IReportRepository<MemberTransactionsReport> reportRepository)
+        public ProviderTransactionsReportController(
+            ILogger<ProviderTransactionsReportController> logger,
+            IReportRepository<ProviderTransactionsReport> reportRepository)
         {
             this.logger = logger;
-            this.repository = reportRepository;
+            this.reportRepository = reportRepository;
         }
 
         /// <summary>
@@ -78,7 +71,7 @@ namespace ChocAn.ReportService.Controllers
             try
             {
                 List<Report> reports = new();
-                await foreach (Report report in repository.GetAllAsync())
+                await foreach (Report report in reportRepository.GetAllAsync())
                 {
                     reports.Add(report);
                 }
@@ -105,7 +98,7 @@ namespace ChocAn.ReportService.Controllers
         {
             try
             {
-                var report = await repository.GetAsync(id);
+                var report = await reportRepository.GetAsync(id);
                 if (null == report)
                 {
                     return NotFound();
@@ -122,17 +115,17 @@ namespace ChocAn.ReportService.Controllers
         /// <summary>
         /// Inserts a new report into the Report repository.
         /// </summary>
-        /// <param name="resource"></param>
+        /// <param name="reportResource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] MemberTransactionsReportResource resource)
+        public async Task<IActionResult> PostAsync([FromBody] ProviderTransactionsReportResource resource)
         {
             try
             {
-                var report = new MemberTransactionsReport()
+                var report = new ProviderTransactionsReport()
                 {
                     Id = 0,
                     Name = resource.Name,
@@ -141,9 +134,9 @@ namespace ChocAn.ReportService.Controllers
                     EndDate = resource.EndDate,
                     Status = resource.Status,
                     Created = resource.Created,
-                    MemberId = resource.MemberId
+                    ProviderId = resource.ProviderId
                 };
-                await repository.AddAsync(report);
+                await reportRepository.AddAsync(report);
                 return Created("", resource);
             }
             catch (Exception ex)
@@ -163,11 +156,11 @@ namespace ChocAn.ReportService.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] MemberTransactionsReportResource reportResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] ProviderTransactionsReportResource reportResource)
         {
             try
             {
-                var report = new MemberTransactionsReport()
+                var report = new ProviderTransactionsReport()
                 {
                     Id = id,
                     Name = reportResource.Name,
@@ -175,10 +168,9 @@ namespace ChocAn.ReportService.Controllers
                     StartDate = reportResource.StartDate,
                     EndDate = reportResource.EndDate,
                     Status = reportResource.Status,
-                    Created = reportResource.Created,
-                    MemberId= reportResource.MemberId
+                    Created = reportResource.Created
                 };
-                await repository.UpdateAsync(report);
+                await reportRepository.UpdateAsync(report);
                 return Ok(reportResource);
             }
             catch (DbUpdateConcurrencyException ex)
@@ -206,7 +198,7 @@ namespace ChocAn.ReportService.Controllers
         {
             try
             {
-                var report = await repository.DeleteAsync(id);
+                var report = await reportRepository.DeleteAsync(id);
                 if (null == report)
                 {
                     return NotFound();
