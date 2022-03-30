@@ -89,6 +89,7 @@ namespace ChocAn.Repository
                 yield return entity;
                 await enumerator.MoveNextAsync();
             }
+            await enumerator.DisposeAsync();
         }
 
         /// <summary>
@@ -107,6 +108,7 @@ namespace ChocAn.Repository
                 yield return entity;
                 await enumerator.MoveNextAsync();
             }
+            await enumerator.DisposeAsync();
         }
     }
 }
