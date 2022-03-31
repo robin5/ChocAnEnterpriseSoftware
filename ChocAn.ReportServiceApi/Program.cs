@@ -41,15 +41,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContextPool<MemberTransactionsReportDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("MemberTransactionsReportConnection")));
-builder.Services.AddScoped<IReportRepository<MemberTransactionsReport>, DefaultMemberTransactionsReportRepository>();
+builder.Services.AddScoped<IMemberTransactionsReportRepository, DefaultMemberTransactionsReportRepository>();
 
 builder.Services.AddDbContextPool<ProviderTransactionsReportDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("ProviderTransactionsReportConnection")));
-builder.Services.AddScoped<IReportRepository<ProviderTransactionsReport>, DefaultProviderTransactionsReportRepository>();
+builder.Services.AddScoped<IProviderTransactionsReportRepository, DefaultProviderTransactionsReportRepository>();
 
 builder.Services.AddDbContextPool<AccountsPayableReportDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("AccountsPayableReportConnection")));
-builder.Services.AddScoped<IReportRepository<AccountsPayableReport>, DefaultAccountsPayableReportRepository>();
+builder.Services.AddScoped<IAccountsPayableReportRepository, DefaultAccountsPayableReportRepository>();
 
 
 builder.Services.AddControllers();

@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: DefaultProviderTransactionsReportRepository.cs
+// * File: IAccountsPayableReportRepository.cs
 // *
-// * Description: Provides access to ProviderTransactionsReport entities stored in a database context
+// * Description: Defines an entity which describes a report of member transactions
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,22 +30,9 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.Repository;
-
 namespace ChocAn.ReportRepository
 {
-    /// <summary>
-    /// Implements repository pattern for ProviderTransactionsReport entities
-    /// </summary>
-    public class DefaultProviderTransactionsReportRepository : Repository<ProviderTransactionsReport>, IProviderTransactionsReportRepository
+    public interface IAccountsPayableReportRepository : IReportRepository<AccountsPayableReport>
     {
-        /// <summary>
-        ///  Constructor for DefaultReportRepository
-        /// </summary>
-        /// <param name="context">DbContext of underlying database</param>
-        public DefaultProviderTransactionsReportRepository(ProviderTransactionsReportDbContext context)
-            : base(context)
-        {
-        }
     }
 }

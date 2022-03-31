@@ -37,7 +37,7 @@ namespace ChocAn.ReportRepository
     /// <summary>
     /// Implements repository pattern for AccountsPayableReport entities
     /// </summary>
-    public class DefaultAccountsPayableReportRepository : Repository<AccountsPayableReport>, IReportRepository<AccountsPayableReport>
+    public class DefaultAccountsPayableReportRepository : Repository<AccountsPayableReport>, IAccountsPayableReportRepository
     {
         /// <summary>
         ///  Constructor for DefaultReportRepository

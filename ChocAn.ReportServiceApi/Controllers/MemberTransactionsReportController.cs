@@ -48,11 +48,11 @@ namespace ChocAn.ReportService.Controllers
         public const string DeleteAsyncExceptionMessage = "Exception while processing request for api/MemberTransactionsReport/DeleteAsync";
 
         private readonly ILogger<MemberTransactionsReportController> logger;
-        private readonly IReportRepository<MemberTransactionsReport> repository;
+        private readonly IMemberTransactionsReportRepository repository;
 
         public MemberTransactionsReportController(
             ILogger<MemberTransactionsReportController> logger,
-            IReportRepository<MemberTransactionsReport> reportRepository)
+            IMemberTransactionsReportRepository reportRepository)
         {
             this.logger = logger;
             this.repository = reportRepository;
@@ -70,8 +70,8 @@ namespace ChocAn.ReportService.Controllers
         {
             try
             {
-                List<Report> reports = new();
-                await foreach (Report report in repository.GetAllAsync())
+                List<MemberTransactionsReport> reports = new();
+                await foreach (MemberTransactionsReport report in repository.GetAllAsync())
                 {
                     reports.Add(report);
                 }

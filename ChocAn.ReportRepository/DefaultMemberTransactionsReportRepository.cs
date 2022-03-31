@@ -1,5 +1,5 @@
 ﻿// **********************************************************************************
-// * Copyright (c) 2021 Robin Murray
+// * Copyright (c) 2022 Robin Murray
 // **********************************************************************************
 // *
 // * File: DefaultMemberTransactionsReportRepository.cs
@@ -37,7 +37,7 @@ namespace ChocAn.ReportRepository
     /// <summary>
     /// Implements repository pattern for MemberTransactionsReport entities
     /// </summary>
-    public class DefaultMemberTransactionsReportRepository : Repository<MemberTransactionsReport>, IReportRepository<MemberTransactionsReport>
+    public class DefaultMemberTransactionsReportRepository : Repository<MemberTransactionsReport>, IMemberTransactionsReportRepository
     {
         /// <summary>
         ///  Constructor for DefaultReportRepository
