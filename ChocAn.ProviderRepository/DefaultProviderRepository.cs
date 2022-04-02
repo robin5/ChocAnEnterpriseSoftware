@@ -63,6 +63,7 @@ namespace ChocAn.ProviderRepository
                 yield return entity;
                 await enumerator.MoveNextAsync();
             }
+            await enumerator.DisposeAsync();
         }
     }
 }
