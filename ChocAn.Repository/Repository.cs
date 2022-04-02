@@ -99,16 +99,8 @@ namespace ChocAn.Repository
         /// <returns>An enumerator that provides asynchronous iteration over all T Entities in the database</returns>
         virtual public async IAsyncEnumerable<T> GetAllByNameAsync(string name)
         {
-            var enumerator = dbSet.AsAsyncEnumerable().GetAsyncEnumerator();
-            T entity;
-
-            await enumerator.MoveNextAsync();
-            while (null != (entity = enumerator.Current))
-            {
-                yield return entity;
-                await enumerator.MoveNextAsync();
-            }
-            await enumerator.DisposeAsync();
+            await Task.Delay(0);
+            yield return null;
         }
     }
 }
