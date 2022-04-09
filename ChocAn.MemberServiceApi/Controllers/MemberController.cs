@@ -31,10 +31,12 @@
 // **********************************************************************************
 
 using ChocAn.Repository;
+using ChocAn.Repository.Paging;
 using Microsoft.AspNetCore.Mvc;
 using ChocAn.MemberRepository;
 using ChocAn.MemberServiceApi.Resources;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ChocAn.MemberServiceApi.Controllers
 {
@@ -44,12 +46,15 @@ namespace ChocAn.MemberServiceApi.Controllers
     {
         private readonly ILogger<MemberController> logger;
         private readonly IRepository<Member> repository;
+        private readonly PagingOptions defaultPagingOptions;
         public MemberController(
             ILogger<MemberController> logger,
-            IRepository<Member> repository)
+            IRepository<Member> repository,
+            IOptions<PagingOptions> defaultPagingOptions)
         {
             this.logger = logger;
             this.repository = repository;
+            this.defaultPagingOptions = defaultPagingOptions.Value;
         }
 
         /// <summary>
@@ -60,12 +65,15 @@ namespace ChocAn.MemberServiceApi.Controllers
         [HttpGet(Name = nameof(GetAllAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] PagingOptions pagingOptions)
         {
             try
             {
+                pagingOptions.Offset ??= defaultPagingOptions.Offset;
+                pagingOptions.Limit ??= defaultPagingOptions.Limit;
+
                 List<Member> members = new();
-                await foreach (Member member in repository.GetAllAsync())
+                await foreach (Member member in repository.GetAllAsync(pagingOptions))
                 {
                     members.Add(member);
                 }
@@ -77,6 +85,7 @@ namespace ChocAn.MemberServiceApi.Controllers
                 return Problem();
             }
         }
+
         /// <summary>
         /// Retrieves an individual member from the Member repository.
         /// </summary>

@@ -36,6 +36,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ChocAn.Repository;
 using ChocAn.DataCenterConsole.Models;
+using ChocAn.Services;
+using System.Net;
+using Microsoft.Extensions.Logging;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
@@ -43,14 +46,22 @@ namespace ChocAn.DataCenterConsole.Actions
         where TModel : class
         where TViewModel : IndexViewModel<TModel>, new()
     {
+        #region 500 level status returns
+        public const int ServiceUnavailable = (int)HttpStatusCode.ServiceUnavailable;
+        public const int InternalServerError = (int)HttpStatusCode.InternalServerError;
+        #endregion
+
+        public const string MemberErrorMessage = "Error while processing request for api/member/{id}";
         public Controller Controller { get; set; }
+
+        public ILogger<Controller> Logger { get; set; }
         public IRepository<TModel> Repository { get; set; }
+        public IService<TModel> Service { get; set; }
         public async Task<IActionResult> ActionResult(string find)
         {
-            List<TModel> entities = new List<TModel>();
-            int id;
+            List<TModel> entities = new();
 
-            if (int.TryParse(find, out id))
+            if (int.TryParse(find, out int id))
             {
                 var provider = await Repository.GetAsync(id);
                 if (null != provider)
@@ -70,6 +81,53 @@ namespace ChocAn.DataCenterConsole.Actions
             {
                 Find = find,
                 Items = entities
+            };
+
+            return Controller.View(vm);
+        }
+        public async Task<IActionResult> ActionResult2(string find)
+        {
+            List<TModel> items = new();
+
+            if (int.TryParse(find, out int id))
+            {
+                var (success, result, error) = await Service.GetAsync(id);
+                if (success)
+                {
+                    if (result == null)
+                        return Controller.NotFound();
+                    else
+                    {
+                        items.Add(result);
+                    }
+                }
+                else
+                {
+                    Logger?.LogError(MemberErrorMessage, error);
+                    return Controller.StatusCode(ServiceUnavailable);
+                }
+            }
+            else
+            {
+                var (success, result, error) = await Service.GetAllByNameAsync(find);
+                if(success)
+                {
+                    await foreach(var model in result)
+                    {
+                        items.Add(model);
+                    }
+                }
+                else
+                {
+                    Logger?.LogError(MemberErrorMessage, error);
+                    return Controller.StatusCode(ServiceUnavailable);
+                }
+            }
+
+            var vm = new TViewModel
+            {
+                Find = find,
+                Items = items
             };
 
             return Controller.View(vm);

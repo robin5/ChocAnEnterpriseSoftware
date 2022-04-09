@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChocAn.Repository;
+using ChocAn.Repository.Paging;
 using ChocAn.ProductRepository;
 
 namespace ChocAn.MockRepositories
@@ -60,7 +61,7 @@ namespace ChocAn.MockRepositories
             return Task.FromResult((Product)null);
         }
 
-        public async IAsyncEnumerable<Product> GetAllAsync()
+        public async IAsyncEnumerable<Product> GetAllAsync(PagingOptions pagingOptions)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
             Product item;

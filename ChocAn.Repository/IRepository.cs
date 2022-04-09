@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChocAn.Repository.Paging;
 
 namespace ChocAn.Repository
 {
@@ -41,7 +42,7 @@ namespace ChocAn.Repository
         /// Retrieves all T entities from the data source
         /// </summary>
         /// <returns>An enumerator that provides asynchronous iteration over all T Entities in the database</returns>
-        IAsyncEnumerable<T> GetAllAsync();
+        IAsyncEnumerable<T> GetAllAsync(PagingOptions pagingOptions);
 
         /// <summary>
         /// Retrieves all T entities with name from the data source

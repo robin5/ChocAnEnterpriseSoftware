@@ -43,6 +43,9 @@ using ChocAn.DataCenterConsole.Infrastructure;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.Repository;
+using ChocAn.Services;
+using ChocAn.Services.DefaultMemberService;
+using System;
 
 namespace ChocAn.DataCenterConsole
 {
@@ -60,14 +63,42 @@ namespace ChocAn.DataCenterConsole
         {
             services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("MemberDbConnection")));
-            
+            services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
+
             services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("MemberDbConnection")));
-            
+            services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
+
             services.AddDbContextPool<ProductDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("MemberDbConnection")));
+            services.AddScoped<IRepository<Product>, DefaultProductRepository>();
 
             services.AddControllersWithViews();
+
+
+
+            // --------------------------------------
+            // Define dependencies for IMemberService
+            // --------------------------------------
+
+            services.AddHttpClient<IMemberService, DefaultMemberService>(DefaultMemberService.Name, client =>
+            {
+                client.BaseAddress = new Uri(Configuration["Services:ChocAn.MemberServiceApi"]);
+            }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+            services.AddScoped<IMemberService, DefaultMemberService>();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             // MemberController actions
             services.AddTransient<IIndexAction<Member>, IndexAction<Member, MemberIndexViewModel>>();
@@ -90,10 +121,6 @@ namespace ChocAn.DataCenterConsole
             services.AddTransient<IEditAction<Product, ProductEditViewModel>, EditAction<Product, ProductEditViewModel>>();
             services.AddTransient<IDeleteAction<Product>, DeleteAction<Product>>();
 
-            // Repositories
-            services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
-            services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
-            services.AddScoped<IRepository<Product>, DefaultProductRepository>();
             services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
         }
 

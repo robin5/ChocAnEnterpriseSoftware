@@ -97,5 +97,33 @@ namespace ChocAn.Services.DefaultMemberService
                 return (false, null, ex.Message);
             }
         }
+
+        public async Task<(bool isSuccess,IEnumerable<Member>? members, string? errorMessage)> GetAllByNameAsync(string find)
+        {
+            try
+            {
+                var client = httpClientFactory.CreateClient(Name);
+                var response = await client.GetAsync($"api/Member/?name={find}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsByteArrayAsync();
+                    var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+                    var members = JsonSerializer.Deserialize<IEnumerable<Member>>(content, options);
+                    return (true, members, null);
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return (true, null, response.ReasonPhrase);
+                }
+
+                logger?.LogError(MemberErrorMessage, response.ReasonPhrase);
+                return (false, null, response.ReasonPhrase);
+            }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex, MemberExceptionMessage, find);
+                return (false, null, ex.Message);
+            }
+        }
     }
 }

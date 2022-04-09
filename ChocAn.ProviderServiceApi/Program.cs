@@ -34,6 +34,7 @@
 
 using ChocAn.ProviderRepository;
 using ChocAn.Repository;
+using ChocAn.Repository.Paging;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,8 @@ var builder = WebApplication.CreateBuilder(args);
 // **************************************************************************
 // * Add services to the container.
 // **************************************************************************
+
+builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("DefaultPagingOptions"));
 
 // DbContext for accessing Provider repository
 builder.Services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(

@@ -35,6 +35,8 @@ using Microsoft.AspNetCore.Mvc;
 using ChocAn.ProductRepository;
 using ChocAn.ProductServiceApi.Resources;
 using Microsoft.EntityFrameworkCore;
+using ChocAn.Repository.Paging;
+using Microsoft.Extensions.Options;
 
 namespace ChocAn.ProductServiceApi.Controllers
 {
@@ -43,13 +45,16 @@ namespace ChocAn.ProductServiceApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> logger;
-        private readonly IRepository<ProductRepository.Product> productRepository;
+        private readonly IRepository<Product> repository;
+        private readonly PagingOptions defaultPagingOptions;
         public ProductController(
             ILogger<ProductController> logger,
-            IRepository<ProductRepository.Product> productRepository)
+            IOptions<PagingOptions> defaultPagingOptions,
+            IRepository<Product> repository)
         {
             this.logger = logger;
-            this.productRepository = productRepository;
+            this.repository = repository;
+            this.defaultPagingOptions = defaultPagingOptions.Value;
         }
 
         /// <summary>
@@ -60,12 +65,15 @@ namespace ChocAn.ProductServiceApi.Controllers
         [HttpGet(Name = nameof(GetAllAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] PagingOptions pagingOptions)
         {
             try
             {
+                pagingOptions.Offset ??= defaultPagingOptions.Offset;
+                pagingOptions.Limit ??= defaultPagingOptions.Limit;
+
                 List<Product> products = new();
-                await foreach (Product product in productRepository.GetAllAsync())
+                await foreach (Product product in repository.GetAllAsync(pagingOptions))
                 {
                     products.Add(product);
                 }
@@ -90,7 +98,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         {
             try
             {
-                var product = await productRepository.GetAsync(id);
+                var product = await repository.GetAsync(id);
                 if (null == product)
                 {
                     return NotFound();
@@ -123,7 +131,7 @@ namespace ChocAn.ProductServiceApi.Controllers
                     Name = resource.Name,
                     Cost = resource.Cost,
                 };
-                await productRepository.AddAsync(product);
+                await repository.AddAsync(product);
                 return Created("", resource);
             }
             catch (Exception ex)
@@ -154,7 +162,7 @@ namespace ChocAn.ProductServiceApi.Controllers
                     Name = resource.Name,
                     Cost = resource.Cost
                 };
-                await productRepository.UpdateAsync(product);
+                await repository.UpdateAsync(product);
                 return Ok(resource);
             }
             catch (DbUpdateConcurrencyException ex)
@@ -182,7 +190,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         {
             try
             {
-                var product = await productRepository.DeleteAsync(id);
+                var product = await repository.DeleteAsync(id);
                 if (null == product)
                 {
                     return NotFound();

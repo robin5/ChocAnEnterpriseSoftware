@@ -38,14 +38,18 @@ using ChocAn.MemberRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Repository;
+using ChocAn.Services;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
     public class MemberController : Controller
     {
         private readonly ILogger<MemberController> logger;
-        private readonly IRepository<Member> repository;
         private readonly IMapper mapper;
+
+        private readonly IRepository<Member> repository;
+        private readonly IService<Member> service;
+
 
         private readonly IIndexAction<Member> indexAction;
         private readonly IDetailsAction<Member> detailsAction;
@@ -67,6 +71,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         public MemberController(
             ILogger<MemberController> logger,
             IRepository<Member> repository,
+            IService<Member> service,
             IMapper mapper,
             IIndexAction<Member> indexAction,
             IDetailsAction<Member> detailsAction,
@@ -83,6 +88,8 @@ namespace ChocAn.DataCenterConsole.Controllers
             this.createAction = createAction;
             this.editAction = editAction;
             this.deleteAction = deleteAction;
+
+            this.service = service;
         }
 
         /// <summary>
@@ -94,7 +101,10 @@ namespace ChocAn.DataCenterConsole.Controllers
         {
             indexAction.Controller = this;
             indexAction.Repository = repository;
-            return await indexAction.ActionResult(find);
+            indexAction.Service = service;
+            //return await indexAction.ActionResult(find);
+            
+            return await indexAction.ActionResult2(find);
         }
 
         /// <summary>

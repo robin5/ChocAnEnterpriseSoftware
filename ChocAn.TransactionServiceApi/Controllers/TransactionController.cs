@@ -36,6 +36,8 @@ using ChocAn.TransactionRepository;
 using ChocAn.TransactionServiceApi.Resources;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ChocAn.Repository.Paging;
+using Microsoft.Extensions.Options;
 
 namespace ChocAn.TransactionServiceApi.Controllers
 {
@@ -45,15 +47,18 @@ namespace ChocAn.TransactionServiceApi.Controllers
     {
         private readonly ILogger<TransactionController> logger;
         private readonly IMapper mapper;
-        private readonly IRepository<TransactionRepository.Transaction> transactionRepository;
+        private readonly IRepository<Transaction> repository;
+        private readonly PagingOptions defaultPagingOptions;
         public TransactionController(
             ILogger<TransactionController> logger,
             IMapper mapper,
-            IRepository<TransactionRepository.Transaction> transactionRepository)
+            IRepository<TransactionRepository.Transaction> repository,
+            IOptions<PagingOptions> defaultPagingOptions)
         {
             this.logger = logger;
             this.mapper = mapper;
-            this.transactionRepository = transactionRepository;
+            this.repository = repository;
+            this.defaultPagingOptions = defaultPagingOptions.Value;
         }
 
         /// <summary>
@@ -64,12 +69,15 @@ namespace ChocAn.TransactionServiceApi.Controllers
         [HttpGet(Name = nameof(GetAllAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] PagingOptions pagingOptions)
         {
             try
             {
+                pagingOptions.Offset ??= defaultPagingOptions.Offset;
+                pagingOptions.Limit ??= defaultPagingOptions.Limit;
+
                 List<Transaction> transactions = new();
-                await foreach (Transaction transaction in transactionRepository.GetAllAsync())
+                await foreach (Transaction transaction in repository.GetAllAsync(pagingOptions))
                 {
                     transactions.Add(transaction);
                 }
@@ -82,7 +90,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
                 return Problem();
             }
         }
-        
+
         /// <summary>
         /// Retrieves an individual transaction from the Transaction repository.
         /// </summary>
@@ -96,7 +104,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
         {
             try
             {
-                var transaction = await transactionRepository.GetAsync(id);
+                var transaction = await repository.GetAsync(id);
                 if (null == transaction)
                 {
                     return NotFound();
@@ -125,7 +133,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
             try
             {
                 var transaction = mapper.Map<Transaction>(transactionResource);
-                await transactionRepository.AddAsync(transaction);
+                await repository.AddAsync(transaction);
                 return Created("", transactionResource);
             }
             catch (DbUpdateException ex)
@@ -135,7 +143,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                
+
                 logger.LogError(ex, nameof(PostAsync));
                 return Problem();
             }
@@ -158,7 +166,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
             {
                 var transaction = mapper.Map<Transaction>(transactionResource);
                 transaction.Id = id;
-                await transactionRepository.UpdateAsync(transaction);
+                await repository.UpdateAsync(transaction);
 
                 return Ok(transactionResource);
             }
@@ -187,7 +195,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
         {
             try
             {
-                var transaction = await transactionRepository.DeleteAsync(id);
+                var transaction = await repository.DeleteAsync(id);
                 if (null == transaction)
                 {
                     return NotFound();

@@ -31,6 +31,7 @@
 // **********************************************************************************
 
 using ChocAn.Repository;
+using ChocAn.Repository.Paging;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -356,7 +357,7 @@ namespace ChocAn.MemberRepository.Test
                 var defaultMemberService = new DefaultMemberRepository(context);
 
                 // Assert
-                await foreach (Member member in defaultMemberService.GetAllAsync())
+                await foreach (Member member in defaultMemberService.GetAllAsync(new PagingOptions() { Offset = 0, Limit = 3 }))
                 {
                     if (VALID0_ID == member.Id)
                     {
