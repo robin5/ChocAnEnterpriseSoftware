@@ -37,6 +37,7 @@ using ChocAn.TransactionServiceApi.Resources;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
 using Microsoft.Extensions.Options;
 
 namespace ChocAn.TransactionServiceApi.Controllers
@@ -69,7 +70,9 @@ namespace ChocAn.TransactionServiceApi.Controllers
         [HttpGet(Name = nameof(GetAllAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync([FromQuery] PagingOptions pagingOptions)
+        public async Task<IActionResult> GetAllAsync(
+            [FromQuery] PagingOptions pagingOptions,
+            [FromQuery] SortOptions<Transaction> sortOptions)
         {
             try
             {
@@ -77,7 +80,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
                 pagingOptions.Limit ??= defaultPagingOptions.Limit;
 
                 List<Transaction> transactions = new();
-                await foreach (Transaction transaction in repository.GetAllAsync(pagingOptions))
+                await foreach (Transaction transaction in repository.GetAllAsync(pagingOptions, sortOptions))
                 {
                     transactions.Add(transaction);
                 }

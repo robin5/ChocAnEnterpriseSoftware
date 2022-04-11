@@ -36,6 +36,7 @@ using System.Threading.Tasks;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.MemberRepository;
+using ChocAn.Repository.Sorting;
 
 namespace ChocAn.MockRepositories
 {
@@ -59,7 +60,7 @@ namespace ChocAn.MockRepositories
             return Task.FromResult((Member)null);
         }
 
-        public async IAsyncEnumerable<Member> GetAllAsync(PagingOptions pagingOptions)
+        public async IAsyncEnumerable<Member> GetAllAsync(PagingOptions pagingOptions, SortOptions<Member> sortOptions)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
             Member item;

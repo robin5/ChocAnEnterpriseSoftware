@@ -32,6 +32,7 @@
 // **********************************************************************************
 
 using System;
+using ChocAn.Repository.Sorting;
 
 namespace ChocAn.TransactionRepository
 {
@@ -41,12 +42,17 @@ namespace ChocAn.TransactionRepository
     public class Transaction
     {
         public int Id { get; set; }
+        [Sortable]
         public int ProviderId { get; set; }
+        [Sortable]
         public int MemberId { get; set; }
+        [Sortable]
         public int ProductId { get; set; }
         public decimal ProductCost { get; set; }
+        [Sortable]
         public DateTime ServiceDate { get; set; }
         public string ServiceComment { get; set; }
+        [Sortable(Default = true)]
         public DateTime Created { get; set; }
     }
 }

@@ -31,6 +31,7 @@
 // **********************************************************************************
 
 using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -345,7 +346,9 @@ namespace ChocAn.ProviderRepository.Test
                 var repository = new DefaultProviderRepository(context);
 
                 // Assert
-                await foreach (Provider provider in repository.GetAllAsync(new PagingOptions() { Offset = 0, Limit = 3 }))
+                await foreach (Provider provider in repository.GetAllAsync(
+                    new PagingOptions() { Offset = 0, Limit = 3 },
+                    new SortOptions<Provider>()))
                 {
                     if (VALID0_ID == provider.Id)
                     {

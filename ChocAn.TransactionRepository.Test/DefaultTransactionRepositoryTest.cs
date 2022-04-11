@@ -31,6 +31,7 @@
 // **********************************************************************************
 
 using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -345,7 +346,9 @@ namespace ChocAn.TransactionRepository.Test
             var defaultTransactionService = new DefaultTransactionRepository(context);
 
             // Assert
-            await foreach (Transaction transaction in defaultTransactionService.GetAllAsync(new PagingOptions() { Offset = 0, Limit = 3 }))
+            await foreach (Transaction transaction in defaultTransactionService.GetAllAsync(
+                    new PagingOptions() { Offset = 0, Limit = 3 }, 
+                    new SortOptions<Transaction>()))
             {
                 if (T0_ID == transaction.Id)
                 {

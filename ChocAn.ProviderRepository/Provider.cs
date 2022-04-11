@@ -31,6 +31,7 @@
 // * 
 // **********************************************************************************
 
+using ChocAn.Repository.Sorting;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ChocAn.ProviderRepository
@@ -42,11 +43,15 @@ namespace ChocAn.ProviderRepository
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; init; }
+        [Sortable(Default = true)]
         public string Name { get; init; }
         public string Email { get; init; }
         public string StreetAddress { get; init; }
+        [Sortable]
         public string City { get; init; }
+        [Sortable]
         public string State { get; init; }
+        [Sortable]
         public int ZipCode { get; init; }
     }
 }

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Linq.Expressions;
 using System;
 using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
 
 namespace ChocAn.Repository
 {
@@ -79,13 +80,15 @@ namespace ChocAn.Repository
         /// Retrieves all T entities from the data source
         /// </summary>
         /// <returns>An enumerator that provides asynchronous iteration over all T Entities in the database</returns>
-        virtual public async IAsyncEnumerable<T> GetAllAsync(PagingOptions pagingOptions)
+        virtual public async IAsyncEnumerable<T> GetAllAsync(PagingOptions pagingOptions, SortOptions<T> sortOptions)
         {
             var count = dbSet.Count<T>();
 
             var query = dbSet
                 .Skip(pagingOptions.Offset.Value)
                 .Take(pagingOptions.Limit.Value);
+
+            query = sortOptions.Apply(query);
 
             //var enumerator = dbSet.AsAsyncEnumerable().GetAsyncEnumerator();
             var enumerator = query.AsAsyncEnumerable<T>().GetAsyncEnumerator();

@@ -36,6 +36,7 @@ using ChocAn.ProviderRepository;
 using ChocAn.ProviderServiceApi.Resources;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
 using Microsoft.Extensions.Options;
 
 namespace ChocAn.ProviderServiceApi.Controllers
@@ -65,7 +66,9 @@ namespace ChocAn.ProviderServiceApi.Controllers
         [HttpGet(Name = nameof(GetAllAsync))]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync([FromQuery] PagingOptions pagingOptions)
+        public async Task<IActionResult> GetAllAsync(
+            [FromQuery] PagingOptions pagingOptions,
+            [FromQuery] SortOptions<Provider> sortOptions)
         {
             try
             {
@@ -73,7 +76,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
                 pagingOptions.Limit ??= defaultPagingOptions.Limit;
 
                 List<Provider> providers = new();
-                await foreach (Provider provider in repository.GetAllAsync(pagingOptions))
+                await foreach (Provider provider in repository.GetAllAsync(pagingOptions, sortOptions))
                 {
                     providers.Add(provider);
                 }

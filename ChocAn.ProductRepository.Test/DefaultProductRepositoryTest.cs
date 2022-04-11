@@ -32,6 +32,7 @@
 
 using System.Threading.Tasks;
 using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -294,7 +295,9 @@ namespace ChocAn.ProductRepository.Test
                 var repository = new DefaultProductRepository(context);
 
                 // Assert
-                await foreach (Product product in repository.GetAllAsync(new PagingOptions() { Offset = 0, Limit = 3 }))
+                await foreach (Product product in repository.GetAllAsync(
+                    new PagingOptions() { Offset = 0, Limit = 3 }, 
+                    new SortOptions<Product>()))
                 {
                     if (VALID0_ID == product.Id)
                     {

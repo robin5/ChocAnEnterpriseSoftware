@@ -30,6 +30,8 @@
 // * 
 // **********************************************************************************using System;
 
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
 using ChocAn.TransactionRepository;
 using System;
 using System.Collections.Generic;
@@ -40,6 +42,11 @@ namespace ChocAn.MockRepositories
         MockRepository<Transaction>,
         ITransactionRepository
     {
+        public IAsyncEnumerable<Transaction> GetAllAsync(PagingOptions pagingOptions, SortOptions<Transaction> sortOptions)
+        {
+            throw new NotImplementedException();
+        }
+
         IAsyncEnumerable<Transaction> ITransactionRepository.GetAccountsPayableTransactionsAsync(DateTime startDate, DateTime endDate)
         {
             throw new NotImplementedException();
