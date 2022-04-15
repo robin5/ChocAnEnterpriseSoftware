@@ -30,13 +30,14 @@
 // * 
 // **********************************************************************************using System;
 
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;
-using ChocAn.ProviderRepository;
 using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
+using ChocAn.ProviderRepository;
 
 namespace ChocAn.MockRepositories
 {
@@ -52,9 +53,7 @@ namespace ChocAn.MockRepositories
 
         public Task<Provider> DeleteAsync(object id)
         {
-            Provider item = null;
-
-            if (items.TryGetValue((int)id, out item))
+            if (items.TryGetValue((int)id, out Provider item))
             {
                 items.Remove((int)id);
                 return Task.FromResult(item);
@@ -62,7 +61,10 @@ namespace ChocAn.MockRepositories
             return Task.FromResult((Provider)null);
         }
 
-        public async IAsyncEnumerable<Provider> GetAllAsync(PagingOptions pagingOptions, SortOptions<Provider> sortOptions)
+        public async IAsyncEnumerable<Provider> GetAllAsync(
+            PagingOptions pagingOptions, 
+            SortOptions<Provider> sortOptions,
+            SearchOptions<Provider> searchOptions)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
             Provider item;
@@ -77,9 +79,7 @@ namespace ChocAn.MockRepositories
 
         public Task<Provider> GetAsync(object id)
         {
-            Provider item = null;
-
-            items.TryGetValue((int)id, out item);
+            items.TryGetValue((int)id, out Provider item);
             return Task.FromResult(item);
         }
 

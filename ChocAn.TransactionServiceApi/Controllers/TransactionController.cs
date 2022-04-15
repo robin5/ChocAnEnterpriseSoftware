@@ -30,15 +30,16 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.TransactionRepository;
-using ChocAn.TransactionServiceApi.Resources;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using AutoMapper;
+using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
-using Microsoft.Extensions.Options;
+using ChocAn.Repository.Search;
+using ChocAn.TransactionRepository;
+using ChocAn.TransactionServiceApi.Resources;
 
 namespace ChocAn.TransactionServiceApi.Controllers
 {
@@ -72,7 +73,8 @@ namespace ChocAn.TransactionServiceApi.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllAsync(
             [FromQuery] PagingOptions pagingOptions,
-            [FromQuery] SortOptions<Transaction> sortOptions)
+            [FromQuery] SortOptions<Transaction> sortOptions,
+            [FromQuery] SearchOptions<Transaction> searchOptions)
         {
             try
             {
@@ -80,7 +82,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
                 pagingOptions.Limit ??= defaultPagingOptions.Limit;
 
                 List<Transaction> transactions = new();
-                await foreach (Transaction transaction in repository.GetAllAsync(pagingOptions, sortOptions))
+                await foreach (Transaction transaction in repository.GetAllAsync(pagingOptions, sortOptions, searchOptions))
                 {
                     transactions.Add(transaction);
                 }

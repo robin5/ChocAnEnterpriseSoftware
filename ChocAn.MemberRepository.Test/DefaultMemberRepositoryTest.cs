@@ -30,13 +30,12 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.Repository;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Xunit;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
-using Xunit;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.MemberRepository.Test
 {
@@ -74,7 +73,6 @@ namespace ChocAn.MemberRepository.Test
         private const int VALID2_ZIPCODE = 30002;
         private const string VALID2_STATUS = "Status 2";
 
-        private const int VALID_UPDATE_ID = 100000009;
         private const string VALID_UPDATE_NAME = "1234567890";
         private const string VALID_UPDATE_ADDRESS = "1234567890123";
         private const string VALID_UPDATE_CITY = "1232345";
@@ -103,23 +101,21 @@ namespace ChocAn.MemberRepository.Test
         /// <returns></returns>
         private static async Task InsertValidMemberIntoTestDatabase(string name)
         {
-            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext(name))
+            using MemberDbContext context = DefaultMemberRepositoryTest.GetContext(name);
+            // Arrange
+            var member = new Member
             {
-                // Arrange
-                var member = new Member
-                {
-                    Id = VALID0_ID,
-                    Name = VALID0_NAME,
-                    StreetAddress = VALID0_ADDRESS,
-                    City = VALID0_CITY,
-                    State = VALID0_STATE,
-                    ZipCode = VALID0_ZIPCODE,
-                    Status = VALID0_STATUS
-                };
+                Id = VALID0_ID,
+                Name = VALID0_NAME,
+                StreetAddress = VALID0_ADDRESS,
+                City = VALID0_CITY,
+                State = VALID0_STATE,
+                ZipCode = VALID0_ZIPCODE,
+                Status = VALID0_STATUS
+            };
 
-                context.Add<Member>(member);
-                await context.SaveChangesAsync();
-            }
+            context.Add<Member>(member);
+            await context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -129,42 +125,40 @@ namespace ChocAn.MemberRepository.Test
         /// <returns></returns>
         private static async Task Insert3ValidMembersIntoTestDatabase(string name)
         {
-            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext(name))
+            using MemberDbContext context = DefaultMemberRepositoryTest.GetContext(name);
+            // Arrange
+            context.Add<Member>(new Member
             {
-                // Arrange
-                context.Add<Member>(new Member
-                {
-                    Id = VALID0_ID,
-                    Name = VALID0_NAME,
-                    StreetAddress = VALID0_ADDRESS,
-                    City = VALID0_CITY,
-                    State = VALID0_STATE,
-                    ZipCode = VALID0_ZIPCODE,
-                    Status = VALID0_STATUS
-                });
-                context.Add<Member>(new Member
-                {
-                    Id = VALID1_ID,
-                    Name = VALID1_NAME,
-                    StreetAddress = VALID1_ADDRESS,
-                    City = VALID1_CITY,
-                    State = VALID1_STATE,
-                    ZipCode = VALID1_ZIPCODE,
-                    Status = VALID1_STATUS
-                });
-                context.Add<Member>(new Member
-                {
-                    Id = VALID2_ID,
-                    Name = VALID2_NAME,
-                    StreetAddress = VALID2_ADDRESS,
-                    City = VALID2_CITY,
-                    State = VALID2_STATE,
-                    ZipCode = VALID2_ZIPCODE,
-                    Status = VALID2_STATUS
-                });
+                Id = VALID0_ID,
+                Name = VALID0_NAME,
+                StreetAddress = VALID0_ADDRESS,
+                City = VALID0_CITY,
+                State = VALID0_STATE,
+                ZipCode = VALID0_ZIPCODE,
+                Status = VALID0_STATUS
+            });
+            context.Add<Member>(new Member
+            {
+                Id = VALID1_ID,
+                Name = VALID1_NAME,
+                StreetAddress = VALID1_ADDRESS,
+                City = VALID1_CITY,
+                State = VALID1_STATE,
+                ZipCode = VALID1_ZIPCODE,
+                Status = VALID1_STATUS
+            });
+            context.Add<Member>(new Member
+            {
+                Id = VALID2_ID,
+                Name = VALID2_NAME,
+                StreetAddress = VALID2_ADDRESS,
+                City = VALID2_CITY,
+                State = VALID2_STATE,
+                ZipCode = VALID2_ZIPCODE,
+                Status = VALID2_STATUS
+            });
 
-                await context.SaveChangesAsync();
-            }
+            await context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -218,22 +212,20 @@ namespace ChocAn.MemberRepository.Test
             // Arrange
             await DefaultMemberRepositoryTest.InsertValidMemberIntoTestDatabase("Get");
 
-            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Get"))
-            {
-                // Act
-                var defaultMemberService = new DefaultMemberRepository(context);
-                var result = await defaultMemberService.GetAsync(VALID0_ID);
+            using MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Get");
+            // Act
+            var defaultMemberService = new DefaultMemberRepository(context);
+            var result = await defaultMemberService.GetAsync(VALID0_ID);
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID0_NAME, result.Name);
-                Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
-                Assert.Equal(VALID0_CITY, result.City);
-                Assert.Equal(VALID0_STATE, result.State);
-                Assert.Equal(VALID0_ZIPCODE, result.ZipCode);
-                Assert.Equal(VALID0_STATUS, result.Status);
-            }
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(VALID0_ID, result.Id);
+            Assert.Equal(VALID0_NAME, result.Name);
+            Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
+            Assert.Equal(VALID0_CITY, result.City);
+            Assert.Equal(VALID0_STATE, result.State);
+            Assert.Equal(VALID0_ZIPCODE, result.ZipCode);
+            Assert.Equal(VALID0_STATUS, result.Status);
         }
 
         /// <summary>
@@ -246,15 +238,13 @@ namespace ChocAn.MemberRepository.Test
             // Arrange
             await DefaultMemberRepositoryTest.InsertValidMemberIntoTestDatabase("ValidateGetMemberAsyncNonExistentMember");
 
-            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("ValidateGetMemberAsyncNonExistentMember"))
-            {
-                // Act
-                var defaultMemberService = new DefaultMemberRepository(context);
-                var result = await defaultMemberService.GetAsync(NON_EXISTENT_MEMBER_ID);
+            using MemberDbContext context = DefaultMemberRepositoryTest.GetContext("ValidateGetMemberAsyncNonExistentMember");
+            // Act
+            var defaultMemberService = new DefaultMemberRepository(context);
+            var result = await defaultMemberService.GetAsync(NON_EXISTENT_MEMBER_ID);
 
-                // Assert
-                Assert.Null(result);
-            }
+            // Assert
+            Assert.Null(result);
         }
 
         /// <summary>
@@ -278,34 +268,32 @@ namespace ChocAn.MemberRepository.Test
                 Status = VALID_UPDATE_STATUS
             };
 
-            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Update"))
-            {
-                // Act
-                var defaultMemberService = new DefaultMemberRepository(context);
-                var result = await defaultMemberService.UpdateAsync(memberChanges);
+            using MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Update");
+            // Act
+            var defaultMemberService = new DefaultMemberRepository(context);
+            var result = await defaultMemberService.UpdateAsync(memberChanges);
 
-                // Assert
-                // Validate return value of function call
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID_UPDATE_NAME, result.Name);
-                Assert.Equal(VALID_UPDATE_ADDRESS, result.StreetAddress);
-                Assert.Equal(VALID_UPDATE_CITY, result.City);
-                Assert.Equal(VALID_UPDATE_STATE, result.State);
-                Assert.Equal(VALID_UPDATE_ZIPCODE, result.ZipCode);
-                Assert.Equal(VALID_UPDATE_STATUS, result.Status);
+            // Assert
+            // Validate return value of function call
+            Assert.NotNull(result);
+            Assert.Equal(VALID0_ID, result.Id);
+            Assert.Equal(VALID_UPDATE_NAME, result.Name);
+            Assert.Equal(VALID_UPDATE_ADDRESS, result.StreetAddress);
+            Assert.Equal(VALID_UPDATE_CITY, result.City);
+            Assert.Equal(VALID_UPDATE_STATE, result.State);
+            Assert.Equal(VALID_UPDATE_ZIPCODE, result.ZipCode);
+            Assert.Equal(VALID_UPDATE_STATUS, result.Status);
 
-                // Validate member was updated in the database
-                var member = await context.Members.FindAsync(VALID0_ID);
-                Assert.NotNull(member);
-                Assert.Equal(VALID0_ID, member.Id);
-                Assert.Equal(VALID_UPDATE_NAME, member.Name);
-                Assert.Equal(VALID_UPDATE_ADDRESS, member.StreetAddress);
-                Assert.Equal(VALID_UPDATE_CITY, member.City);
-                Assert.Equal(VALID_UPDATE_STATE, member.State);
-                Assert.Equal(VALID_UPDATE_ZIPCODE, member.ZipCode);
-                Assert.Equal(VALID_UPDATE_STATUS, member.Status);
-            }
+            // Validate member was updated in the database
+            var member = await context.Members.FindAsync(VALID0_ID);
+            Assert.NotNull(member);
+            Assert.Equal(VALID0_ID, member.Id);
+            Assert.Equal(VALID_UPDATE_NAME, member.Name);
+            Assert.Equal(VALID_UPDATE_ADDRESS, member.StreetAddress);
+            Assert.Equal(VALID_UPDATE_CITY, member.City);
+            Assert.Equal(VALID_UPDATE_STATE, member.State);
+            Assert.Equal(VALID_UPDATE_ZIPCODE, member.ZipCode);
+            Assert.Equal(VALID_UPDATE_STATUS, member.Status);
         }
 
         /// <summary>
@@ -318,24 +306,22 @@ namespace ChocAn.MemberRepository.Test
             // Arrange
             await DefaultMemberRepositoryTest.InsertValidMemberIntoTestDatabase("Delete");
 
-            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Delete"))
-            {
-                // Act
-                var defaultMemberService = new DefaultMemberRepository(context);
-                var result = await defaultMemberService.DeleteAsync(VALID0_ID);
+            using MemberDbContext context = DefaultMemberRepositoryTest.GetContext("Delete");
+            // Act
+            var defaultMemberService = new DefaultMemberRepository(context);
+            var result = await defaultMemberService.DeleteAsync(VALID0_ID);
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID0_NAME, result.Name);
-                Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
-                Assert.Equal(VALID0_CITY, result.City);
-                Assert.Equal(VALID0_STATE, result.State);
-                Assert.Equal(VALID0_ZIPCODE, result.ZipCode);
-                Assert.Equal(VALID0_STATUS, result.Status);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(VALID0_ID, result.Id);
+            Assert.Equal(VALID0_NAME, result.Name);
+            Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
+            Assert.Equal(VALID0_CITY, result.City);
+            Assert.Equal(VALID0_STATE, result.State);
+            Assert.Equal(VALID0_ZIPCODE, result.ZipCode);
+            Assert.Equal(VALID0_STATUS, result.Status);
 
-                Assert.Equal(0, await context.Members.CountAsync());
-            }
+            Assert.Equal(0, await context.Members.CountAsync());
         }
 
         /// <summary>
@@ -352,51 +338,52 @@ namespace ChocAn.MemberRepository.Test
             bool member1Found = false;
             bool member2Found = false;
 
-            using (MemberDbContext context = DefaultMemberRepositoryTest.GetContext("GetAllMembersAsync"))
+            using MemberDbContext context = DefaultMemberRepositoryTest.GetContext("GetAllMembersAsync");
+            // Act
+            var defaultMemberService = new DefaultMemberRepository(context);
+
+            // Assert
+            await foreach (Member member in defaultMemberService.GetAllAsync(
+                new PagingOptions() { Offset = 0, Limit = 3 },
+                new SortOptions<Member>(),
+                new SearchOptions<Member>()))
             {
-                // Act
-                var defaultMemberService = new DefaultMemberRepository(context);
-
-                // Assert
-                await foreach (Member member in defaultMemberService.GetAllAsync(new PagingOptions() { Offset = 0, Limit = 3 }, new SortOptions<Member>()))
+                if (VALID0_ID == member.Id)
                 {
-                    if (VALID0_ID == member.Id)
-                    {
-                        Assert.Equal(VALID0_NAME, member.Name);
-                        Assert.Equal(VALID0_ADDRESS, member.StreetAddress);
-                        Assert.Equal(VALID0_CITY, member.City);
-                        Assert.Equal(VALID0_STATE, member.State);
-                        Assert.Equal(VALID0_ZIPCODE, member.ZipCode);
-                        Assert.Equal(VALID0_STATUS, member.Status);
-                        member0Found = true;
-                    }
-                    else if (VALID1_ID == member.Id)
-                    {
-                        Assert.Equal(VALID1_NAME, member.Name);
-                        Assert.Equal(VALID1_ADDRESS, member.StreetAddress);
-                        Assert.Equal(VALID1_CITY, member.City);
-                        Assert.Equal(VALID1_STATE, member.State);
-                        Assert.Equal(VALID1_ZIPCODE, member.ZipCode);
-                        Assert.Equal(VALID1_STATUS, member.Status);
-                        member1Found = true;
-                    }
-                    else if (VALID2_ID == member.Id)
-                    {
-                        Assert.Equal(VALID2_NAME, member.Name);
-                        Assert.Equal(VALID2_ADDRESS, member.StreetAddress);
-                        Assert.Equal(VALID2_CITY, member.City);
-                        Assert.Equal(VALID2_STATE, member.State);
-                        Assert.Equal(VALID2_ZIPCODE, member.ZipCode);
-                        Assert.Equal(VALID2_STATUS, member.Status);
-                        member2Found = true;
-                    }
+                    Assert.Equal(VALID0_NAME, member.Name);
+                    Assert.Equal(VALID0_ADDRESS, member.StreetAddress);
+                    Assert.Equal(VALID0_CITY, member.City);
+                    Assert.Equal(VALID0_STATE, member.State);
+                    Assert.Equal(VALID0_ZIPCODE, member.ZipCode);
+                    Assert.Equal(VALID0_STATUS, member.Status);
+                    member0Found = true;
                 }
-
-                // There should be 3 members in the database
-                Assert.True(member0Found);
-                Assert.True(member1Found);
-                Assert.True(member2Found);
+                else if (VALID1_ID == member.Id)
+                {
+                    Assert.Equal(VALID1_NAME, member.Name);
+                    Assert.Equal(VALID1_ADDRESS, member.StreetAddress);
+                    Assert.Equal(VALID1_CITY, member.City);
+                    Assert.Equal(VALID1_STATE, member.State);
+                    Assert.Equal(VALID1_ZIPCODE, member.ZipCode);
+                    Assert.Equal(VALID1_STATUS, member.Status);
+                    member1Found = true;
+                }
+                else if (VALID2_ID == member.Id)
+                {
+                    Assert.Equal(VALID2_NAME, member.Name);
+                    Assert.Equal(VALID2_ADDRESS, member.StreetAddress);
+                    Assert.Equal(VALID2_CITY, member.City);
+                    Assert.Equal(VALID2_STATE, member.State);
+                    Assert.Equal(VALID2_ZIPCODE, member.ZipCode);
+                    Assert.Equal(VALID2_STATUS, member.Status);
+                    member2Found = true;
+                }
             }
+
+            // There should be 3 members in the database
+            Assert.True(member0Found);
+            Assert.True(member1Found);
+            Assert.True(member2Found);
         }
     }
 }

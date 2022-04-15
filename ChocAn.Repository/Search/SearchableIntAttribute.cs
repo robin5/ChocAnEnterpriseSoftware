@@ -1,10 +1,11 @@
 ﻿// **********************************************************************************
-// * Copyright (c) 2021 Robin Murray
+// * Copyright (c) 2022 Robin Murray
 // **********************************************************************************
 // *
-// * File: Product.cs
+// * File: SearchableIntAttribute.cs
 // *
-// * Description: Defines an entity which describes a product or service given by a Provider
+// * Description: Defines an attribute that when added to a model indicates
+// *     that a given int field can be used in the search query
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,24 +31,16 @@
 // * 
 // **********************************************************************************
 
-using System.ComponentModel.DataAnnotations.Schema;
-using ChocAn.Repository.Sorting;
-using ChocAn.Repository.Search;
+using System;
 
-namespace ChocAn.ProductRepository
+namespace ChocAn.Repository.Search
 {
-    /// <summary>
-    /// Represents a ChocAn product or service
-    /// </summary>
-    public class Product
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class SearchableIntAttribute : SearchableAttribute
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; init; }
-        [Sortable(Default = true)]
-        [Searchable]
-        public string Name { get; init; }
-        [Sortable]
-        [Searchable]
-        public decimal Cost { get; init; }
+        public SearchableIntAttribute()
+        {
+            ExpressionProvider = new IntSearchExpressionProvider();
+        }
     }
 }

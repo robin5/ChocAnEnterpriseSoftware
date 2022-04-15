@@ -1,12 +1,42 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Collections.Generic;
+﻿// **********************************************************************************
+// * Copyright (c) 2021 Robin Murray
+// **********************************************************************************
+// *
+// * File: Repository.cs
+// *
+// * Description: Implements a generic repository pattern for interacting with databases
+// *
+// **********************************************************************************
+// * Author: Robin Murray
+// **********************************************************************************
+// *
+// * Granting License: The MIT License (MIT)
+// * 
+// *   Permission is hereby granted, free of charge, to any person obtaining a copy
+// *   of this software and associated documentation files (the "Software"), to deal
+// *   in the Software without restriction, including without limitation the rights
+// *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// *   copies of the Software, and to permit persons to whom the Software is
+// *   furnished to do so, subject to the following conditions:
+// *   The above copyright notice and this permission notice shall be included in
+// *   all copies or substantial portions of the Software.
+// *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// *   THE SOFTWARE.
+// * 
+// **********************************************************************************
+
 using System.Threading.Tasks;
-using System.Reflection;
-using System.Linq.Expressions;
-using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.Repository
 {
@@ -80,17 +110,21 @@ namespace ChocAn.Repository
         /// Retrieves all T entities from the data source
         /// </summary>
         /// <returns>An enumerator that provides asynchronous iteration over all T Entities in the database</returns>
-        virtual public async IAsyncEnumerable<T> GetAllAsync(PagingOptions pagingOptions, SortOptions<T> sortOptions)
+        virtual public async IAsyncEnumerable<T> GetAllAsync(
+            PagingOptions pagingOptions, 
+            SortOptions<T> sortOptions,
+            SearchOptions<T> searchOptions)
         {
-            var count = dbSet.Count<T>();
+            var query = dbSet.AsQueryable<T>();
 
-            var query = dbSet
+            query = searchOptions.Apply(query);
+            query = sortOptions.Apply(query);
+            query = query
                 .Skip(pagingOptions.Offset.Value)
                 .Take(pagingOptions.Limit.Value);
 
-            query = sortOptions.Apply(query);
+            //var size = await dbSet.CountAsync<T>();
 
-            //var enumerator = dbSet.AsAsyncEnumerable().GetAsyncEnumerator();
             var enumerator = query.AsAsyncEnumerable<T>().GetAsyncEnumerator();
             T entity;
 

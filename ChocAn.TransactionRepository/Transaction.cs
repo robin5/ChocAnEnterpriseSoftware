@@ -33,6 +33,7 @@
 
 using System;
 using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.TransactionRepository
 {
@@ -43,16 +44,21 @@ namespace ChocAn.TransactionRepository
     {
         public int Id { get; set; }
         [Sortable]
+        [Searchable]
         public int ProviderId { get; set; }
         [Sortable]
+        [Searchable]
         public int MemberId { get; set; }
         [Sortable]
+        [Searchable]
         public int ProductId { get; set; }
         public decimal ProductCost { get; set; }
         [Sortable]
+        [Searchable]
         public DateTime ServiceDate { get; set; }
         public string ServiceComment { get; set; }
         [Sortable(Default = true)]
+        [Searchable]
         public DateTime Created { get; set; }
     }
 }

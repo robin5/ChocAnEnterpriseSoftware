@@ -30,14 +30,15 @@
 // * 
 // **********************************************************************************
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
-using Microsoft.AspNetCore.Mvc;
+using ChocAn.Repository.Search;
 using ChocAn.MemberRepository;
 using ChocAn.MemberServiceApi.Resources;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace ChocAn.MemberServiceApi.Controllers
 {
@@ -68,7 +69,8 @@ namespace ChocAn.MemberServiceApi.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllAsync(
             [FromQuery] PagingOptions pagingOptions,
-            [FromQuery] SortOptions<Member> sortOptions)
+            [FromQuery] SortOptions<Member> sortOptions,
+            [FromQuery] SearchOptions<Member> searchOptions)
         {
             try
             {
@@ -76,7 +78,7 @@ namespace ChocAn.MemberServiceApi.Controllers
                 pagingOptions.Limit ??= defaultPagingOptions.Limit;
 
                 List<Member> members = new();
-                await foreach (Member member in repository.GetAllAsync(pagingOptions, sortOptions))
+                await foreach (Member member in repository.GetAllAsync(pagingOptions, sortOptions, searchOptions))
                 {
                     members.Add(member);
                 }

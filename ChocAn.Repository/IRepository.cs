@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.Repository
 {
@@ -43,7 +44,7 @@ namespace ChocAn.Repository
         /// Retrieves all T entities from the data source
         /// </summary>
         /// <returns>An enumerator that provides asynchronous iteration over all T Entities in the database</returns>
-        IAsyncEnumerable<T> GetAllAsync(PagingOptions pagingOptions, SortOptions<T> sortOptions);
+        IAsyncEnumerable<T> GetAllAsync(PagingOptions pagingOptions, SortOptions<T> sortOptions, SearchOptions<T> searchOptions);
 
         /// <summary>
         /// Retrieves all T entities with name from the data source

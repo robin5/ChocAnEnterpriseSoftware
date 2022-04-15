@@ -32,6 +32,7 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.MemberRepository
 {
@@ -43,16 +44,22 @@ namespace ChocAn.MemberRepository
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; init; }
         [Sortable(Default = true)]
+        [Searchable]
         public string Name { get; init; }
+        [Searchable]
         public string Email { get; init; }
         public string StreetAddress { get; init; }
         [Sortable]
+        [Searchable]
         public string City { get; init; }
         [Sortable]
+        [Searchable]
         public string State { get; init; }
         [Sortable]
+        [SearchableInt]
         public int ZipCode { get; init; }
         [Sortable]
+        [Searchable]
         public string Status { get; init; }
     }
 }

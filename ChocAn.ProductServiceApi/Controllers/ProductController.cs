@@ -30,14 +30,15 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.ProductRepository;
-using ChocAn.ProductServiceApi.Resources;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
-using Microsoft.Extensions.Options;
+using ChocAn.Repository.Search;
+using ChocAn.ProductRepository;
+using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.ProductServiceApi.Controllers
 {
@@ -68,7 +69,8 @@ namespace ChocAn.ProductServiceApi.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllAsync(
             [FromQuery] PagingOptions pagingOptions,
-            [FromQuery] SortOptions<Product> sortOptions)
+            [FromQuery] SortOptions<Product> sortOptions,
+            [FromQuery] SearchOptions<Product> searchOptions)
         {
             try
             {
@@ -76,7 +78,7 @@ namespace ChocAn.ProductServiceApi.Controllers
                 pagingOptions.Limit ??= defaultPagingOptions.Limit;
 
                 List<Product> products = new();
-                await foreach (Product product in repository.GetAllAsync(pagingOptions, sortOptions))
+                await foreach (Product product in repository.GetAllAsync(pagingOptions, sortOptions, searchOptions))
                 {
                     products.Add(product);
                 }

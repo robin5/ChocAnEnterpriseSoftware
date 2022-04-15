@@ -1,10 +1,10 @@
 ﻿// **********************************************************************************
-// * Copyright (c) 2021 Robin Murray
+// * Copyright (c) 2022 Robin Murray
 // **********************************************************************************
 // *
-// * File: Product.cs
+// * File: ISearchExpressionProvider.cs
 // *
-// * Description: Defines an entity which describes a product or service given by a Provider
+// * Description: 
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,24 +30,13 @@
 // * 
 // **********************************************************************************
 
-using System.ComponentModel.DataAnnotations.Schema;
-using ChocAn.Repository.Sorting;
-using ChocAn.Repository.Search;
+using System.Linq.Expressions;
 
-namespace ChocAn.ProductRepository
+namespace ChocAn.Repository.Search
 {
-    /// <summary>
-    /// Represents a ChocAn product or service
-    /// </summary>
-    public class Product
+    internal interface ISearchExpressionProvider
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; init; }
-        [Sortable(Default = true)]
-        [Searchable]
-        public string Name { get; init; }
-        [Sortable]
-        [Searchable]
-        public decimal Cost { get; init; }
+        ConstantExpression GetValue(string input);
+        Expression GetComparison(MemberExpression left, string op, ConstantExpression right);
     }
 }

@@ -31,15 +31,12 @@
 // **********************************************************************************
 
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ChocAn.ReportRepository;
-using Microsoft.Extensions.Logging;
-using ChocAn.ReportService.Resources;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
+using ChocAn.ReportRepository;
+using ChocAn.ReportService.Resources;
 
 namespace ChocAn.ReportService.Controllers
 {
@@ -73,12 +70,14 @@ namespace ChocAn.ReportService.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllAsync(
             [FromQuery] PagingOptions pagingOptions,
-            [FromQuery] SortOptions<AccountsPayableReport> sortOptions)
+            [FromQuery] SortOptions<AccountsPayableReport> sortOptions,
+            [FromQuery] SearchOptions<AccountsPayableReport> searchOptions)
         {
             try
             {
                 List<AccountsPayableReport> reports = new();
-                await foreach (AccountsPayableReport report in reportRepository.GetAllAsync(pagingOptions, sortOptions))
+                await foreach (AccountsPayableReport report in reportRepository
+                    .GetAllAsync(pagingOptions, sortOptions, searchOptions))
                 {
                     reports.Add(report);
                 }
