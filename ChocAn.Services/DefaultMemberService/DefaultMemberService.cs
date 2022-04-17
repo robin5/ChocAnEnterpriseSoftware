@@ -31,99 +31,23 @@
 // * 
 // **********************************************************************************
 
-using System.Net;
-using System.Text.Json;
 using ChocAn.MemberRepository;
-using Microsoft.Extensions.Logging;
 
 namespace ChocAn.Services.DefaultMemberService
 {
-    public class DefaultMemberService : IMemberService
+    public class DefaultMemberService : DefaultService<Member>
     {
-        public const string MemberErrorMessage = "Error while processing request for api/member/{id}";
-        public const string MemberExceptionMessage = "Exception while processing request for api/member/{id}";
-
-        private readonly IHttpClientFactory httpClientFactory;
-        private readonly ILogger<DefaultMemberService> logger;
-
-        public static readonly string Name = ServiceNames.DefaultMemberService;
+        public const string HttpClientName = Services.HttpClientName.MemberService;
+        public const string Url = ServiceUrl.MemberService;
 
         /// <summary>
         /// Constructor for DefaultMemberService
         /// </summary>
         /// <param name="httpClientFactory"></param>
         /// <param name="logger"></param>
-        public DefaultMemberService(IHttpClientFactory httpClientFactory,
-            ILogger<DefaultMemberService> logger)
+        public DefaultMemberService(IHttpClientFactory httpClientFactory) 
+            : base(Url, HttpClientName, httpClientFactory)
         {
-            this.httpClientFactory = httpClientFactory;
-            this.logger = logger;
-        }
-
-        /// <summary>
-        /// Retrieves member data from member service
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>
-        ///   A tuple consisting of the following fields:
-        ///   isSuccess - A boolean specifying the success of the retrieve operation
-        ///   member - member data
-        ///   errorMessage - a string specifying the cause of the operation failure, null otherwise
-        /// </returns>
-        public async Task<(bool isSuccess, Member? member, string? errorMessage)> GetAsync(int id)
-        {
-            try
-            {
-                var client = httpClientFactory.CreateClient(Name);
-                var response = await client.GetAsync($"api/Member/{id}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsByteArrayAsync();
-                    var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                    var member = JsonSerializer.Deserialize<Member>(content, options);
-                    return (true, member, null);
-                }
-                else if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return (true, null, response.ReasonPhrase);
-                }
-
-                logger?.LogError(MemberErrorMessage, response.ReasonPhrase);
-                return (false, null, response.ReasonPhrase);
-            }
-            catch (Exception ex)
-            {
-                logger?.LogError(ex, MemberExceptionMessage, id);
-                return (false, null, ex.Message);
-            }
-        }
-
-        public async Task<(bool isSuccess,IEnumerable<Member>? members, string? errorMessage)> GetAllByNameAsync(string find)
-        {
-            try
-            {
-                var client = httpClientFactory.CreateClient(Name);
-                var response = await client.GetAsync($"api/Member/?name={find}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsByteArrayAsync();
-                    var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                    var members = JsonSerializer.Deserialize<IEnumerable<Member>>(content, options);
-                    return (true, members, null);
-                }
-                else if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return (true, null, response.ReasonPhrase);
-                }
-
-                logger?.LogError(MemberErrorMessage, response.ReasonPhrase);
-                return (false, null, response.ReasonPhrase);
-            }
-            catch (Exception ex)
-            {
-                logger?.LogError(ex, MemberExceptionMessage, find);
-                return (false, null, ex.Message);
-            }
         }
     }
 }

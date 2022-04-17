@@ -31,65 +31,23 @@
 // * 
 // **********************************************************************************
 
-using System.Text;
-using System.Text.Json;
 using ChocAn.TransactionRepository;
-using Microsoft.Extensions.Logging;
 
 namespace ChocAn.Services.DefaultTransactionService
 {
-    public class DefaultTransactionService : ITransactionService
+    public class DefaultTransactionService : DefaultService<Transaction>
     {
-        public const string TransactionErrorMessage = "Error while processing request for api/transaction";
-        public const string TransactionExceptionMessage = "Exception while processing request for api/transaction";
-
-        private readonly IHttpClientFactory httpClientFactory;
-        private readonly ILogger<DefaultTransactionService> logger;
-
-        public static readonly string Name = ServiceNames.DefaultTransactionService;
+        public const string HttpClientName = Services.HttpClientName.TransactionService;
+        public const string Url = ServiceUrl.TransactionService;
 
         /// <summary>
         /// Constructor for DefaultTransactionService
         /// </summary>
         /// <param name="httpClientFactory"></param>
         /// <param name="logger"></param>
-        public DefaultTransactionService(IHttpClientFactory httpClientFactory,
-            ILogger<DefaultTransactionService> logger)
+        public DefaultTransactionService(IHttpClientFactory httpClientFactory)
+            : base(Url, HttpClientName, httpClientFactory)
         {
-            this.httpClientFactory = httpClientFactory;
-            this.logger = logger;
-        }
-
-        /// <summary>
-        /// Retrieves transaction data from transaction service
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>
-        ///   A tuple consisting of the following fields:
-        ///   isSuccess - A boolean specifying the success of the retrieve operation
-        ///   transaction - transaction data
-        ///   errorMessage - a string specifying the cause of the operation failure, null otherwise
-        /// </returns>
-        public async Task<(bool isSuccess, string? errorMessage)> AddAsync(Transaction transaction)
-        {
-            try
-            {
-                var client = httpClientFactory.CreateClient("DefaultTransactionService");
-                var content = new StringContent(JsonSerializer.Serialize<Transaction>(transaction), Encoding.UTF8, "application/json");
-                var response = await client.PostAsync($"api/Transaction/", content);
-                if (response.IsSuccessStatusCode)
-                {
-                    return (true, null);
-                }
-
-                logger?.LogError(TransactionErrorMessage, response.ReasonPhrase);
-                return (false, response.ReasonPhrase);
-            }
-            catch (Exception ex)
-            {
-                logger?.LogError(ex, TransactionExceptionMessage);
-                return (false, ex.Message);
-            }
         }
     }
 }

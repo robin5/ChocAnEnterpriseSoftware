@@ -46,6 +46,8 @@ using ChocAn.Repository;
 using ChocAn.Services;
 using ChocAn.Services.DefaultMemberService;
 using System;
+using ChocAn.Services.DefaultProviderService;
+using ChocAn.Services.DefaultProductService;
 
 namespace ChocAn.DataCenterConsole
 {
@@ -62,43 +64,54 @@ namespace ChocAn.DataCenterConsole
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("MemberDbConnection")));
+                Configuration.GetConnectionString("DefaultDbConnection")));
             services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
 
             services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("MemberDbConnection")));
+                Configuration.GetConnectionString("DefaultDbConnection")));
             services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
 
             services.AddDbContextPool<ProductDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("MemberDbConnection")));
+                Configuration.GetConnectionString("DefaultDbConnection")));
             services.AddScoped<IRepository<Product>, DefaultProductRepository>();
 
             services.AddControllersWithViews();
-
-
 
             // --------------------------------------
             // Define dependencies for IMemberService
             // --------------------------------------
 
-            services.AddHttpClient<IMemberService, DefaultMemberService>(DefaultMemberService.Name, client =>
-            {
-                client.BaseAddress = new Uri(Configuration["Services:ChocAn.MemberServiceApi"]);
-            }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
-            services.AddScoped<IMemberService, DefaultMemberService>();
+            services.AddHttpClient<IService<Member>, DefaultMemberService>(
+                DefaultMemberService.HttpClientName, client =>
+                {
+                    client.BaseAddress = new Uri(Configuration["Services:ChocAn.MemberServiceApi"]);
+                }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
+            services.AddScoped<IService<Member>, DefaultMemberService>();
 
+            // ----------------------------------------
+            // Define dependencies for IProviderService
+            // ----------------------------------------
 
+            services.AddHttpClient<IService<Provider>, DefaultProviderService>(
+                DefaultProviderService.HttpClientName, client =>
+                {
+                    client.BaseAddress = new Uri(Configuration["Services:ChocAn.ProviderServiceApi"]);
+                }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
+            services.AddScoped<IService<Provider>, DefaultProviderService>();
 
+            // ---------------------------------------
+            // Define dependencies for IProductService
+            // ---------------------------------------
 
+            services.AddHttpClient<IService<Product>, DefaultProductService>(
+                DefaultProductService.HttpClientName, client =>
+                {
+                    client.BaseAddress = new Uri(Configuration["Services:ChocAn.ProductServiceApi"]);
+                }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
-
-
-
-
-
-
+            services.AddScoped<IService<Product>, DefaultProductService>();
 
             // MemberController actions
             services.AddTransient<IIndexAction<Member>, IndexAction<Member, MemberIndexViewModel>>();

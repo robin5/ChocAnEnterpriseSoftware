@@ -33,9 +33,12 @@
 }
 @model ChocAn.DataCenterConsole.Models.ProductCreateViewModel
 @{
-    ViewData["Title"] = "Add Service";
+    ViewData["Title"] = "Add Product";
 }
-
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">

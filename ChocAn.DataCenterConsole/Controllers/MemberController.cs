@@ -35,10 +35,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using ChocAn.MemberRepository;
+using ChocAn.ProviderRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Repository;
 using ChocAn.Services;
+using System;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
@@ -46,10 +48,8 @@ namespace ChocAn.DataCenterConsole.Controllers
     {
         private readonly ILogger<MemberController> logger;
         private readonly IMapper mapper;
-
-        private readonly IRepository<Member> repository;
         private readonly IService<Member> service;
-
+        private readonly IRepository<Member> repository;
 
         private readonly IIndexAction<Member> indexAction;
         private readonly IDetailsAction<Member> detailsAction;
@@ -70,9 +70,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="deleteAction"></param>
         public MemberController(
             ILogger<MemberController> logger,
-            IRepository<Member> repository,
-            IService<Member> service,
             IMapper mapper,
+            IService<Member> service,
+
             IIndexAction<Member> indexAction,
             IDetailsAction<Member> detailsAction,
             ICreateAction<Member, MemberCreateViewModel> createAction,
@@ -80,16 +80,14 @@ namespace ChocAn.DataCenterConsole.Controllers
             IDeleteAction<Member> deleteAction)
         {
             this.logger = logger;
-            this.repository = repository;
             this.mapper = mapper;
+            this.service = service;
 
             this.indexAction = indexAction;
             this.detailsAction = detailsAction;
             this.createAction = createAction;
             this.editAction = editAction;
             this.deleteAction = deleteAction;
-
-            this.service = service;
         }
 
         /// <summary>
@@ -100,11 +98,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> Index(string find)
         {
             indexAction.Controller = this;
-            indexAction.Repository = repository;
+            indexAction.Logger = logger;
             indexAction.Service = service;
-            //return await indexAction.ActionResult(find);
-            
-            return await indexAction.ActionResult2(find);
+            return await indexAction.ActionResult(find);
         }
 
         /// <summary>
@@ -116,7 +112,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> DetailsAsync(int id)
         {
             detailsAction.Controller = this;
-            detailsAction.Repository = repository;
+            detailsAction.Logger = logger;
+            detailsAction.Service = service;
             detailsAction.Mapper = mapper;
             return await detailsAction.ActionResult(id);
         }
@@ -126,7 +123,10 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// </summary>
         /// <returns>Create view</returns>
         [HttpGet]
-        public ActionResult Create() => View();
+        public ActionResult Create()
+        {
+            return View(new MemberCreateViewModel());
+        }
 
         /// <summary>
         /// HttpPost endpoint for member/create/{form-data}
@@ -138,7 +138,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> CreateAsync(MemberCreateViewModel viewModel)
         {
             createAction.Controller = this;
-            createAction.Repository = repository;
+            createAction.Logger = logger;
+            createAction.Service = service;
             createAction.Mapper = mapper;
             return await createAction.ActionResult(viewModel, nameof(Index));
         }

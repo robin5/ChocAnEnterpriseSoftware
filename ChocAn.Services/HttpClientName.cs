@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: IMemberService.cs
+// * File: HttpClientName.cs
 // *
-// * Description: Defines service interface for Members from the Member repository 
+// * Description: Implememnts a class which defines the service names 
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +30,13 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.ProviderRepository;
-
 namespace ChocAn.Services
 {
-    public interface IProviderService
+    internal class HttpClientName
     {
-        Task<(bool isSuccess, Provider? provider, string? errorMessage)> GetAsync(int id);
+        public const string MemberService = "MemberService";
+        public const string ProviderService = "ProviderService";
+        public const string ProductService = "ProductService";
+        public const string TransactionService = "TransactionService";
     }
 }

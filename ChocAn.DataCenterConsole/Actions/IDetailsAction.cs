@@ -1,14 +1,16 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.Repository;
+using Microsoft.Extensions.Logging;
 using AutoMapper;
+using ChocAn.Services;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
     public interface IDetailsAction<TModel> where TModel : class
     {
         public Controller Controller { get; set; }
-        public IRepository<TModel> Repository { get; set; }
+        public ILogger<Controller> Logger { get; set; }
+        public IService<TModel> Service { get; set; }
         public IMapper Mapper { get; set; }
         public Task<IActionResult> ActionResult(int id);
     }

@@ -38,14 +38,16 @@ using ChocAn.ProductRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Repository;
+using ChocAn.Services;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
     public class ProductController : Controller
     {
         private readonly ILogger<ProductController> logger;
-        private readonly IRepository<Product> repository;
         private readonly IMapper mapper;
+        private readonly IService<Product> service;
+        private readonly IRepository<Product> repository;
 
         private readonly IIndexAction<Product> indexAction;
         private readonly IDetailsAction<Product> detailsAction;
@@ -66,8 +68,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="deleteAction"></param>
         public ProductController(
             ILogger<ProductController> logger,
-            IRepository<Product> repository,
             IMapper mapper,
+            IService<Product> service,
             IIndexAction<Product> indexAction,
             IDetailsAction<Product> detailsAction,
             ICreateAction<Product, ProductCreateViewModel> createAction,
@@ -75,8 +77,8 @@ namespace ChocAn.DataCenterConsole.Controllers
             IDeleteAction<Product> deleteAction)
         {
             this.logger = logger;
-            this.repository = repository;
             this.mapper = mapper;
+            this.service = service;
 
             this.indexAction = indexAction;
             this.detailsAction = detailsAction;
@@ -93,7 +95,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> Index(string find)
         {
             indexAction.Controller = this;
-            indexAction.Repository = repository;
+            indexAction.Logger = logger;
+            indexAction.Service = service;
             return await indexAction.ActionResult(find);
         }
 
@@ -106,8 +109,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> DetailsAsync(int id)
         {
             detailsAction.Controller = this;
-            detailsAction.Repository = repository;
+            detailsAction.Logger = logger;
             detailsAction.Mapper = mapper;
+            detailsAction.Service = service;
             return await detailsAction.ActionResult(id);
         }
 
@@ -128,8 +132,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> CreateAsync(ProductCreateViewModel viewModel)
         {
             createAction.Controller = this;
-            createAction.Repository = repository;
+            createAction.Logger = logger;
             createAction.Mapper = mapper;
+            createAction.Service = service;
             return await createAction.ActionResult(viewModel, nameof(Index));
         }
 

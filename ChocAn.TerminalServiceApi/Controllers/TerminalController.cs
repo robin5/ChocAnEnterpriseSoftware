@@ -37,6 +37,9 @@ using ChocAn.TransactionRepository;
 using ChocAn.Services;
 using ChocAn.TerminalServiceApi.Resources;
 using System.Net;
+using ChocAn.MemberRepository;
+using ChocAn.ProviderRepository;
+using ChocAn.ProductRepository;
 
 namespace ChocAn.TerminalServiceApi.Controllers
 {
@@ -69,10 +72,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
 
         // Private members
         private readonly ILogger<TerminalController> logger;
-        private readonly IMemberService memberService;
-        private readonly IProviderService providerService;
-        private readonly IProductService productService;
-        private readonly ITransactionService transactionService;
+        private readonly IService<Member> memberService;
+        private readonly IService<Provider> providerService;
+        private readonly IService<Product> productService;
+        private readonly IService<Transaction> transactionService;
 
         /// <summary>
         /// TerminalController constructor
@@ -84,10 +87,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
         /// <param name="transactionService">Transaction service</param>
         public TerminalController(
             ILogger<TerminalController> logger,
-            IMemberService memberService,
-            IProviderService providerService,
-            IProductService productService,
-            ITransactionService transactionService
+            IService<Member> memberService,
+            IService<Provider> providerService,
+            IService<Product> productService,
+            IService<Transaction> transactionService
             )
         {
             this.logger = logger;
@@ -263,18 +266,16 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     return BadRequest();
                 }
 
-                // Assemble transaction
-                var transaction = new Transaction
+                // Execute transaction
+                var (transactionSuccess, transaction, transactionError) = await transactionService.CreateAsync(new Transaction
                 {
                     ProviderId = provider.Id,
                     MemberId = member.Id,
                     ProductId = product.Id,
                     ServiceDate = transactionResource.ServiceDate,
                     ServiceComment = transactionResource.ServiceComment
-                };
+                });
 
-                // Execute transaction
-                var (transactionSuccess, transactionError) = await transactionService.AddAsync(transaction);
                 if (!transactionSuccess)
                 {
                     logger?.LogError(TransactionErrorMessage, transactionError);
@@ -282,7 +283,7 @@ namespace ChocAn.TerminalServiceApi.Controllers
                 }
 
                 // Report transaction accepted
-                return Created(string.Empty, transactionResource);
+                return Created(string.Empty, transaction);
             }
             catch (Exception ex)
             {

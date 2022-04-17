@@ -35,58 +35,64 @@
 @{
     ViewData["Title"] = "Provider Details";
 }
-
-<!-- Modal -->
-<div style="width: 100%" data-backdrop="true" class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div style="width: 100%" class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Provider: @Model.Id</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <h5 class="card-text">@Model.Name</h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                <form method="post"
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
+}
+@if (Model != null)
+{
+    <!-- Modal -->
+    <div style="width: 100%" data-backdrop="true" class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div style="width: 100%" class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Provider: @Model.Id</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="card-text">@Model.Name</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    <form method="post"
                       asp-area=""
                       asp-controller="Provider"
                       asp-action="Delete"
                       asp-route-id="@Model.Id">
-                    <button type="submit" class="btn btn-danger">Confirm delete</button>
-                </form>
+                        <button type="submit" class="btn btn-danger">Confirm delete</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Modal End -->
+    <!-- Modal End -->
 
-<div>
-    <section style="margin-top: 20px">
-        <div class="card" style="width: 24em">
-            <div class="card-header">
-                Provider ID: @Model.Id
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">@Model.Name</h5>
-                <p class="card-text">
-                    Address: @Model.StreetAddress<br />@Model.City, @Model.State @Model.ZipCode
-                </p>
-                <p class="card-text">
-                    Email: @Model.Email
-                </p>
-                <hr>
-                <a class="card-link"
+    <div>
+        <section style="margin-top: 20px">
+            <div class="card" style="width: 24em">
+                <div class="card-header">
+                    Provider ID: @Model.Id
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Name</h5>
+                    <p class="card-text">
+                        Address: @Model.StreetAddress<br />@Model.City, @Model.State @Model.ZipCode
+                    </p>
+                    <p class="card-text">
+                        Email: @Model.Email
+                    </p>
+                    <hr>
+                    <a class="card-link"
                    asp-area=""
                    asp-controller="Provider"
                    asp-action="Edit"
                    asp-route-id="@Model.Id">Edit</a>
-                <a href="#deleteModal" class="card-link" data-toggle="modal">Delete</a>
+                    <a href="#deleteModal" class="card-link" data-toggle="modal">Delete</a>
+                </div>
             </div>
-        </div>
-    </section>
-</div>
+        </section>
+    </div>
+}
 <div class="back-to-list">
     <a asp-action="Index">Back to List</a>
 </div>
