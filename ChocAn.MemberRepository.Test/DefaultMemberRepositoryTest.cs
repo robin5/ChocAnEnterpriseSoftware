@@ -275,14 +275,7 @@ namespace ChocAn.MemberRepository.Test
 
             // Assert
             // Validate return value of function call
-            Assert.NotNull(result);
-            Assert.Equal(VALID0_ID, result.Id);
-            Assert.Equal(VALID_UPDATE_NAME, result.Name);
-            Assert.Equal(VALID_UPDATE_ADDRESS, result.StreetAddress);
-            Assert.Equal(VALID_UPDATE_CITY, result.City);
-            Assert.Equal(VALID_UPDATE_STATE, result.State);
-            Assert.Equal(VALID_UPDATE_ZIPCODE, result.ZipCode);
-            Assert.Equal(VALID_UPDATE_STATUS, result.Status);
+            Assert.Equal(1, result);
 
             // Validate member was updated in the database
             var member = await context.Members.FindAsync(VALID0_ID);

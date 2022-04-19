@@ -35,85 +35,100 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.Services;
 using System.Net;
-using Microsoft.Extensions.Logging;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class IndexAction<TModel, TViewModel> : IIndexAction<TModel>
+    public class IndexAction<TResource, TModel, TViewModel> : IIndexAction<TResource, TModel>
+        where TResource : class
         where TModel : class
         where TViewModel : IndexViewModel<TModel>, new()
     {
+        private const string LogExceptionTemplate = "DetailsAction: {ex}";
+        private const string LogErrorTemplate = "DetailsAction: {error}";
+
         #region 500 level status returns
-        public const int ServiceUnavailable = (int)HttpStatusCode.ServiceUnavailable;
-        public const int InternalServerError = (int)HttpStatusCode.InternalServerError;
+        //public const int ServiceUnavailable = (int)HttpStatusCode.ServiceUnavailable;
+        //public const int InternalServerError = (int)HttpStatusCode.InternalServerError;
         #endregion
 
         public const string MemberErrorMessage = "Error while processing request for api/member/{id}";
         public Controller Controller { get; set; }
         public ILogger<Controller> Logger { get; set; }
-        public IService<TModel> Service { get; set; }
+        public IService<TResource, TModel> Service { get; set; }
         public async Task<IActionResult> ActionResult(string find)
         {
             List<TModel> items = new();
-            string vmError = null;
+
+            string error = null;
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(find))
+                // Short circuit test for default index view with nothing in the find box
+                if (string.IsNullOrWhiteSpace(find))
                 {
-                    if (int.TryParse(find, out int id))
+                    return Controller.View(new TViewModel
                     {
-                        var (success, result, error) = await Service.GetAsync(id);
-                        if (success)
+                        Find = "",
+                        Items = items
+                    });
+                }
+
+                // Parse find for a model id or name
+                if (int.TryParse(find, out int id))
+                {
+                    var (success, model, errorMessage) = await Service.GetAsync(id);
+                    if (success)
+                    {
+                        if (model != null)
                         {
-                            if (result != null)
-                            {
-                                items.Add(result);
-                            }
-                        }
-                        else
-                        {
-                            Logger?.LogError(MemberErrorMessage, error);
-                            vmError = error;
+                            items.Add(model);
                         }
                     }
                     else
                     {
-                        var (success, result, error) = await Service
-                            .AddSearch($"name eq {find}")
-                            .OrderBy("name")
-                            .Paginate(0, 25)
-                            .GetAllAsync();
+                        error = errorMessage;
+                        Logger?.LogError(LogErrorTemplate, error);
+                    }
+                }
+                else
+                {
+                    var (success, models, errorMessage) = await Service
+                        .AddSearch($"name eq {find}")
+                        .OrderBy("name")
+                        .Paginate(0, 25)
+                        .GetAllAsync();
 
-                        if (success)
+                    if (success)
+                    {
+                        foreach (var model in models)
                         {
-                            foreach (var model in result)
-                            {
-                                items.Add(model);
-                            }
+                            items.Add(model);
                         }
-                        else
-                        {
-                            Logger?.LogError(MemberErrorMessage, error);
-                            vmError = error;
-                        }
+                    }
+                    else
+                    {
+                        error = errorMessage;
+                        Logger?.LogError(LogErrorTemplate, error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Logger?.LogError(vmError, ex);
-                vmError = ex.Message;
+                Logger?.LogError(LogExceptionTemplate, ex);
+                error = ex.Message;
             }
+
+            if (null != error)
+                Controller.ModelState.AddModelError("Error", error);
 
             return Controller.View(new TViewModel
             {
                 Find = find,
-                Items = items,
-                Error = vmError
+                Items = items
             });
         }
     }

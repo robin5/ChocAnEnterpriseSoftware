@@ -41,30 +41,32 @@ using AutoMapper;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class DetailsAction<TModel, TViewModel> : IDetailsAction<TModel>
+    public class DetailsAction<TResource, TModel, TViewModel> : IDetailsAction<TResource, TModel>
+        where TResource : class
         where TModel : class
         where TViewModel : class, new()
     {
-        public const string ErrorMessage = $"Error while processing request for {nameof(TModel)}";
-        public const string NotFoundMessage = $"Item not found";
+        private const string LogExceptionTemplate = "DetailsAction: {ex}";
+        private const string LogErrorTemplate = "DetailsAction: {error}";
+        private const string NotFoundMessage = $"Item not found";
         public Controller Controller { get; set; }
         public ILogger<Controller> Logger { get; set; }
         public IMapper Mapper { get; set; }
-        public IService<TModel> Service { get; set; }
+        public IService<TResource, TModel> Service { get; set; }
         public async Task<IActionResult> ActionResult(int id)
         {
-            string error = null;
+            string error;
 
             try
             {
                 // Get an item from the service
-                var (success, item, errorMessage) = await Service.GetAsync(id);
+                var (success, model, errorMessage) = await Service.GetAsync(id);
                 if (success)
                 {
-                    if (null != item)
+                    if (null != model)
                     {
                         // Map the item into the TViewModel
-                        var viewModel = Mapper.Map<TViewModel>(item);
+                        var viewModel = Mapper.Map<TViewModel>(model);
 
                         // Render the view
                         return Controller.View(viewModel);
@@ -72,21 +74,21 @@ namespace ChocAn.DataCenterConsole.Actions
                     else
                     {
                         // Record not found error
-                        Logger?.LogError(NotFoundMessage);
                         error = NotFoundMessage;
+                        Logger?.LogError(LogErrorTemplate, error);
                     }
                 }
                 else
                 {
                     // Record service error
-                    Logger?.LogError(ErrorMessage, errorMessage);
-                    error = ErrorMessage;
+                    error = errorMessage;
+                    Logger?.LogError(LogErrorTemplate, error);
                 }
             }
             catch (Exception ex)
             {
                 // Record exception
-                Logger?.LogError(error, ex);
+                Logger?.LogError(LogExceptionTemplate, ex);
                 error = ex.Message;
             }
 

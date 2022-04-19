@@ -39,6 +39,7 @@ using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Repository;
 using ChocAn.Services;
+using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
@@ -46,14 +47,13 @@ namespace ChocAn.DataCenterConsole.Controllers
     {
         private readonly ILogger<ProductController> logger;
         private readonly IMapper mapper;
-        private readonly IService<Product> service;
-        private readonly IRepository<Product> repository;
+        private readonly IService<ProductResource, Product> service;
 
-        private readonly IIndexAction<Product> indexAction;
-        private readonly IDetailsAction<Product> detailsAction;
-        private readonly ICreateAction<Product, ProductCreateViewModel> createAction;
-        private readonly IEditAction<Product, ProductEditViewModel> editAction;
-        private readonly IDeleteAction<Product> deleteAction;
+        private readonly IIndexAction<ProductResource, Product> indexAction;
+        private readonly IDetailsAction<ProductResource, Product> detailsAction;
+        private readonly ICreateAction<ProductResource, Product, ProductCreateViewModel> createAction;
+        private readonly IEditAction<ProductResource, Product, ProductEditViewModel> editAction;
+        private readonly IDeleteAction<ProductResource, Product> deleteAction;
 
         /// <summary>
         /// Constructor for ProductController
@@ -69,12 +69,12 @@ namespace ChocAn.DataCenterConsole.Controllers
         public ProductController(
             ILogger<ProductController> logger,
             IMapper mapper,
-            IService<Product> service,
-            IIndexAction<Product> indexAction,
-            IDetailsAction<Product> detailsAction,
-            ICreateAction<Product, ProductCreateViewModel> createAction,
-            IEditAction<Product, ProductEditViewModel> editAction,
-            IDeleteAction<Product> deleteAction)
+            IService<ProductResource, Product> service,
+            IIndexAction<ProductResource, Product> indexAction,
+            IDetailsAction<ProductResource, Product> detailsAction,
+            ICreateAction<ProductResource, Product, ProductCreateViewModel> createAction,
+            IEditAction<ProductResource, Product, ProductEditViewModel> editAction,
+            IDeleteAction<ProductResource, Product> deleteAction)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -120,7 +120,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// </summary>
         /// <returns>Create view</returns>
         [HttpGet]
-        public ActionResult Create() => View();
+        public ActionResult Create() => View(new ProductCreateViewModel());
 
         /// <summary>
         /// HttpPost endpoint for product/create/{form-data}
@@ -147,7 +147,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> EditAsync(int id)
         {
             editAction.Controller = this;
-            editAction.Repository = repository;
+            editAction.Logger = logger;
+            editAction.Service = service;
             editAction.Mapper = mapper;
             return await editAction.ActionResult(id);
         }
@@ -162,9 +163,10 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> EditAsync(ProductEditViewModel viewModel)
         {
             editAction.Controller = this;
-            editAction.Repository = repository;
+            editAction.Logger = logger;
+            editAction.Service = service;
             editAction.Mapper = mapper;
-            return await editAction.ActionResult(viewModel, nameof(Index));
+            return await editAction.ActionResult(viewModel.Id, viewModel, "Details");
         }
 
         /// <summary>
@@ -177,7 +179,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> DeleteAsync(int id)
         {
             deleteAction.Controller = this;
-            deleteAction.Repository = repository;
+            deleteAction.Logger = logger;
+            deleteAction.Service = service;
+            deleteAction.Mapper = mapper;
             return await deleteAction.ActionResult(id, nameof(Index));
         }
     }

@@ -38,7 +38,7 @@ namespace ChocAn.ReportService.Resources
     public class ReportResource
     {
         [MaxLength(25)]
-        public string Name { get; init; }
+        public string? Name { get; init; }
         public Guid OwnerId { get; init; }
         public DateTime StartDate { get; init; }
         public DateTime EndDate { get; init; }

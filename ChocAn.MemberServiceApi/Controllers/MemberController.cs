@@ -64,7 +64,7 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// </summary>
         /// <param name="id">Member's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
-        [HttpGet(Name = nameof(GetAllAsync))]
+        [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllAsync(
@@ -96,7 +96,7 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// </summary>
         /// <param name="id">Member's identification number</param>
         /// <returns>200 on success. 404 if member does not exist. 500 on exception</returns>
-        [HttpGet("{id}", Name = nameof(GetAsync))]
+        [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -123,7 +123,7 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// </summary>
         /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPost(Name = nameof(PostAsync))]
+        [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -158,9 +158,10 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// <param name="id">Member's identification number</param>
         /// <param name="resource">Member updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPut("{id}", Name = nameof(PutAsync))]
+        [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] MemberResource resource)
         {
@@ -177,8 +178,12 @@ namespace ChocAn.MemberServiceApi.Controllers
                     ZipCode = resource.ZipCode,
                     Status = resource.Status
                 };
-                await repository.UpdateAsync(member);
-                return Ok(resource);
+
+                var numChanged = await repository.UpdateAsync(member);
+                if (numChanged > 0)
+                    return Ok();
+                else
+                    return NotFound();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -197,7 +202,7 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// </summary>
         /// <param name="id">Member's identification number</param>
         /// <returns>200 on success. 404 if member does not exist. 500 on exception</returns>
-        [HttpDelete("{id}", Name = nameof(DeleteAsync))]
+        [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]

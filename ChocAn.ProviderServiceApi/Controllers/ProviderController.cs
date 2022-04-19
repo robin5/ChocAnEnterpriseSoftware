@@ -64,7 +64,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// </summary>
         /// <param name="id">Provider's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
-        [HttpGet(Name = nameof(GetAllAsync))]
+        [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllAsync(
@@ -95,7 +95,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// </summary>
         /// <param name="id">Provider's identification number</param>
         /// <returns>200 on success. 404 if provider does not exist. 500 on exception</returns>
-        [HttpGet("{id}", Name = nameof(GetAsync))]
+        [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -122,7 +122,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// </summary>
         /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPost(Name = nameof(PostAsync))]
+        [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -157,9 +157,10 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// <param name="id">Provider's identification number</param>
         /// <param name="resource">Provider updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPut("{id}", Name = nameof(PutAsync))]
+        [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] ProviderResource resource)
         {
@@ -175,8 +176,12 @@ namespace ChocAn.ProviderServiceApi.Controllers
                     State = resource.State,
                     ZipCode = resource.ZipCode
                 };
-                await repository.UpdateAsync(provider);
-                return Ok(resource);
+
+                var numChanged = await repository.UpdateAsync(provider);
+                if (numChanged > 0)
+                    return Ok();
+                else
+                    return NotFound();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -195,7 +200,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// </summary>
         /// <param name="id">Provider's identification number</param>
         /// <returns>200 on success. 404 if provider does not exist. 500 on exception</returns>
-        [HttpDelete("{id}", Name = nameof(DeleteAsync))]
+        [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]

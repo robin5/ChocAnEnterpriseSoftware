@@ -64,7 +64,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// </summary>
         /// <param name="id">Product's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
-        [HttpGet(Name = nameof(GetAllAsync))]
+        [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllAsync(
@@ -95,7 +95,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// </summary>
         /// <param name="id">Product's identification number</param>
         /// <returns>200 on success. 404 if product does not exist. 500 on exception</returns>
-        [HttpGet("{id}", Name = nameof(GetAsync))]
+        [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -122,7 +122,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// </summary>
         /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPost(Name = nameof(PostAsync))]
+        [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -153,9 +153,10 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// <param name="id">Product's identification number</param>
         /// <param name="resource">Product updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPut("{id}", Name = nameof(PutAsync))]
+        [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] ProductResource resource)
         {
@@ -167,8 +168,12 @@ namespace ChocAn.ProductServiceApi.Controllers
                     Name = resource.Name,
                     Cost = resource.Cost
                 };
-                await repository.UpdateAsync(product);
-                return Ok(resource);
+
+                var numChanged = await repository.UpdateAsync(product);
+                if (numChanged > 0)
+                    return Ok();
+                else
+                    return NotFound();
             }
             catch (DbUpdateConcurrencyException ex)
             {

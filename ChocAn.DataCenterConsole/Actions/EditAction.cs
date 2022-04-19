@@ -31,44 +31,110 @@
 // * 
 // **********************************************************************************
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.Repository;
+using Microsoft.Extensions.Logging;
 using AutoMapper;
+using ChocAn.Services;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class EditAction<TModel, TViewModel> : IEditAction<TModel, TViewModel>
+    public class EditAction<TResource, TModel, TViewModel> : IEditAction<TResource, TModel, TViewModel>
+        where TResource : class
         where TModel : class
         where TViewModel : class, new()
     {
+        private const string LogExceptionTemplate = "EditAction: {ex}";
+        private const string LogErrorTemplate = "EditAction: {error}";
+        private const string NotFoundMessage = $"Item not found";
         public Controller Controller { get; set; }
-        public IRepository<TModel> Repository { get; set; }
+        public ILogger<Controller> Logger { get; set; }
+        public IService<TResource, TModel> Service { get; set; }
         public IMapper Mapper { get; set; }
         public async Task<IActionResult> ActionResult(int id)
         {
-            var entity = await Repository.GetAsync(id);
-            if (null != entity)
-            {
-                // map VM
-                var viewModel = Mapper.Map<TViewModel>(entity);
+            string error;
 
-                return Controller.View(viewModel);
+            try
+            {
+                // Get an item from the service
+                var (success, model, errorMessage) = await Service.GetAsync(id);
+                if (success)
+                {
+                    if (null != model)
+                    {
+                        // Map the item into the TViewModel
+                        var viewModel = Mapper.Map<TViewModel>(model);
+
+                        // Render the view
+                        return Controller.View(viewModel);
+                    }
+                    else
+                    {
+                        // Record not found error
+                        error = NotFoundMessage;
+                        Logger?.LogError(LogErrorTemplate, error);
+                    }
+                }
+                else
+                {
+                    // Record service error
+                    error = errorMessage;
+                    Logger?.LogError(LogErrorTemplate, error);
+                }
             }
+            catch (Exception ex)
+            {
+                // Record exception
+                Logger?.LogError(LogExceptionTemplate, ex);
+                error = ex.Message;
+            }
+
+            Controller.ModelState.AddModelError("Error", error);
+
+            // Render view with error and no item
             return Controller.View();
         }
-        public async Task<IActionResult> ActionResult(TViewModel viewModel, string indexAction = null)
+        public async Task<IActionResult> ActionResult(int id, TViewModel viewModel, string detailsAction)
         {
-            if (!Controller.ModelState.IsValid)
+            string error;
+
+            try
             {
-                return Controller.View(viewModel);
+                if (!Controller.ModelState.IsValid)
+                {
+                    // Render view
+                    return Controller.View(viewModel);
+                }
+
+                var resource = Mapper.Map<TResource>(viewModel);
+
+                var (success, errorMessage) = await Service.UpdateAsync(id, resource);
+                if (success)
+                {
+                    // TODO: Once an ID can be returned, Redirect to details page
+                    return Controller.RedirectToAction(detailsAction, new { id });
+                }
+                else
+                {
+                    // Record not created error
+                    error = errorMessage;
+                    Logger?.LogError(LogErrorTemplate, error);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Record exception
+                Logger?.LogError(LogExceptionTemplate, ex);
+                error = ex.Message;
             }
 
-            var entity = Mapper.Map<TModel>(viewModel);
+            // Pass error to controller via ModelState
+            Controller.ModelState.AddModelError("Error", error);
 
-            await Repository.UpdateAsync(entity);
-
-            return Controller.RedirectToAction(indexAction);
+            // Pass viewModel back to controller
+            return Controller.View(viewModel);
         }
     }
 }

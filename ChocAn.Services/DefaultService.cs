@@ -5,7 +5,9 @@ using System.Net.Http.Headers;
 
 namespace ChocAn.Services
 {
-    public abstract class DefaultService<T> : IService<T> where T : class
+    public abstract class DefaultService<TResource, TModel> : IService<TResource, TModel>
+        where TResource : class
+        where TModel : class
     {
         private readonly string url;
         private readonly IHttpClientFactory httpClientFactory;
@@ -15,7 +17,6 @@ namespace ChocAn.Services
         private int limit = 25;
         private readonly List<string> search = new();
         private readonly List<string> orderby = new();
-
 
         public const string MemberErrorMessage = "Error while processing request for api/member/{id}";
         public const string MemberExceptionMessage = "Exception while processing request for api/member/{id}";
@@ -45,7 +46,7 @@ namespace ChocAn.Services
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public IService<T> Paginate(int offset, int limit)
+        public IService<TResource, TModel> Paginate(int offset, int limit)
         {
             this.offset = offset;
             this.limit = limit;
@@ -57,7 +58,7 @@ namespace ChocAn.Services
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public IService<T> AddSearch(string value)
+        public IService<TResource, TModel> AddSearch(string value)
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
@@ -71,7 +72,7 @@ namespace ChocAn.Services
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public IService<T> OrderBy(string value)
+        public IService<TResource, TModel> OrderBy(string value)
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
@@ -105,7 +106,7 @@ namespace ChocAn.Services
         ///   member - member data
         ///   errorMessage - a string specifying the cause of the operation failure, null otherwise
         /// </returns>
-        public async virtual Task<(bool isSuccess, T? result, string? errorMessage)> GetAsync(int id)
+        public async virtual Task<(bool isSuccess, TModel? result, string? errorMessage)> GetAsync(int id)
         {
             using var client = httpClientFactory.CreateClient(httpClientName);
             var response = await client.GetAsync($"{url}/{id}");
@@ -113,7 +114,7 @@ namespace ChocAn.Services
             {
                 var content = await response.Content.ReadAsByteArrayAsync();
                 var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                var result = JsonSerializer.Deserialize<T>(content, options);
+                var result = JsonSerializer.Deserialize<TModel>(content, options);
                 return (true, result, null);
             }
             else if (response.StatusCode == HttpStatusCode.NotFound)
@@ -129,7 +130,7 @@ namespace ChocAn.Services
         /// pagination, sort, and search parameters
         /// </summary>
         /// <returns></returns>
-        public async virtual Task<(bool isSuccess, IEnumerable<T>? result, string? errorMessage)> GetAllAsync()
+        public async virtual Task<(bool isSuccess, IEnumerable<TModel>? result, string? errorMessage)> GetAllAsync()
         {
             using var client = httpClientFactory.CreateClient(httpClientName);
 
@@ -138,7 +139,7 @@ namespace ChocAn.Services
             {
                 var content = await response.Content.ReadAsByteArrayAsync();
                 var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                var result = JsonSerializer.Deserialize<List<T>>(content, options);
+                var result = JsonSerializer.Deserialize<List<TModel>>(content, options);
                 return (true, result, null);
             }
             else if (response.StatusCode == HttpStatusCode.NotFound)
@@ -154,12 +155,12 @@ namespace ChocAn.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async virtual Task<(bool isSuccess, T? result, string? errorMessage)> CreateAsync(T entity)
+        public async virtual Task<(bool isSuccess, TResource? result, string? errorMessage)> CreateAsync(TResource entity)
         {
             using var client = httpClientFactory.CreateClient(httpClientName);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var json = JsonSerializer.Serialize<T>(entity);
+            var json = JsonSerializer.Serialize<TResource>(entity);
             var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync($"{url}", content);
@@ -167,11 +168,33 @@ namespace ChocAn.Services
             {
                 var bytes = await response.Content.ReadAsByteArrayAsync();
                 var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                var result = JsonSerializer.Deserialize<T>(bytes, options);
+                var result = JsonSerializer.Deserialize<TResource>(bytes, options);
                 return (true, result, null);
             }
 
             return (false, null, response.ReasonPhrase);
+        }
+
+        public async Task<(bool isSuccess, string? errorMessage)> UpdateAsync(int id, TResource entity)
+        {
+            using var client = httpClientFactory.CreateClient(httpClientName);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var json = JsonSerializer.Serialize<TResource>(entity);
+            var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+
+            var response = await client.PutAsync($"{url}/{id}", content);
+            if (response.IsSuccessStatusCode)
+            {
+                return (true, null);
+            }
+
+            return (false, response.ReasonPhrase);
+        }
+
+        public Task<(bool isSuccess, TResource? result, string? errorMessage)> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -83,10 +83,10 @@ namespace ChocAn.MockRepositories
             return Task.FromResult(item);
         }
 
-        public Task<Member> UpdateAsync(Member memberChanges)
+        public Task<int> UpdateAsync(Member memberChanges)
         {
             items[memberChanges.Id] = memberChanges;
-            return Task.FromResult(memberChanges);
+            return Task.FromResult(1);
         }
 
         public async IAsyncEnumerable<Member> GetAllByNameAsync(string name)

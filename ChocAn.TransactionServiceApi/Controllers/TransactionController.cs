@@ -68,7 +68,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
         /// </summary>
         /// <param name="id">Transaction's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
-        [HttpGet(Name = nameof(GetAllAsync))]
+        [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllAsync(
@@ -101,7 +101,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
         /// </summary>
         /// <param name="id">Transaction's identification number</param>
         /// <returns>200 on success. 404 if transaction does not exist. 500 on exception</returns>
-        [HttpGet("{id}", Name = nameof(GetAsync))]
+        [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -161,9 +161,10 @@ namespace ChocAn.TransactionServiceApi.Controllers
         /// <param name="id">Transaction's identification number</param>
         /// <param name="transactionResource">Transaction updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPut("{id}", Name = nameof(PutAsync))]
+        [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] TransactionResource transactionResource)
         {
@@ -171,9 +172,12 @@ namespace ChocAn.TransactionServiceApi.Controllers
             {
                 var transaction = mapper.Map<Transaction>(transactionResource);
                 transaction.Id = id;
-                await repository.UpdateAsync(transaction);
 
-                return Ok(transactionResource);
+                var numChanged = await repository.UpdateAsync(transaction);
+                if (numChanged > 0)
+                    return Ok(transactionResource);
+                else
+                    return NotFound();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -192,7 +196,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
         /// </summary>
         /// <param name="id">Transaction's identification number</param>
         /// <returns>200 on success. 404 if transaction does not exist. 500 on exception</returns>
-        [HttpDelete("{id}", Name = nameof(DeleteAsync))]
+        [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]

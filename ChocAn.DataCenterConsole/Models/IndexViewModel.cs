@@ -39,6 +39,5 @@ namespace ChocAn.DataCenterConsole.Models
     {
         public string Find { get; set; }
         public IEnumerable<TModel> Items { get; set; }
-        public string Error { get; set; }
     }
 }

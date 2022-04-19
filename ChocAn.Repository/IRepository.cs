@@ -31,7 +31,7 @@ namespace ChocAn.Repository
         /// </summary>
         /// <param name="changes">Changes to be applied to T entity</param>
         /// <returns></returns>
-        Task<T> UpdateAsync(T entity);
+        Task<int> UpdateAsync(T entity);
 
         /// <summary>
         /// Deletes a T entity from the data source

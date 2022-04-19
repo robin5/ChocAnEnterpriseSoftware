@@ -82,12 +82,12 @@ namespace ChocAn.Repository
         /// </summary>
         /// <param name="changes">Changes to be applied to T entity</param>
         /// <returns></returns>
-        virtual public async Task<T> UpdateAsync(T changes)
+        virtual public async Task<int> UpdateAsync(T changes)
         {
             var entity = dbSet.Attach(changes);
             entity.State = EntityState.Modified;
-            await context.SaveChangesAsync();
-            return changes;
+            
+            return await context.SaveChangesAsync(); ;
         }
 
         /// <summary>

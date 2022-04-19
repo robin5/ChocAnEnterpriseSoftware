@@ -279,14 +279,7 @@ namespace ChocAn.TransactionRepository.Test
 
             // Assert
             // Validate return value of function call
-            Assert.NotNull(result);
-            Assert.Equal(T0_ID, result.Id);
-            Assert.Equal(T_UPDATE_PROVIDER_ID, result.ProviderId);
-            Assert.Equal(T_UPDATE_MEMBER_ID, result.MemberId);
-            Assert.Equal(T_UPDATE_PRODUCT_ID, result.ProductId);
-            Assert.Equal(T_UPDATE_SERVICE_DATETIME, result.ServiceDate);
-            Assert.Equal(T_UPDATE_SERVICE_COMMENT, result.ServiceComment);
-            Assert.Equal(T_UPDATE_CREATED, result.Created);
+            Assert.Equal(1, result);
 
             // Validate transaction was updated in the database
             var transaction = await context.Transactions.FindAsync(T0_ID);

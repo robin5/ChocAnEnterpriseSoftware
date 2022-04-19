@@ -72,10 +72,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
 
         // Private members
         private readonly ILogger<TerminalController> logger;
-        private readonly IService<Member> memberService;
-        private readonly IService<Provider> providerService;
-        private readonly IService<Product> productService;
-        private readonly IService<Transaction> transactionService;
+        private readonly IService<MemberResource, Member> memberService;
+        private readonly IService<ProviderResource, Provider> providerService;
+        private readonly IService<ProductResource, Product> productService;
+        private readonly IService<TransactionResource, Transaction> transactionService;
 
         /// <summary>
         /// TerminalController constructor
@@ -87,10 +87,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
         /// <param name="transactionService">Transaction service</param>
         public TerminalController(
             ILogger<TerminalController> logger,
-            IService<Member> memberService,
-            IService<Provider> providerService,
-            IService<Product> productService,
-            IService<Transaction> transactionService
+            IService<MemberResource, Member> memberService,
+            IService<ProviderResource, Provider> providerService,
+            IService<ProductResource, Product> productService,
+            IService<TransactionResource, Transaction> transactionService
             )
         {
             this.logger = logger;
@@ -267,7 +267,7 @@ namespace ChocAn.TerminalServiceApi.Controllers
                 }
 
                 // Execute transaction
-                var (transactionSuccess, transaction, transactionError) = await transactionService.CreateAsync(new Transaction
+                var (transactionSuccess, transaction, transactionError) = await transactionService.CreateAsync(new TransactionResource
                 {
                     ProviderId = provider.Id,
                     MemberId = member.Id,

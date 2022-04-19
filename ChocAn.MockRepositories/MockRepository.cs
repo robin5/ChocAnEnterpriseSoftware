@@ -74,7 +74,7 @@ namespace ChocAn.MockRepositories
             throw new NotImplementedException();
         }
 
-        public Task<T> UpdateAsync(T memberChanges)
+        public Task<int> UpdateAsync(T memberChanges)
         {
             throw new NotImplementedException();
         }

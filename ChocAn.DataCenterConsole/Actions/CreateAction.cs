@@ -40,16 +40,17 @@ using ChocAn.Services;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class CreateAction<TModel, TViewModel> : ICreateAction<TModel, TViewModel>
+    public class CreateAction<TResource, TModel, TViewModel> : ICreateAction<TResource, TModel, TViewModel>
+        where TResource : class
         where TModel : class
         where TViewModel : class, new()
     {
-        public const string ExceptionMessage = $"Exception while processing request for {nameof(TModel)}";
+        public const string ExceptionMessage = $"Exception while processing request for {nameof(TResource)}";
         public const string ErrorMessage = "Error while processing request for {nameof(TModel)}: {errorMesage}";
         public const string NotCreatedMessage = $"Item not created. Service not available.";
         public Controller Controller { get; set; }
         public ILogger<Controller> Logger { get; set; }
-        public IService<TModel> Service { get; set; }
+        public IService<TResource, TModel> Service { get; set; }
         public IMapper Mapper { get; set; }
         public async Task<IActionResult> ActionResult(TViewModel viewModel, string indexAction)
         {
@@ -61,9 +62,9 @@ namespace ChocAn.DataCenterConsole.Actions
                     return Controller.View(viewModel);
                 }
 
-                var entity = Mapper.Map<TModel>(viewModel);
+                var resource = Mapper.Map<TResource>(viewModel);
 
-                var (success, result, error) = await Service.CreateAsync(entity);
+                var (success, model, error) = await Service.CreateAsync(resource);
                 if (success)
                 {
                     // TODO: Once an ID can be returned, Redirect to details page

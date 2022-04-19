@@ -32,10 +32,11 @@
 // **********************************************************************************
 
 using ChocAn.ProviderRepository;
+using ChocAn.ProviderServiceApi.Resources;
 
 namespace ChocAn.Services.DefaultProviderService
 {
-    public class DefaultProviderService : DefaultService<Provider>
+    public class DefaultProviderService : DefaultService<ProviderResource, Provider>
     {
         public const string HttpClientName = Services.HttpClientName.ProviderService;
         public const string Url = ServiceUrl.ProviderService;

@@ -6,11 +6,13 @@ using ChocAn.Services;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public interface IDetailsAction<TModel> where TModel : class
+    public interface IDetailsAction<TResource, TModel>
+        where TResource : class
+        where TModel : class
     {
         public Controller Controller { get; set; }
         public ILogger<Controller> Logger { get; set; }
-        public IService<TModel> Service { get; set; }
+        public IService<TResource, TModel> Service { get; set; }
         public IMapper Mapper { get; set; }
         public Task<IActionResult> ActionResult(int id);
     }

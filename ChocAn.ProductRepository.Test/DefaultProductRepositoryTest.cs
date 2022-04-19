@@ -227,10 +227,7 @@ namespace ChocAn.ProductRepository.Test
 
             // Assert
             // Validate return value of function call
-            Assert.NotNull(result);
-            Assert.Equal(VALID0_ID, result.Id);
-            Assert.Equal(VALID_UPDATE_NAME, result.Name);
-            Assert.Equal(VALID_UPDATE_COST, result.Cost);
+            Assert.Equal(1, result);
 
             // Validate product was updated in the database
             var product = await context.Products.FindAsync(VALID0_ID);

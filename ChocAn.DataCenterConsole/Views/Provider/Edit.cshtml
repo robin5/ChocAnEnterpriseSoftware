@@ -35,7 +35,10 @@
 @{
     ViewData["Title"] = "Edit Provider";
 }
-
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
+}
 @if (null == Model)
 {
     <div>
