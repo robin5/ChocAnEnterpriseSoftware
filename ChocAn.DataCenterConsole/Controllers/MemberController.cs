@@ -176,13 +176,13 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <returns>Redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DCDeleteAsync(int id)
         {
             deleteAction.Controller = this;
             deleteAction.Logger = logger;
             deleteAction.Service = service;
             deleteAction.Mapper = mapper;
-            return await deleteAction.ActionResult(id, nameof(Index));
+            return await deleteAction.ActionResult(id, "Index", "Details");
         }
     }
 }

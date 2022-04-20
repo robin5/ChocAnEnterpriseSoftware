@@ -10,6 +10,6 @@ namespace ChocAn.Services
         Task<(bool isSuccess, IEnumerable<TModel>? result, string? errorMessage)> GetAllAsync();
         Task<(bool isSuccess, TResource? result, string? errorMessage)> CreateAsync(TResource entity);
         Task<(bool isSuccess, string? errorMessage)> UpdateAsync(int id, TResource entity);
-        Task<(bool isSuccess, TResource? result, string? errorMessage)> DeleteAsync(int id);
+        Task<(bool isSuccess, TModel? result, string? errorMessage)> DeleteAsync(int id);
     }
 }

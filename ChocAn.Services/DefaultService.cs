@@ -151,10 +151,10 @@ namespace ChocAn.Services
         }
 
         /// <summary>
-        /// 
+        /// Creates a T entity.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="entity">Entity to create</param>
+        /// <returns>TResource representing created entity</returns>
         public async virtual Task<(bool isSuccess, TResource? result, string? errorMessage)> CreateAsync(TResource entity)
         {
             using var client = httpClientFactory.CreateClient(httpClientName);
@@ -175,6 +175,12 @@ namespace ChocAn.Services
             return (false, null, response.ReasonPhrase);
         }
 
+        /// <summary>
+        /// Updates a T entity.
+        /// </summary>
+        /// <param name="id">ID of entity to update</param>
+        /// <param name="entity">New entity values</param>
+        /// <returns>Tuple representing result</returns>
         public async Task<(bool isSuccess, string? errorMessage)> UpdateAsync(int id, TResource entity)
         {
             using var client = httpClientFactory.CreateClient(httpClientName);
@@ -192,9 +198,28 @@ namespace ChocAn.Services
             return (false, response.ReasonPhrase);
         }
 
-        public Task<(bool isSuccess, TResource? result, string? errorMessage)> DeleteAsync(int id)
+        /// <summary>
+        /// Deletes a T entity
+        /// </summary>
+        /// <param name="id">ID of entity to delete</param>
+        /// <returns>Deleted T entity</returns>
+        public async Task<(bool isSuccess, TModel? result, string? errorMessage)> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            using var client = httpClientFactory.CreateClient(httpClientName);
+            var response = await client.DeleteAsync($"{url}/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsByteArrayAsync();
+                var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+                var result = JsonSerializer.Deserialize<TModel>(content, options);
+                return (true, result, null);
+            }
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return (true, null, response.ReasonPhrase);
+            }
+
+            return (false, null, response.ReasonPhrase);
         }
     }
 }

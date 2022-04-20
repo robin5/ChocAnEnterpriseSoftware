@@ -183,7 +183,7 @@ namespace ChocAn.DataCenterConsole.Controllers
             deleteAction.Logger = logger;
             deleteAction.Service = service;
             deleteAction.Mapper = mapper;
-            return await deleteAction.ActionResult(id, nameof(Index));
+            return await deleteAction.ActionResult(id, "Index", "Details");
         }
     }
 }

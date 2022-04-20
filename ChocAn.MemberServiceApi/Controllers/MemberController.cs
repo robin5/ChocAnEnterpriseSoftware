@@ -151,7 +151,6 @@ namespace ChocAn.MemberServiceApi.Controllers
             }
         }
 
-
         /// <summary>
         /// Updates a member in the Member repository.
         /// </summary>

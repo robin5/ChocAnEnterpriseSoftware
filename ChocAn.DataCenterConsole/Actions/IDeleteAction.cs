@@ -14,6 +14,6 @@ namespace ChocAn.DataCenterConsole.Actions
         public ILogger<Controller> Logger { get; set; }
         public IService<TResource, TModel> Service { get; set; }
         public IMapper Mapper { get; set; }
-        public Task<IActionResult> ActionResult(int id, string indexAction = null);
+        public Task<IActionResult> ActionResult(int id, string indexAction, string detailsAction);
     }
 }
