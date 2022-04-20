@@ -547,7 +547,8 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
-                .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()));
+                .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()))
+                .Returns(Task.FromResult(1));
 
             var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
             mockDefaultPagingOptions
@@ -577,18 +578,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // Verify controller returned a OkObjectResult
             Assert.NotNull(result);
-            var okObjectResult = Assert.IsType<OkObjectResult>(result);
-
-            // Verify the returned resource is equivalent to the entered resource
-            var value = Assert.IsType<MemberResource>(okObjectResult.Value);
-            Assert.NotNull(value);
-            Assert.Equal(resource.Name, value.Name);
-            Assert.Equal(resource.Email, value.Email);
-            Assert.Equal(resource.StreetAddress, value.StreetAddress);
-            Assert.Equal(resource.City, value.City);
-            Assert.Equal(resource.State, value.State);
-            Assert.Equal(resource.ZipCode, value.ZipCode);
-            Assert.Equal(resource.Status, value.Status);
+            var okResult = Assert.IsType<OkResult>(result);
         }
 
         /// <summary>
