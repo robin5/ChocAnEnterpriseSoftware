@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChocAn.Repository.Paging;
 
 namespace ChocAn.MockRepositories
 {
@@ -53,7 +54,7 @@ namespace ChocAn.MockRepositories
             throw new NotImplementedException();
         }
 
-        public async IAsyncEnumerable<T> GetAllAsync()
+        public async IAsyncEnumerable<T> GetAllAsync(PagingOptions pagingOptions)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
             T item;
@@ -73,7 +74,7 @@ namespace ChocAn.MockRepositories
             throw new NotImplementedException();
         }
 
-        public Task<T> UpdateAsync(T memberChanges)
+        public Task<int> UpdateAsync(T memberChanges)
         {
             throw new NotImplementedException();
         }

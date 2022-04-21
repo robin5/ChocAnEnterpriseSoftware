@@ -31,71 +31,24 @@
 // * 
 // **********************************************************************************
 
-using System.Net;
-using System.Text.Json;
 using ChocAn.ProductRepository;
-using Microsoft.Extensions.Logging;
+using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.Services.DefaultProductService
 {
-    public class DefaultProductService : IProductService
+    public class DefaultProductService : DefaultService<ProductResource, Product>
     {
-        public const string ProductErrorMessage = "Error while processing request for api/product/{id}";
-        public const string ProductExceptionMessage = "Exception while processing request for api/product/{id}";
-
-        private readonly IHttpClientFactory httpClientFactory;
-        private readonly ILogger<DefaultProductService> logger;
-
-        public static readonly string Name = ServiceNames.DefaultProductService;
+        public const string HttpClientName = Services.HttpClientName.ProductService;
+        public const string Url = ServiceUrl.ProductService;
 
         /// <summary>
         /// Constructor for DefaultProductService
         /// </summary>
         /// <param name="httpClientFactory"></param>
         /// <param name="logger"></param>
-        public DefaultProductService(IHttpClientFactory httpClientFactory,
-            ILogger<DefaultProductService> logger)
+        public DefaultProductService(IHttpClientFactory httpClientFactory)
+            : base(Url, HttpClientName, httpClientFactory)
         {
-            this.httpClientFactory = httpClientFactory;
-            this.logger = logger;
-        }
-
-        /// <summary>
-        /// Retrieves product data from product service
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>
-        ///   A tuple consisting of the following fields:
-        ///   isSuccess - A boolean specifying the success of the retrieve operation
-        ///   product - product data
-        ///   errorMessage - a string specifying the cause of the operation failure, null otherwise
-        /// </returns>
-        public async Task<(bool isSuccess, Product? product, string? errorMessage)> GetAsync(int id)
-        {
-            try
-            {
-                var client = httpClientFactory.CreateClient("DefaultProductService");
-                var response = await client.GetAsync($"api/Product/{id}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsByteArrayAsync();
-                    var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                    var product = JsonSerializer.Deserialize<Product>(content, options);
-                    return (true, product, null);
-                }
-                else if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return (true, null, response.ReasonPhrase);
-                }
-
-                logger?.LogError(ProductErrorMessage, response.ReasonPhrase);
-                return (false, null, response.ReasonPhrase);
-            }
-            catch (Exception ex)
-            {
-                logger?.LogError(ex, ProductExceptionMessage, id);
-                return (false, null, ex.Message);
-            }
         }
     }
 }

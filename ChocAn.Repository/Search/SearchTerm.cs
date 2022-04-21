@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProviderResource.cs
+// * File: Searchterm.cs
 // *
-// * Description: Defines a resource which describes a ChocAn provider
+// * Description: Implements the search term passed into a controller.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,11 +30,14 @@
 // * 
 // **********************************************************************************
 
-namespace ChocAn.TerminalServiceApi.Resources
+namespace ChocAn.Repository.Search
 {
-    public class ProviderResource
+    public class SearchTerm
     {
-        public int Id { get; init; }
-        public string? Name { get; init; }
+        public string Name { get; set; }
+        public string Operator { get; set; }
+        public string Value { get; set; }
+        public bool ValidSyntax { get; set; }
+        internal ISearchExpressionProvider ExpressionProvider { get; set; }
     }
 }

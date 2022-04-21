@@ -31,31 +31,70 @@
 // * 
 // **********************************************************************************
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.Repository;
+using Microsoft.Extensions.Logging;
+using ChocAn.Services;
+using ChocAn.DataCenterConsole.Models;
 using AutoMapper;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class DetailsAction<TModel, TViewModel> : IDetailsAction<TModel>
+    public class DetailsAction<TResource, TModel, TViewModel> : IDetailsAction<TResource, TModel>
+        where TResource : class
         where TModel : class
         where TViewModel : class, new()
     {
+        private const string LogExceptionTemplate = "DetailsAction: {ex}";
+        private const string LogErrorTemplate = "DetailsAction: {error}";
+        private const string NotFoundMessage = $"Item not found";
         public Controller Controller { get; set; }
-        public IRepository<TModel> Repository { get; set; }
+        public ILogger<Controller> Logger { get; set; }
         public IMapper Mapper { get; set; }
+        public IService<TResource, TModel> Service { get; set; }
         public async Task<IActionResult> ActionResult(int id)
         {
-            // Get a TModel entity from the repository
-            var entity = await Repository.GetAsync(id);
-            if (null != entity)
+            string error;
+
+            try
             {
-                // Instantiate a TViewModel from the TModel entity
-                var viewModel = Mapper.Map<TViewModel>(entity);
-                // Render the view
-                return Controller.View(viewModel);
+                // Get an item from the service
+                var (success, model, errorMessage) = await Service.GetAsync(id);
+                if (success)
+                {
+                    if (null != model)
+                    {
+                        // Map the item into the TViewModel
+                        var viewModel = Mapper.Map<TViewModel>(model);
+
+                        // Render the view
+                        return Controller.View(viewModel);
+                    }
+                    else
+                    {
+                        // Record not found error
+                        error = NotFoundMessage;
+                        Logger?.LogError(LogErrorTemplate, error);
+                    }
+                }
+                else
+                {
+                    // Record service error
+                    error = errorMessage;
+                    Logger?.LogError(LogErrorTemplate, error);
+                }
             }
+            catch (Exception ex)
+            {
+                // Record exception
+                Logger?.LogError(LogExceptionTemplate, ex);
+                error = ex.Message;
+            }
+
+            Controller.ModelState.AddModelError("Error", error);
+
+            // Render view with error and no item
             return Controller.View();
         }
     }

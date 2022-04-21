@@ -1,10 +1,10 @@
 ﻿// **********************************************************************************
-// * Copyright (c) 2021 Robin Murray
+// * Copyright (c) 2022 Robin Murray
 // **********************************************************************************
 // *
-// * File: ProductResource.cs
+// * File: DefaultSearchExpressionProvider.cs
 // *
-// * Description: Defines a resource which describes a ChocAn product
+// * Description: 
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +30,22 @@
 // * 
 // **********************************************************************************
 
-namespace ChocAn.TerminalServiceApi.Resources
+using System;
+using System.Linq.Expressions;
+
+namespace ChocAn.Repository.Search
 {
-    public class ProductResource
+    internal class DefaultSearchExpressionProvider : ISearchExpressionProvider
     {
-        public int Id { get; init; }
-        public string? Name { get; init; }
-        public decimal Cost { get; init; }
+        public virtual Expression GetComparison(MemberExpression left, string op, ConstantExpression right)
+        {
+            if (!op.Equals("eq", System.StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException($"Invalid operator: {op}");
+
+            return Expression.Equal(left, right);
+        }
+
+        public virtual ConstantExpression GetValue(string input)
+            => Expression.Constant(input);
     }
 }

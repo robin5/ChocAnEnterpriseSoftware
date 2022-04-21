@@ -30,10 +30,13 @@
 // * 
 // **********************************************************************************
 
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ChocAn.Repository;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 using ChocAn.ProductRepository;
 
 namespace ChocAn.MockRepositories
@@ -50,9 +53,7 @@ namespace ChocAn.MockRepositories
 
         public Task<Product> DeleteAsync(object id)
         {
-            Product item = null;
-
-            if (items.TryGetValue((int)id, out item))
+            if (items.TryGetValue((int)id, out Product item))
             {
                 items.Remove((int)id);
                 return Task.FromResult(item);
@@ -60,7 +61,10 @@ namespace ChocAn.MockRepositories
             return Task.FromResult((Product)null);
         }
 
-        public async IAsyncEnumerable<Product> GetAllAsync()
+        public async IAsyncEnumerable<Product> GetAllAsync(
+            PagingOptions pagingOptions, 
+            SortOptions<Product> sortOptions,
+            SearchOptions<Product> searchOptions)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
             Product item;
@@ -75,16 +79,14 @@ namespace ChocAn.MockRepositories
 
         public Task<Product> GetAsync(object id)
         {
-            Product item = null;
-
-            items.TryGetValue((int)id, out item);
+            items.TryGetValue((int)id, out Product item);
             return Task.FromResult(item);
         }
 
-        public Task<Product> UpdateAsync(Product changes)
+        public Task<int> UpdateAsync(Product changes)
         {
             items[changes.Id] = changes;
-            return Task.FromResult(changes);
+            return Task.FromResult(1);
         }
 
         public async IAsyncEnumerable<Product> GetAllByNameAsync(string name)

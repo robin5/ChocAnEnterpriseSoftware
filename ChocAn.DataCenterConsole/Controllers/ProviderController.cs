@@ -38,20 +38,22 @@ using ChocAn.ProviderRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Repository;
+using ChocAn.Services;
+using ChocAn.ProviderServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
     public class ProviderController : Controller
     {
         private readonly ILogger<ProviderController> logger;
-        private readonly IRepository<Provider> repository;
         private readonly IMapper mapper;
+        private readonly IService<ProviderResource, Provider> service;
 
-        private readonly IIndexAction<Provider> indexAction;
-        private readonly IDetailsAction<Provider> detailsAction;
-        private readonly ICreateAction<Provider, ProviderCreateViewModel> createAction;
-        private readonly IEditAction<Provider, ProviderEditViewModel> editAction;
-        private readonly IDeleteAction<Provider> deleteAction;
+        private readonly IIndexAction<ProviderResource, Provider> indexAction;
+        private readonly IDetailsAction<ProviderResource, Provider> detailsAction;
+        private readonly ICreateAction<ProviderResource, Provider, ProviderCreateViewModel> createAction;
+        private readonly IEditAction<ProviderResource, Provider, ProviderEditViewModel> editAction;
+        private readonly IDeleteAction<ProviderResource, Provider> deleteAction;
 
         /// <summary>
         /// Constructor for ProviderController
@@ -66,17 +68,18 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="deleteAction"></param>
         public ProviderController(
             ILogger<ProviderController> logger,
-            IRepository<Provider> repository,
             IMapper mapper,
-            IIndexAction<Provider> indexAction,
-            IDetailsAction<Provider> detailsAction,
-            ICreateAction<Provider, ProviderCreateViewModel> createAction,
-            IEditAction<Provider, ProviderEditViewModel> editAction,
-            IDeleteAction<Provider> deleteAction)
+            IService<ProviderResource, Provider> service,
+
+            IIndexAction<ProviderResource, Provider> indexAction,
+            IDetailsAction<ProviderResource, Provider> detailsAction,
+            ICreateAction<ProviderResource, Provider, ProviderCreateViewModel> createAction,
+            IEditAction<ProviderResource, Provider, ProviderEditViewModel> editAction,
+            IDeleteAction<ProviderResource, Provider> deleteAction)
         {
             this.logger = logger;
-            this.repository = repository;
             this.mapper = mapper;
+            this.service = service;
 
             this.indexAction = indexAction;
             this.detailsAction = detailsAction;
@@ -93,7 +96,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> Index(string find)
         {
             indexAction.Controller = this;
-            indexAction.Repository = repository;
+            indexAction.Logger = logger;
+            indexAction.Service = service;
             return await indexAction.ActionResult(find);
         }
 
@@ -106,8 +110,9 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> DetailsAsync(int id)
         {
             detailsAction.Controller = this;
-            detailsAction.Repository = repository;
+            detailsAction.Logger = logger;
             detailsAction.Mapper = mapper;
+            detailsAction.Service = service;
             return await detailsAction.ActionResult(id);
         }
 
@@ -116,7 +121,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// </summary>
         /// <returns>Create view</returns>
         [HttpGet]
-        public ActionResult Create() => View();
+        public ActionResult Create() => View(new ProviderCreateViewModel());
 
         /// <summary>
         /// HttpPost endpoint for provider/create/{form-data}
@@ -128,9 +133,10 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> CreateAsync(ProviderCreateViewModel viewModel)
         {
             createAction.Controller = this;
-            createAction.Repository = repository;
+            createAction.Logger = logger;
             createAction.Mapper = mapper;
-            return await createAction.ActionResult(viewModel, nameof(Index));
+            createAction.Service = service;
+            return await createAction.ActionResult(viewModel, "Details");
         }
 
         /// <summary>
@@ -142,7 +148,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> EditAsync(int id)
         {
             editAction.Controller = this;
-            editAction.Repository = repository;
+            editAction.Logger = logger;
+            editAction.Service = service;
             editAction.Mapper = mapper;
             return await editAction.ActionResult(id);
         }
@@ -157,9 +164,10 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> EditAsync(ProviderEditViewModel viewModel)
         {
             editAction.Controller = this;
-            editAction.Repository = repository;
+            editAction.Logger = logger;
+            editAction.Service = service;
             editAction.Mapper = mapper;
-            return await editAction.ActionResult(viewModel, nameof(Index));
+            return await editAction.ActionResult(viewModel.Id, viewModel, "Details");
         }
 
         /// <summary>
@@ -172,8 +180,10 @@ namespace ChocAn.DataCenterConsole.Controllers
         public async Task<IActionResult> DeleteAsync(int id)
         {
             deleteAction.Controller = this;
-            deleteAction.Repository = repository;
-            return await deleteAction.ActionResult(id, nameof(Index));
+            deleteAction.Logger = logger;
+            deleteAction.Service = service;
+            deleteAction.Mapper = mapper;
+            return await deleteAction.ActionResult(id, "Index", "Details");
         }
     }
 }

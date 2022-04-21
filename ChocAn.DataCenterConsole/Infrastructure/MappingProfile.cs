@@ -35,6 +35,9 @@ using ChocAn.MemberRepository;
 using ChocAn.ProviderRepository;
 using ChocAn.ProductRepository;
 using AutoMapper;
+using ChocAn.MemberServiceApi.Resources;
+using ChocAn.ProviderServiceApi.Resources;
+using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole.Infrastructure
 {
@@ -42,20 +45,47 @@ namespace ChocAn.DataCenterConsole.Infrastructure
     {
         public MappingProfile()
         {
+            // CreateAction mapping from TViewModel to TResource
+            CreateMap<MemberCreateViewModel, MemberResource>();
+            CreateMap<ProviderCreateViewModel, ProviderResource>();
+            CreateMap<ProductCreateViewModel, ProductResource>();
+
+            // DetailsAction mapping from TModel to TViewModel
+            CreateMap<Member, MemberDetailsViewModel>();
+            CreateMap<Provider, ProviderDetailsViewModel>();
+            CreateMap<Product, ProductDetailsViewModel>();
+
+            // EditAction mapping from TResource to TViewModel [Get]
+            CreateMap<Member, MemberEditViewModel>();
+            CreateMap<Provider, ProviderEditViewModel>();
+            CreateMap<Product, ProductEditViewModel>();
+
+            // EditAction mapping from TViewModel to TResource [Update]
+            CreateMap<MemberEditViewModel, MemberResource>();
+            CreateMap<ProviderEditViewModel, ProviderResource>();
+            CreateMap<ProductEditViewModel, ProductResource>();
+
+
+            /*
+
+            // IndexAction mapping from TResource to TModel
+            CreateMap<Member, MemberResource>();
+            CreateMap<MemberResource, Member>();
+            CreateMap<ProviderResource, Provider>();
+            CreateMap<ProductResource, Product>();
+
             CreateMap<Member, MemberEditViewModel>();
             CreateMap<Member, MemberDetailsViewModel>();
-            CreateMap<MemberCreateViewModel, Member>();
             CreateMap<MemberEditViewModel, Member>();
 
             CreateMap<Provider, ProviderEditViewModel>();
             CreateMap<Provider, ProviderDetailsViewModel>();
-            CreateMap<ProviderCreateViewModel, Provider>();
             CreateMap<ProviderEditViewModel, Provider>();
 
             CreateMap<Product, ProductEditViewModel>();
             CreateMap<Product, ProductDetailsViewModel>();
-            CreateMap<ProductCreateViewModel, Product>();
             CreateMap<ProductEditViewModel, Product>();
+            */
         }
     }
 }

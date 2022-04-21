@@ -33,6 +33,9 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.ProductRepository.Test
 {
@@ -82,19 +85,17 @@ namespace ChocAn.ProductRepository.Test
         /// <returns></returns>
         private static async Task InsertValidProductIntoTestDatabase(string name)
         {
-            using (ProductDbContext context = DefaultProductRepositoryTest.GetContext(name))
+            using ProductDbContext context = DefaultProductRepositoryTest.GetContext(name);
+            // Arrange
+            var product = new Product
             {
-                // Arrange
-                var product = new Product
-                {
-                    Id = VALID0_ID,
-                    Name = VALID0_NAME,
-                    Cost = VALID0_COST
-                };
+                Id = VALID0_ID,
+                Name = VALID0_NAME,
+                Cost = VALID0_COST
+            };
 
-                context.Add<Product>(product);
-                await context.SaveChangesAsync();
-            }
+            context.Add<Product>(product);
+            await context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -104,30 +105,28 @@ namespace ChocAn.ProductRepository.Test
         /// <returns></returns>
         private static async Task Insert3ValidProductsIntoTestDatabase(string name)
         {
-            using (ProductDbContext context = DefaultProductRepositoryTest.GetContext(name))
+            using ProductDbContext context = DefaultProductRepositoryTest.GetContext(name);
+            // Arrange
+            context.Add<Product>(new Product
             {
-                // Arrange
-                context.Add<Product>(new Product
-                {
-                    Id = VALID0_ID,
-                    Name = VALID0_NAME,
-                    Cost = VALID0_COST
-                });
-                context.Add<Product>(new Product
-                {
-                    Id = VALID1_ID,
-                    Name = VALID1_NAME,
-                    Cost = VALID1_COST
-                });
-                context.Add<Product>(new Product
-                {
-                    Id = VALID2_ID,
-                    Name = VALID2_NAME,
-                    Cost = VALID2_COST
-                });
+                Id = VALID0_ID,
+                Name = VALID0_NAME,
+                Cost = VALID0_COST
+            });
+            context.Add<Product>(new Product
+            {
+                Id = VALID1_ID,
+                Name = VALID1_NAME,
+                Cost = VALID1_COST
+            });
+            context.Add<Product>(new Product
+            {
+                Id = VALID2_ID,
+                Name = VALID2_NAME,
+                Cost = VALID2_COST
+            });
 
-                await context.SaveChangesAsync();
-            }
+            await context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -173,18 +172,16 @@ namespace ChocAn.ProductRepository.Test
             // Arrange
             await DefaultProductRepositoryTest.InsertValidProductIntoTestDatabase("Get");
 
-            using (ProductDbContext context = DefaultProductRepositoryTest.GetContext("Get"))
-            {
-                // Act
-                var repository = new DefaultProductRepository(context);
-                var result = await repository.GetAsync(VALID0_ID);
+            using ProductDbContext context = DefaultProductRepositoryTest.GetContext("Get");
+            // Act
+            var repository = new DefaultProductRepository(context);
+            var result = await repository.GetAsync(VALID0_ID);
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID0_NAME, result.Name);
-                Assert.Equal(VALID0_COST, result.Cost);
-            }
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(VALID0_ID, result.Id);
+            Assert.Equal(VALID0_NAME, result.Name);
+            Assert.Equal(VALID0_COST, result.Cost);
         }
 
         /// <summary>
@@ -197,15 +194,13 @@ namespace ChocAn.ProductRepository.Test
             // Arrange
             await DefaultProductRepositoryTest.InsertValidProductIntoTestDatabase("ValidateGetProductAsyncNonExistentProduct");
 
-            using (ProductDbContext context = DefaultProductRepositoryTest.GetContext("ValidateGetProductAsyncNonExistentProduct"))
-            {
-                // Act
-                var repository = new DefaultProductRepository(context);
-                var result = await repository.GetAsync(NON_EXISTENT_MEMBER_ID);
+            using ProductDbContext context = DefaultProductRepositoryTest.GetContext("ValidateGetProductAsyncNonExistentProduct");
+            // Act
+            var repository = new DefaultProductRepository(context);
+            var result = await repository.GetAsync(NON_EXISTENT_MEMBER_ID);
 
-                // Assert
-                Assert.Null(result);
-            }
+            // Assert
+            Assert.Null(result);
         }
 
         /// <summary>
@@ -225,26 +220,21 @@ namespace ChocAn.ProductRepository.Test
                 Cost = VALID_UPDATE_COST
             };
 
-            using (ProductDbContext context = DefaultProductRepositoryTest.GetContext("Update"))
-            {
-                // Act
-                var repository = new DefaultProductRepository(context);
-                var result = await repository.UpdateAsync(productChanges);
+            using ProductDbContext context = DefaultProductRepositoryTest.GetContext("Update");
+            // Act
+            var repository = new DefaultProductRepository(context);
+            var result = await repository.UpdateAsync(productChanges);
 
-                // Assert
-                // Validate return value of function call
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID_UPDATE_NAME, result.Name);
-                Assert.Equal(VALID_UPDATE_COST, result.Cost);
+            // Assert
+            // Validate return value of function call
+            Assert.Equal(1, result);
 
-                // Validate product was updated in the database
-                var product = await context.Products.FindAsync(VALID0_ID);
-                Assert.NotNull(product);
-                Assert.Equal(VALID0_ID, product.Id);
-                Assert.Equal(VALID_UPDATE_NAME, product.Name);
-                Assert.Equal(VALID_UPDATE_COST, product.Cost);
-            }
+            // Validate product was updated in the database
+            var product = await context.Products.FindAsync(VALID0_ID);
+            Assert.NotNull(product);
+            Assert.Equal(VALID0_ID, product.Id);
+            Assert.Equal(VALID_UPDATE_NAME, product.Name);
+            Assert.Equal(VALID_UPDATE_COST, product.Cost);
         }
 
         /// <summary>
@@ -257,20 +247,18 @@ namespace ChocAn.ProductRepository.Test
             // Arrange
             await DefaultProductRepositoryTest.InsertValidProductIntoTestDatabase("Delete");
 
-            using (ProductDbContext context = DefaultProductRepositoryTest.GetContext("Delete"))
-            {
-                // Act
-                var repository = new DefaultProductRepository(context);
-                var result = await repository.DeleteAsync(VALID0_ID);
+            using ProductDbContext context = DefaultProductRepositoryTest.GetContext("Delete");
+            // Act
+            var repository = new DefaultProductRepository(context);
+            var result = await repository.DeleteAsync(VALID0_ID);
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID0_NAME, result.Name);
-                Assert.Equal(VALID0_COST, result.Cost);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(VALID0_ID, result.Id);
+            Assert.Equal(VALID0_NAME, result.Name);
+            Assert.Equal(VALID0_COST, result.Cost);
 
-                Assert.Equal(0, await context.Products.CountAsync());
-            }
+            Assert.Equal(0, await context.Products.CountAsync());
         }
 
         /// <summary>
@@ -287,39 +275,40 @@ namespace ChocAn.ProductRepository.Test
             bool product1Found = false;
             bool product2Found = false;
 
-            using (ProductDbContext context = DefaultProductRepositoryTest.GetContext("GetAllProductsAsync"))
+            using ProductDbContext context = DefaultProductRepositoryTest.GetContext("GetAllProductsAsync");
+            // Act
+            var repository = new DefaultProductRepository(context);
+
+            // Assert
+            await foreach (Product product in repository.GetAllAsync(
+                new PagingOptions() { Offset = 0, Limit = 3 },
+                new SortOptions<Product>(),
+                new SearchOptions<Product>()))
             {
-                // Act
-                var repository = new DefaultProductRepository(context);
-
-                // Assert
-                await foreach (Product product in repository.GetAllAsync())
+                if (VALID0_ID == product.Id)
                 {
-                    if (VALID0_ID == product.Id)
-                    {
-                        Assert.Equal(VALID0_NAME, product.Name);
-                        Assert.Equal(VALID0_COST, product.Cost);
-                        product0Found = true;
-                    }
-                    else if (VALID1_ID == product.Id)
-                    {
-                        Assert.Equal(VALID1_NAME, product.Name);
-                        Assert.Equal(VALID1_COST, product.Cost);
-                        product1Found = true;
-                    }
-                    else if (VALID2_ID == product.Id)
-                    {
-                        Assert.Equal(VALID2_NAME, product.Name);
-                        Assert.Equal(VALID2_COST, product.Cost);
-                        product2Found = true;
-                    }
+                    Assert.Equal(VALID0_NAME, product.Name);
+                    Assert.Equal(VALID0_COST, product.Cost);
+                    product0Found = true;
                 }
-
-                // There should be 3 products in the database
-                Assert.True(product0Found);
-                Assert.True(product1Found);
-                Assert.True(product2Found);
+                else if (VALID1_ID == product.Id)
+                {
+                    Assert.Equal(VALID1_NAME, product.Name);
+                    Assert.Equal(VALID1_COST, product.Cost);
+                    product1Found = true;
+                }
+                else if (VALID2_ID == product.Id)
+                {
+                    Assert.Equal(VALID2_NAME, product.Name);
+                    Assert.Equal(VALID2_COST, product.Cost);
+                    product2Found = true;
+                }
             }
+
+            // There should be 3 products in the database
+            Assert.True(product0Found);
+            Assert.True(product1Found);
+            Assert.True(product2Found);
         }
     }
 }

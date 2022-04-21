@@ -30,11 +30,15 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using ChocAn.Repository;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 using ChocAn.MemberRepository;
 using ChocAn.MemberServiceApi.Resources;
-using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.MemberServiceApi.Controllers
 {
@@ -44,12 +48,15 @@ namespace ChocAn.MemberServiceApi.Controllers
     {
         private readonly ILogger<MemberController> logger;
         private readonly IRepository<Member> repository;
+        private readonly PagingOptions defaultPagingOptions;
         public MemberController(
             ILogger<MemberController> logger,
-            IRepository<Member> repository)
+            IRepository<Member> repository,
+            IOptions<PagingOptions> defaultPagingOptions)
         {
             this.logger = logger;
             this.repository = repository;
+            this.defaultPagingOptions = defaultPagingOptions.Value;
         }
 
         /// <summary>
@@ -57,15 +64,21 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// </summary>
         /// <param name="id">Member's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
-        [HttpGet(Name = nameof(GetAllAsync))]
+        [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(
+            [FromQuery] PagingOptions pagingOptions,
+            [FromQuery] SortOptions<Member> sortOptions,
+            [FromQuery] SearchOptions<Member> searchOptions)
         {
             try
             {
+                pagingOptions.Offset ??= defaultPagingOptions.Offset;
+                pagingOptions.Limit ??= defaultPagingOptions.Limit;
+
                 List<Member> members = new();
-                await foreach (Member member in repository.GetAllAsync())
+                await foreach (Member member in repository.GetAllAsync(pagingOptions, sortOptions, searchOptions))
                 {
                     members.Add(member);
                 }
@@ -77,12 +90,13 @@ namespace ChocAn.MemberServiceApi.Controllers
                 return Problem();
             }
         }
+
         /// <summary>
         /// Retrieves an individual member from the Member repository.
         /// </summary>
         /// <param name="id">Member's identification number</param>
         /// <returns>200 on success. 404 if member does not exist. 500 on exception</returns>
-        [HttpGet("{id}", Name = nameof(GetAsync))]
+        [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -109,7 +123,7 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// </summary>
         /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPost(Name = nameof(PostAsync))]
+        [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -137,16 +151,16 @@ namespace ChocAn.MemberServiceApi.Controllers
             }
         }
 
-
         /// <summary>
         /// Updates a member in the Member repository.
         /// </summary>
         /// <param name="id">Member's identification number</param>
         /// <param name="resource">Member updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPut("{id}", Name = nameof(PutAsync))]
+        [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] MemberResource resource)
         {
@@ -163,8 +177,12 @@ namespace ChocAn.MemberServiceApi.Controllers
                     ZipCode = resource.ZipCode,
                     Status = resource.Status
                 };
-                await repository.UpdateAsync(member);
-                return Ok(resource);
+
+                var numChanged = await repository.UpdateAsync(member);
+                if (numChanged > 0)
+                    return Ok();
+                else
+                    return NotFound();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -183,7 +201,7 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// </summary>
         /// <param name="id">Member's identification number</param>
         /// <returns>200 on success. 404 if member does not exist. 500 on exception</returns>
-        [HttpDelete("{id}", Name = nameof(DeleteAsync))]
+        [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]

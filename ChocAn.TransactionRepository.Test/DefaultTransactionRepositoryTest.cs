@@ -30,10 +30,13 @@
 // * 
 // **********************************************************************************
 
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.TransactionRepository.Test
 {
@@ -276,14 +279,7 @@ namespace ChocAn.TransactionRepository.Test
 
             // Assert
             // Validate return value of function call
-            Assert.NotNull(result);
-            Assert.Equal(T0_ID, result.Id);
-            Assert.Equal(T_UPDATE_PROVIDER_ID, result.ProviderId);
-            Assert.Equal(T_UPDATE_MEMBER_ID, result.MemberId);
-            Assert.Equal(T_UPDATE_PRODUCT_ID, result.ProductId);
-            Assert.Equal(T_UPDATE_SERVICE_DATETIME, result.ServiceDate);
-            Assert.Equal(T_UPDATE_SERVICE_COMMENT, result.ServiceComment);
-            Assert.Equal(T_UPDATE_CREATED, result.Created);
+            Assert.Equal(1, result);
 
             // Validate transaction was updated in the database
             var transaction = await context.Transactions.FindAsync(T0_ID);
@@ -344,7 +340,10 @@ namespace ChocAn.TransactionRepository.Test
             var defaultTransactionService = new DefaultTransactionRepository(context);
 
             // Assert
-            await foreach (Transaction transaction in defaultTransactionService.GetAllAsync())
+            await foreach (Transaction transaction in defaultTransactionService.GetAllAsync(
+                    new PagingOptions() { Offset = 0, Limit = 3 }, 
+                    new SortOptions<Transaction>(),
+                    new SearchOptions<Transaction>()))
             {
                 if (T0_ID == transaction.Id)
                 {

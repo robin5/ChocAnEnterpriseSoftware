@@ -1,10 +1,11 @@
 ﻿// **********************************************************************************
-// * Copyright (c) 2021 Robin Murray
+// * Copyright (c) 2022 Robin Murray
 // **********************************************************************************
 // *
-// * File: ITransactionService.cs
+// * File: SearchableAttribute.cs
 // *
-// * Description: Defines service interface for Transactions from the Transaction repository 
+// * Description: Defines an attribute that when added to a model indicates
+// *     that a given field can be used in the search query
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +31,14 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.TransactionRepository;
+using System;
 
-namespace ChocAn.Services
+namespace ChocAn.Repository.Search
 {
-    public interface ITransactionService
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class SearchableAttribute : Attribute
     {
-        Task<(bool isSuccess, string? errorMessage)> AddAsync(Transaction transaction);
+        internal ISearchExpressionProvider ExpressionProvider { get; set; }
+        = new DefaultSearchExpressionProvider();
     }
 }

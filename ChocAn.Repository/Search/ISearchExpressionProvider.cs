@@ -1,10 +1,10 @@
 ﻿// **********************************************************************************
-// * Copyright (c) 2021 Robin Murray
+// * Copyright (c) 2022 Robin Murray
 // **********************************************************************************
 // *
-// * File: IMemberService.cs
+// * File: ISearchExpressionProvider.cs
 // *
-// * Description: Defines service interface for Members from the Member repository 
+// * Description: 
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +30,13 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.MemberRepository;
+using System.Linq.Expressions;
 
-namespace ChocAn.Services
+namespace ChocAn.Repository.Search
 {
-    public interface IMemberService
+    internal interface ISearchExpressionProvider
     {
-        Task<(bool isSuccess, Member? member, string? errorMessage)> GetAsync(int id);
+        ConstantExpression GetValue(string input);
+        Expression GetComparison(MemberExpression left, string op, ConstantExpression right);
     }
 }

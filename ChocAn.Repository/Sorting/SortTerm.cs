@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: MemberResource.cs
+// * File: SortTerm.cs
 // *
-// * Description: Defines a resource which describes a ChocAn member
+// * Description: Class representing a sort term passed to the API
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,11 +30,12 @@
 // * 
 // **********************************************************************************
 
-namespace ChocAn.TerminalServiceApi.Resources
+namespace ChocAn.Repository.Sorting
 {
-    public class MemberResource
+    public class SortTerm
     {
-        public int Id { get; init; }
-        public string? Status { get; init; }
+        public string Name { get; init; }
+        public bool IsDescending { get; init; }
+        public bool Default { get; set; }
     }
 }

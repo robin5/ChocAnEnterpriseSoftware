@@ -43,6 +43,14 @@ using ChocAn.DataCenterConsole.Infrastructure;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.Repository;
+using ChocAn.Services;
+using ChocAn.Services.DefaultMemberService;
+using System;
+using ChocAn.Services.DefaultProviderService;
+using ChocAn.Services.DefaultProductService;
+using ChocAn.MemberServiceApi.Resources;
+using ChocAn.ProviderServiceApi.Resources;
+using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole
 {
@@ -58,42 +66,79 @@ namespace ChocAn.DataCenterConsole
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /*
             services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("MemberDbConnection")));
-            
+                Configuration.GetConnectionString("DefaultDbConnection")));
+            services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
+
             services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("MemberDbConnection")));
-            
+                Configuration.GetConnectionString("DefaultDbConnection")));
+            services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
+
             services.AddDbContextPool<ProductDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("MemberDbConnection")));
+                Configuration.GetConnectionString("DefaultDbConnection")));
+            services.AddScoped<IRepository<Product>, DefaultProductRepository>();
+            */
 
             services.AddControllersWithViews();
 
+            // --------------------------------------
+            // Define dependencies for IMemberService
+            // --------------------------------------
+
+            services.AddHttpClient<IService<MemberResource, Member>, DefaultMemberService>(
+                DefaultMemberService.HttpClientName, client =>
+                {
+                    client.BaseAddress = new Uri(Configuration["Services:ChocAn.MemberServiceApi"]);
+                }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+
+            services.AddScoped<IService<MemberResource, Member>, DefaultMemberService>();
+
+            // ----------------------------------------
+            // Define dependencies for IProviderService
+            // ----------------------------------------
+
+            services.AddHttpClient<IService<ProviderResource, Provider>, DefaultProviderService>(
+                DefaultProviderService.HttpClientName, client =>
+                {
+                    client.BaseAddress = new Uri(Configuration["Services:ChocAn.ProviderServiceApi"]);
+                }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+
+            services.AddScoped<IService<ProviderResource, Provider>, DefaultProviderService>();
+
+            // ---------------------------------------
+            // Define dependencies for IProductService
+            // ---------------------------------------
+
+            services.AddHttpClient<IService<ProductResource, Product>, DefaultProductService>(
+                DefaultProductService.HttpClientName, client =>
+                {
+                    client.BaseAddress = new Uri(Configuration["Services:ChocAn.ProductServiceApi"]);
+                }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+
+            services.AddScoped<IService<ProductResource, Product>, DefaultProductService>();
+
             // MemberController actions
-            services.AddTransient<IIndexAction<Member>, IndexAction<Member, MemberIndexViewModel>>();
-            services.AddTransient<IDetailsAction<Member>, DetailsAction<Member, MemberDetailsViewModel>>();
-            services.AddTransient<ICreateAction<Member, MemberCreateViewModel>, CreateAction<Member, MemberCreateViewModel>>();
-            services.AddTransient<IEditAction<Member, MemberEditViewModel>, EditAction<Member, MemberEditViewModel>>();
-            services.AddTransient<IDeleteAction<Member>, DeleteAction<Member>>();
+            services.AddTransient<IIndexAction<MemberResource, Member>, IndexAction<MemberResource, Member, MemberIndexViewModel>>();
+            services.AddTransient<IDetailsAction<MemberResource, Member>, DetailsAction<MemberResource, Member, MemberDetailsViewModel>>();
+            services.AddTransient<ICreateAction<MemberResource, Member, MemberCreateViewModel>, CreateAction<MemberResource, Member, MemberCreateViewModel>>();
+            services.AddTransient<IEditAction<MemberResource, Member, MemberEditViewModel>, EditAction<MemberResource, Member, MemberEditViewModel>>();
+            services.AddTransient<IDeleteAction<MemberResource, Member>, DeleteAction<MemberResource, Member>>();
 
             // ProviderController actions
-            services.AddTransient<IIndexAction<Provider>, IndexAction<Provider, ProviderIndexViewModel>>();
-            services.AddTransient<IDetailsAction<Provider>, DetailsAction<Provider, ProviderDetailsViewModel>>();
-            services.AddTransient<ICreateAction<Provider, ProviderCreateViewModel>, CreateAction<Provider, ProviderCreateViewModel>>();
-            services.AddTransient<IEditAction<Provider, ProviderEditViewModel>, EditAction<Provider, ProviderEditViewModel>>();
-            services.AddTransient<IDeleteAction<Provider>, DeleteAction<Provider>>();
+            services.AddTransient<IIndexAction<ProviderResource, Provider>, IndexAction<ProviderResource, Provider, ProviderIndexViewModel>>();
+            services.AddTransient<IDetailsAction<ProviderResource, Provider>, DetailsAction<ProviderResource, Provider, ProviderDetailsViewModel>>();
+            services.AddTransient<ICreateAction<ProviderResource, Provider, ProviderCreateViewModel>, CreateAction<ProviderResource, Provider, ProviderCreateViewModel>>();
+            services.AddTransient<IEditAction<ProviderResource, Provider, ProviderEditViewModel>, EditAction<ProviderResource, Provider, ProviderEditViewModel>>();
+            services.AddTransient<IDeleteAction<ProviderResource, Provider>, DeleteAction<ProviderResource, Provider>>();
 
             // ProductController actions
-            services.AddTransient<IIndexAction<Product>, IndexAction<Product, ProductIndexViewModel>>();
-            services.AddTransient<IDetailsAction<Product>, DetailsAction<Product, ProductDetailsViewModel>>();
-            services.AddTransient<ICreateAction<Product, ProductCreateViewModel>, CreateAction<Product, ProductCreateViewModel>>();
-            services.AddTransient<IEditAction<Product, ProductEditViewModel>, EditAction<Product, ProductEditViewModel>>();
-            services.AddTransient<IDeleteAction<Product>, DeleteAction<Product>>();
+            services.AddTransient<IIndexAction<ProductResource, Product>, IndexAction<ProductResource, Product, ProductIndexViewModel>>();
+            services.AddTransient<IDetailsAction<ProductResource, Product>, DetailsAction<ProductResource, Product, ProductDetailsViewModel>>();
+            services.AddTransient<ICreateAction<ProductResource, Product, ProductCreateViewModel>, CreateAction<ProductResource, Product, ProductCreateViewModel>>();
+            services.AddTransient<IEditAction<ProductResource, Product, ProductEditViewModel>, EditAction<ProductResource, Product, ProductEditViewModel>>();
+            services.AddTransient<IDeleteAction<ProductResource, Product>, DeleteAction<ProductResource, Product>>();
 
-            // Repositories
-            services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
-            services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
-            services.AddScoped<IRepository<Product>, DefaultProductRepository>();
             services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
         }
 

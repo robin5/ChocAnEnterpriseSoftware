@@ -35,7 +35,10 @@
 @{
     ViewData["Title"] = "Members";
 }
-
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
+}
 <div>
     <section class="input-group">
         <form asp-area=""
@@ -81,7 +84,7 @@
                            asp-area=""
                            asp-controller="Member"
                            asp-action="Details"
-                           asp-route-id="@member.Id">@member.Name</a>
+                           asp-route-id="@member.Id"><span>@member.Name</span>&nbsp;<span>(@member.Id)</span></a>
                     </li>
                 }
             </ul>

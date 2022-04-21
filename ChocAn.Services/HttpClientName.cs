@@ -2,7 +2,7 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ServiceNames.cs
+// * File: HttpClientName.cs
 // *
 // * Description: Implememnts a class which defines the service names 
 // *
@@ -32,11 +32,11 @@
 
 namespace ChocAn.Services
 {
-    internal class ServiceNames
+    internal class HttpClientName
     {
-        public static readonly string DefaultMemberService = "DefaultMemberService";
-        public static readonly string DefaultProviderService = "DefaultProviderService";
-        public static readonly string DefaultProductService = "DefaultProductService";
-        public static readonly string DefaultTransactionService = "DefaultTransactionService";
+        public const string MemberService = "MemberService";
+        public const string ProviderService = "ProviderService";
+        public const string ProductService = "ProductService";
+        public const string TransactionService = "TransactionService";
     }
 }

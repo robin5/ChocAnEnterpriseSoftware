@@ -33,9 +33,12 @@
 }
 @model ChocAn.DataCenterConsole.Models.ProductEditViewModel
 @{
-    ViewData["Title"] = "Edit Service";
+    ViewData["Title"] = "Edit Product";
 }
-
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
+}
 @if (null == Model)
 {
     <div>

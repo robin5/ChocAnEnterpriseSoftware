@@ -30,11 +30,15 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using ChocAn.Repository;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 using ChocAn.ProductRepository;
 using ChocAn.ProductServiceApi.Resources;
-using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.ProductServiceApi.Controllers
 {
@@ -43,13 +47,16 @@ namespace ChocAn.ProductServiceApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> logger;
-        private readonly IRepository<ProductRepository.Product> productRepository;
+        private readonly IRepository<Product> repository;
+        private readonly PagingOptions defaultPagingOptions;
         public ProductController(
             ILogger<ProductController> logger,
-            IRepository<ProductRepository.Product> productRepository)
+            IOptions<PagingOptions> defaultPagingOptions,
+            IRepository<Product> repository)
         {
             this.logger = logger;
-            this.productRepository = productRepository;
+            this.repository = repository;
+            this.defaultPagingOptions = defaultPagingOptions.Value;
         }
 
         /// <summary>
@@ -57,15 +64,21 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// </summary>
         /// <param name="id">Product's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
-        [HttpGet(Name = nameof(GetAllAsync))]
+        [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(
+            [FromQuery] PagingOptions pagingOptions,
+            [FromQuery] SortOptions<Product> sortOptions,
+            [FromQuery] SearchOptions<Product> searchOptions)
         {
             try
             {
+                pagingOptions.Offset ??= defaultPagingOptions.Offset;
+                pagingOptions.Limit ??= defaultPagingOptions.Limit;
+
                 List<Product> products = new();
-                await foreach (Product product in productRepository.GetAllAsync())
+                await foreach (Product product in repository.GetAllAsync(pagingOptions, sortOptions, searchOptions))
                 {
                     products.Add(product);
                 }
@@ -82,7 +95,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// </summary>
         /// <param name="id">Product's identification number</param>
         /// <returns>200 on success. 404 if product does not exist. 500 on exception</returns>
-        [HttpGet("{id}", Name = nameof(GetAsync))]
+        [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -90,7 +103,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         {
             try
             {
-                var product = await productRepository.GetAsync(id);
+                var product = await repository.GetAsync(id);
                 if (null == product)
                 {
                     return NotFound();
@@ -109,7 +122,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// </summary>
         /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPost(Name = nameof(PostAsync))]
+        [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -123,7 +136,7 @@ namespace ChocAn.ProductServiceApi.Controllers
                     Name = resource.Name,
                     Cost = resource.Cost,
                 };
-                await productRepository.AddAsync(product);
+                await repository.AddAsync(product);
                 return Created("", resource);
             }
             catch (Exception ex)
@@ -140,9 +153,10 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// <param name="id">Product's identification number</param>
         /// <param name="resource">Product updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPut("{id}", Name = nameof(PutAsync))]
+        [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] ProductResource resource)
         {
@@ -154,8 +168,12 @@ namespace ChocAn.ProductServiceApi.Controllers
                     Name = resource.Name,
                     Cost = resource.Cost
                 };
-                await productRepository.UpdateAsync(product);
-                return Ok(resource);
+
+                var numChanged = await repository.UpdateAsync(product);
+                if (numChanged > 0)
+                    return Ok();
+                else
+                    return NotFound();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -182,7 +200,7 @@ namespace ChocAn.ProductServiceApi.Controllers
         {
             try
             {
-                var product = await productRepository.DeleteAsync(id);
+                var product = await repository.DeleteAsync(id);
                 if (null == product)
                 {
                     return NotFound();

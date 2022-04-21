@@ -30,7 +30,9 @@
 // * 
 // **********************************************************************************
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ChocAn.DataCenterConsole.Models
 {
@@ -48,5 +50,12 @@ namespace ChocAn.DataCenterConsole.Models
         public string State { get; set; }
         [Required]
         public int ZipCode { get; set; }
+        [Required]
+        public string Status { get; set; }
+        public List<SelectListItem> Statuses { get; } = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "active", Text = "Active" },
+            new SelectListItem { Value = "suspended", Text = "Suspended" },
+        };
     }
 }

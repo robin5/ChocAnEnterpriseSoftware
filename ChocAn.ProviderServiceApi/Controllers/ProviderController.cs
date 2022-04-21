@@ -30,11 +30,15 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using ChocAn.Repository;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 using ChocAn.ProviderRepository;
 using ChocAn.ProviderServiceApi.Resources;
-using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.ProviderServiceApi.Controllers
 {
@@ -43,13 +47,16 @@ namespace ChocAn.ProviderServiceApi.Controllers
     public class ProviderController : ControllerBase
     {
         private readonly ILogger<ProviderController> logger;
-        private readonly IRepository<ProviderRepository.Provider> providerRepository;
+        private readonly IRepository<Provider> repository;
+        private readonly PagingOptions defaultPagingOptions;
         public ProviderController(
             ILogger<ProviderController> logger,
-            IRepository<ProviderRepository.Provider> providerRepository)
+            IRepository<Provider> repository,
+            IOptions<PagingOptions> defaultPagingOptions)
         {
             this.logger = logger;
-            this.providerRepository = providerRepository;
+            this.repository = repository;
+            this.defaultPagingOptions = defaultPagingOptions.Value;
         }
 
         /// <summary>
@@ -57,15 +64,21 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// </summary>
         /// <param name="id">Provider's identification number</param>
         /// <returns>200 on success. 500 on exception</returns>
-        [HttpGet(Name = nameof(GetAllAsync))]
+        [HttpGet()]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(
+            [FromQuery] PagingOptions pagingOptions,
+            [FromQuery] SortOptions<Provider> sortOptions,
+            [FromQuery] SearchOptions<Provider> searchOptions)
         {
             try
             {
+                pagingOptions.Offset ??= defaultPagingOptions.Offset;
+                pagingOptions.Limit ??= defaultPagingOptions.Limit;
+
                 List<Provider> providers = new();
-                await foreach (Provider provider in providerRepository.GetAllAsync())
+                await foreach (Provider provider in repository.GetAllAsync(pagingOptions, sortOptions, searchOptions))
                 {
                     providers.Add(provider);
                 }
@@ -82,7 +95,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// </summary>
         /// <param name="id">Provider's identification number</param>
         /// <returns>200 on success. 404 if provider does not exist. 500 on exception</returns>
-        [HttpGet("{id}", Name = nameof(GetAsync))]
+        [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -90,7 +103,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         {
             try
             {
-                var provider = await providerRepository.GetAsync(id);
+                var provider = await repository.GetAsync(id);
                 if (null == provider)
                 {
                     return NotFound();
@@ -109,7 +122,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// </summary>
         /// <param name="resource"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPost(Name = nameof(PostAsync))]
+        [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -119,7 +132,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
             {
                 var provider = new Provider()
                 {
-                    Id  = 0,
+                    Id = 0,
                     Name = resource.Name,
                     Email = resource.Email,
                     StreetAddress = resource.StreetAddress,
@@ -127,7 +140,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
                     State = resource.State,
                     ZipCode = resource.ZipCode
                 };
-                await providerRepository.AddAsync(provider);
+                await repository.AddAsync(provider);
                 return Created("", resource);
             }
             catch (Exception ex)
@@ -144,9 +157,10 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// <param name="id">Provider's identification number</param>
         /// <param name="resource">Provider updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
-        [HttpPut("{id}", Name = nameof(PutAsync))]
+        [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] ProviderResource resource)
         {
@@ -162,8 +176,12 @@ namespace ChocAn.ProviderServiceApi.Controllers
                     State = resource.State,
                     ZipCode = resource.ZipCode
                 };
-                await providerRepository.UpdateAsync(provider);
-                return Ok(resource);
+
+                var numChanged = await repository.UpdateAsync(provider);
+                if (numChanged > 0)
+                    return Ok();
+                else
+                    return NotFound();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -182,7 +200,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// </summary>
         /// <param name="id">Provider's identification number</param>
         /// <returns>200 on success. 404 if provider does not exist. 500 on exception</returns>
-        [HttpDelete("{id}", Name = nameof(DeleteAsync))]
+        [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -190,7 +208,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         {
             try
             {
-                var provider = await providerRepository.DeleteAsync(id);
+                var provider = await repository.DeleteAsync(id);
                 if (null == provider)
                 {
                     return NotFound();

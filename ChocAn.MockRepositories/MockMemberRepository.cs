@@ -30,10 +30,13 @@
 // * 
 // **********************************************************************************using System;
 
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ChocAn.Repository;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 using ChocAn.MemberRepository;
 
 namespace ChocAn.MockRepositories
@@ -58,7 +61,10 @@ namespace ChocAn.MockRepositories
             return Task.FromResult((Member)null);
         }
 
-        public async IAsyncEnumerable<Member> GetAllAsync()
+        public async IAsyncEnumerable<Member> GetAllAsync(
+            PagingOptions pagingOptions, 
+            SortOptions<Member> sortOptions,
+            SearchOptions<Member> searchOptions)
         {
             var enumerator = items.AsEnumerable().GetEnumerator();
             Member item;
@@ -77,10 +83,10 @@ namespace ChocAn.MockRepositories
             return Task.FromResult(item);
         }
 
-        public Task<Member> UpdateAsync(Member memberChanges)
+        public Task<int> UpdateAsync(Member memberChanges)
         {
             items[memberChanges.Id] = memberChanges;
-            return Task.FromResult(memberChanges);
+            return Task.FromResult(1);
         }
 
         public async IAsyncEnumerable<Member> GetAllByNameAsync(string name)

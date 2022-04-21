@@ -31,6 +31,7 @@
 // **********************************************************************************
 
 using ChocAn.ReportRepository;
+using ChocAn.Repository.Paging;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,8 @@ var builder = WebApplication.CreateBuilder(args);
 // -----------------------------
 // Add services to the container
 // -----------------------------
+
+builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("DefaultPagingOptions"));
 
 builder.Services.AddDbContextPool<MemberTransactionsReportDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("MemberTransactionsReportConnection")));

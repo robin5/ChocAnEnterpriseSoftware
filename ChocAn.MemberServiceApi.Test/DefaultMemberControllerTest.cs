@@ -42,6 +42,10 @@ using ChocAn.MemberRepository;
 using ChocAn.MemberServiceApi.Controllers;
 using ChocAn.MemberServiceApi.Resources;
 using Microsoft.EntityFrameworkCore;
+using ChocAn.Repository.Paging;
+using Microsoft.Extensions.Options;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.MemberServiceApi.Test
 {
@@ -153,12 +157,20 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
-                .Setup(repository => repository.GetAllAsync())
+                .Setup(repository => repository.GetAllAsync(It.IsAny<PagingOptions>(), It.IsAny<SortOptions<Member>>(), It.IsAny<SearchOptions<Member>>()))
                 .Returns(generator.Members);
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // Act
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
-            var result = await controller.GetAllAsync();
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
+            var result = await controller.GetAllAsync(
+                new PagingOptions(), 
+                new SortOptions<Member>(), 
+                new SearchOptions<Member>());
 
             // Assert
             Assert.NotNull(result);
@@ -223,18 +235,32 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
-                .Setup(repository => repository.GetAllAsync())
+                .Setup(repository => repository.GetAllAsync(
+                    It.IsAny<PagingOptions>(), 
+                    It.IsAny<SortOptions<Member>>(),
+                    It.IsAny<SearchOptions<Member>>()))
                 .Throws<Exception>();
+
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
-            var result = await controller.GetAllAsync();
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
+            var result = await controller.GetAllAsync(
+                new PagingOptions() { Offset = 0, Limit = 3 }, 
+                new SortOptions<Member>(),
+                new SearchOptions<Member>());
 
             // * Assert *
 
             // Verify repository's GetAllAsync method was called
-            mockRepository.Verify(repository => repository.GetAllAsync(), Times.Once());
+            mockRepository.Verify(repository => repository.GetAllAsync(
+                It.IsAny<PagingOptions>(), 
+                It.IsAny<SortOptions<Member>>(), 
+                It.IsAny<SearchOptions<Member>>()), Times.Once());
 
             // Verify controller returned an ObjectResult whose status code is 500
             Assert.NotNull(result);
@@ -270,9 +296,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.GetAsync(member.Id))
                 .Returns(Task.FromResult(member));
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.GetAsync(member.Id);
 
             // * Assert *
@@ -308,9 +339,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult<Member>(null));
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.GetAsync(1);
 
             // * Assert *
@@ -337,9 +373,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.GetAsync(It.IsAny<int>()))
                 .Throws<Exception>();
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             // Note: any Id value can be used because any 
             // call to the repository will throw an exception
             var result = await controller.GetAsync(1);
@@ -383,9 +424,14 @@ namespace ChocAn.MemberServiceApi.Test
             mockRepository
                 .Setup(repository => repository.AddAsync(It.IsAny<Member>()));
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.PostAsync(resource);
 
             // * Assert *
@@ -440,9 +486,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.AddAsync(It.IsAny<Member>()))
                 .Throws<Exception>();
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.PostAsync(resource);
 
             // * Assert *
@@ -496,11 +547,17 @@ namespace ChocAn.MemberServiceApi.Test
 
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
-                .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()));
+                .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()))
+                .Returns(Task.FromResult(1));
+
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.PutAsync(member.Id, resource);
 
             // * Assert *
@@ -521,18 +578,7 @@ namespace ChocAn.MemberServiceApi.Test
 
             // Verify controller returned a OkObjectResult
             Assert.NotNull(result);
-            var okObjectResult = Assert.IsType<OkObjectResult>(result);
-
-            // Verify the returned resource is equivalent to the entered resource
-            var value = Assert.IsType<MemberResource>(okObjectResult.Value);
-            Assert.NotNull(value);
-            Assert.Equal(resource.Name, value.Name);
-            Assert.Equal(resource.Email, value.Email);
-            Assert.Equal(resource.StreetAddress, value.StreetAddress);
-            Assert.Equal(resource.City, value.City);
-            Assert.Equal(resource.State, value.State);
-            Assert.Equal(resource.ZipCode, value.ZipCode);
-            Assert.Equal(resource.Status, value.Status);
+            var okResult = Assert.IsType<OkResult>(result);
         }
 
         /// <summary>
@@ -555,10 +601,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()))
                 .Throws<DbUpdateConcurrencyException>();
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
 
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.PutAsync(member.Id, resource);
 
             // * Assert *
@@ -600,9 +650,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.UpdateAsync(It.IsAny<Member>()))
                 .Throws<Exception>();
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.PutAsync(member.Id, resource);
 
             // * Assert *
@@ -647,9 +702,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.DeleteAsync(member.Id))
                 .Returns(Task.FromResult(member));
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.DeleteAsync(member.Id);
 
             // * Assert *
@@ -687,9 +747,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.DeleteAsync(member.Id))
                 .Returns(Task.FromResult<Member>(null));
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.DeleteAsync(member.Id);
 
             // * Assert *
@@ -716,9 +781,14 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.DeleteAsync(It.IsAny<int>()))
                 .Throws<Exception>();
 
+            var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
+            mockDefaultPagingOptions
+                .Setup(defaultPagingOptions => defaultPagingOptions.Value)
+                .Returns(new PagingOptions() { Offset = 0, Limit = 3 });
+
             // * Act *
 
-            var controller = new MemberController(mockLogger.Object, mockRepository.Object);
+            var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
             var result = await controller.DeleteAsync(1);
 
             // * Assert *

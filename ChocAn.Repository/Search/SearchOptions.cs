@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: TransactionResource.cs
+// * File: SearchOptions.cs
 // *
-// * Description: Defines a resource which describes a ChocAn transaction
+// * Description: Implements the searching options model passed into a controller.
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,24 +30,49 @@
 // * 
 // **********************************************************************************
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel.DataAnnotations;
 
-namespace ChocAn.TerminalServiceApi.Resources
+namespace ChocAn.Repository.Search
 {
-    public class TransactionResource
+    public class SearchOptions<T> : IValidatableObject
     {
-        [Range(1,999999999, ErrorMessage = "Value out of range")]
-        public int ProviderId { get; init; }
-        
-        [Range(1, 999999999, ErrorMessage = "Value out of range")]
-        public int MemberId { get; init; }
+        public string[] Search { get; set; }
 
-        [Range(1, 999999, ErrorMessage = "Value out of range")]
-        public int ProductId { get; init; }
+        /// <summary>
+        /// ASP.NET Core calls this to validate parameters
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var processor = new SearchOptionsProcessor<T>(Search);
 
-        public DateTime ServiceDate { get; init; }
-        
-        [MaxLength(100, ErrorMessage = "Value out of range")]
-        public string? ServiceComment { get; init; }
+            var validTerms = processor.GetValidTerms().Select(term => term.Name);
+
+            var invalidTerms = processor.GetAllTerms().Select(term => term.Name)
+                .Except(validTerms, StringComparer.OrdinalIgnoreCase);
+
+            // return validation error results for each invalid term encountered
+            foreach(var term in invalidTerms)
+            {
+                yield return new ValidationResult($"Invalid search term '{term}'", new [] {nameof(Search)});
+            }
+        }
+
+        /// <summary>
+        /// Applies sorting options to the supplied database query
+        /// </summary>
+        /// <param name="query">query to apply sorting to</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public IQueryable<T> Apply(IQueryable<T> query)
+        {
+            var processor = new SearchOptionsProcessor<T>(Search);
+            return processor.Apply(query);
+        }
     }
 }

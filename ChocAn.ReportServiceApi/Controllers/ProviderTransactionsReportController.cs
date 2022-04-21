@@ -31,9 +31,12 @@
 // **********************************************************************************
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 using ChocAn.ReportRepository;
 using ChocAn.ReportService.Resources;
-using Microsoft.EntityFrameworkCore;
 
 namespace ChocAn.ReportService.Controllers
 {
@@ -66,12 +69,16 @@ namespace ChocAn.ReportService.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(
+            [FromQuery] PagingOptions pagingOptions,
+            [FromQuery] SortOptions<ProviderTransactionsReport> sortOptions,
+            [FromQuery] SearchOptions<ProviderTransactionsReport> searchOptions)
         {
             try
             {
                 List<ProviderTransactionsReport> reports = new();
-                await foreach (ProviderTransactionsReport report in reportRepository.GetAllAsync())
+                await foreach (ProviderTransactionsReport report in reportRepository
+                    .GetAllAsync(pagingOptions, sortOptions, searchOptions))
                 {
                     reports.Add(report);
                 }

@@ -31,32 +31,62 @@
 // * 
 // **********************************************************************************
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.Repository;
+using Microsoft.Extensions.Logging;
 using AutoMapper;
+using ChocAn.Services;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class CreateAction<TModel, TViewModel> : ICreateAction<TModel, TViewModel>
+    public class CreateAction<TResource, TModel, TViewModel> : ICreateAction<TResource, TModel, TViewModel>
+        where TResource : class
         where TModel : class
         where TViewModel : class, new()
     {
+        public const string ExceptionMessage = $"Exception while processing request for {nameof(TResource)}";
+        public const string ErrorMessage = "Error while processing request for {nameof(TModel)}: {errorMesage}";
+        public const string NotCreatedMessage = $"Item not created. Service not available.";
         public Controller Controller { get; set; }
-        public IRepository<TModel> Repository { get; set; }
+        public ILogger<Controller> Logger { get; set; }
+        public IService<TResource, TModel> Service { get; set; }
         public IMapper Mapper { get; set; }
         public async Task<IActionResult> ActionResult(TViewModel viewModel, string indexAction)
         {
-            if (!Controller.ModelState.IsValid)
+            try
             {
-                return Controller.View(viewModel);
+                if (!Controller.ModelState.IsValid)
+                {
+                    // Render view
+                    return Controller.View(viewModel);
+                }
+
+                var resource = Mapper.Map<TResource>(viewModel);
+
+                var (success, model, error) = await Service.CreateAsync(resource);
+                if (success)
+                {
+                    // TODO: Once an ID can be returned, Redirect to details page
+                    return Controller.RedirectToAction(indexAction);
+                }
+                else
+                {
+                    // Record not created error
+                    Logger?.LogError(ErrorMessage, error);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Record exception
+                Logger?.LogError(ex, ExceptionMessage);
             }
 
-            var entity = Mapper.Map<TModel>(viewModel);
-            
-            await Repository.AddAsync(entity);
+            // Pass error to controller via ModelState
+            Controller.ModelState.AddModelError("Error", NotCreatedMessage);
 
-            return Controller.RedirectToAction(indexAction);
+            // Pass viewModel back to controller
+            return Controller.View(viewModel);
         }
     }
 }

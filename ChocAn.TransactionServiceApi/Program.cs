@@ -36,12 +36,15 @@ using ChocAn.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using ChocAn.Repository.Paging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // **************************************************************************
 // * Add services to the container.
 // **************************************************************************
+
+builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("DefaultPagingOptions"));
 
 // --------------
 // API versioning

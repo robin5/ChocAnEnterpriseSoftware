@@ -40,6 +40,14 @@ using ChocAn.Services.DefaultProviderService;
 using ChocAn.Services.DefaultProductService;
 using ChocAn.Services.DefaultTransactionService;
 using System.Net.Http.Headers;
+using ChocAn.MemberRepository;
+using ChocAn.ProviderRepository;
+using ChocAn.ProductRepository;
+using ChocAn.TransactionRepository;
+using ChocAn.MemberServiceApi.Resources;
+using ChocAn.ProviderServiceApi.Resources;
+using ChocAn.ProductServiceApi.Resources;
+using ChocAn.TransactionServiceApi.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,37 +61,44 @@ builder.Services.AddMvc(options =>
 // Define dependencies for IMemberService
 // --------------------------------------
 
-builder.Services.AddHttpClient<IMemberService, DefaultMemberService>(DefaultMemberService.Name, client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.MemberServiceApi"]);
-}).SetHandlerLifetime(TimeSpan.FromMinutes(2));
-builder.Services.AddScoped<IMemberService, DefaultMemberService>();
+builder.Services.AddHttpClient<IService<MemberResource, Member>, DefaultMemberService>(
+    DefaultMemberService.HttpClientName, client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.MemberServiceApi"]);
+    }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+
+builder.Services.AddScoped<IService<MemberResource, Member>, DefaultMemberService>();
 
 // ----------------------------------------
 // Define dependencies for IProviderService
 // ----------------------------------------
 
-builder.Services.AddHttpClient<IProviderService, DefaultProviderService>(DefaultProviderService.Name, client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.ProviderServiceApi"]);
-}).SetHandlerLifetime(TimeSpan.FromMinutes(2));
-builder.Services.AddScoped<IProviderService, DefaultProviderService>();
+builder.Services.AddHttpClient<IService<ProviderResource, Provider>, DefaultProviderService>(
+    DefaultProviderService.HttpClientName, client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.ProviderServiceApi"]);
+    }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+
+builder.Services.AddScoped<IService<ProviderResource, Provider>, DefaultProviderService>();
 
 // ---------------------------------------
 // Define dependencies for IProductService
 // ---------------------------------------
 
-builder.Services.AddHttpClient<IProductService, DefaultProductService>(DefaultProductService.Name, client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.ProductServiceApi"]);
-}).SetHandlerLifetime(TimeSpan.FromMinutes(2));
-builder.Services.AddScoped<IProductService, DefaultProductService>();
+builder.Services.AddHttpClient<IService<ProductResource, Product>, DefaultProductService>(
+    DefaultProductService.HttpClientName, client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.ProductServiceApi"]);
+    }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
+
+builder.Services.AddScoped<IService<ProductResource, Product>, DefaultProductService>();
 
 // -------------------------------------------
 // Define dependencies for ITransactionService
 // -------------------------------------------
 
-builder.Services.AddHttpClient<ITransactionService, DefaultTransactionService>(DefaultTransactionService.Name, client =>
+builder.Services.AddHttpClient<IService<TransactionResource, Transaction>, DefaultTransactionService>(
+    DefaultTransactionService.HttpClientName, client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.TransactionServiceApi"]);
     //client.DefaultRequestHeaders
@@ -91,9 +106,11 @@ builder.Services.AddHttpClient<ITransactionService, DefaultTransactionService>(D
     //  .Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
 
 }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
-builder.Services.AddScoped<ITransactionService, DefaultTransactionService>();
+
+builder.Services.AddScoped<IService<TransactionResource, Transaction>, DefaultTransactionService>();
 
 // Add API versioning services
+
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -103,19 +120,19 @@ builder.Services.AddApiVersioning(options =>
     options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
 });
 
-// Add Cross site
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowTesting", policy => policy
-//    .AllowAnyOrigin()
-//    .AllowAnyMethod()
-//    .AllowAnyHeader());
+//Add Cross site
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowTesting", policy => policy
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
-//    options.AddPolicy("AllowProviderTerminal", policy => policy
-//    .WithOrigins("https://localhost:44380")
-//    .AllowAnyMethod()
-//    .AllowAnyHeader());
-//});
+options.AddPolicy("AllowProviderTerminal", policy => policy
+.WithOrigins("https://localhost:44380")
+.AllowAnyMethod()
+.AllowAnyHeader());
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -127,10 +144,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+    //app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
-    //app.UseCors("AllowTesting");
+    app.UseCors("AllowTesting");
 }
 
 app.UseHttpsRedirection();

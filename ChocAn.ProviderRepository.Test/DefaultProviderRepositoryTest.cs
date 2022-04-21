@@ -30,10 +30,12 @@
 // * 
 // **********************************************************************************
 
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
+using ChocAn.Repository.Paging;
+using ChocAn.Repository.Search;
+using ChocAn.Repository.Sorting;
 
 namespace ChocAn.ProviderRepository.Test
 {
@@ -53,7 +55,6 @@ namespace ChocAn.ProviderRepository.Test
         private const string VALID0_CITY = "12345678901234";
         private const string VALID0_STATE = "12";
         private const int VALID0_ZIPCODE = 99999;
-        private const string VALID0_STATUS = "Status 0";
 
         private const int VALID1_ID = 1;
         private const string VALID1_NAME = "Name 1";
@@ -61,7 +62,6 @@ namespace ChocAn.ProviderRepository.Test
         private const string VALID1_CITY = "City 1";
         private const string VALID1_STATE = "WA";
         private const int VALID1_ZIPCODE = 20001;
-        private const string VALID1_STATUS = "Status 1";
 
         private const int VALID2_ID = 2;
         private const string VALID2_NAME = "Name 2";
@@ -69,15 +69,12 @@ namespace ChocAn.ProviderRepository.Test
         private const string VALID2_CITY = "City 2";
         private const string VALID2_STATE = "OR";
         private const int VALID2_ZIPCODE = 30002;
-        private const string VALID2_STATUS = "Status 2";
 
-        private const int VALID_UPDATE_ID = 100000009;
         private const string VALID_UPDATE_NAME = "1234567890";
         private const string VALID_UPDATE_ADDRESS = "1234567890123";
         private const string VALID_UPDATE_CITY = "1232345";
         private const string VALID_UPDATE_STATE = "CA";
         private const int VALID_UPDATE_ZIPCODE = 10026;
-        private const string VALID_UPDATE_STATUS = "suspended";
         #endregion
 
         /// <summary>
@@ -100,22 +97,20 @@ namespace ChocAn.ProviderRepository.Test
         /// <returns></returns>
         private static async Task InsertValidProviderIntoTestDatabase(string name)
         {
-            using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext(name))
+            using ProviderDbContext context = DefaultProviderRepositoryTest.GetContext(name);
+            // Arrange
+            var provider = new Provider
             {
-                // Arrange
-                var provider = new Provider
-                {
-                    Id = VALID0_ID,
-                    Name = VALID0_NAME,
-                    StreetAddress = VALID0_ADDRESS,
-                    City = VALID0_CITY,
-                    State = VALID0_STATE,
-                    ZipCode = VALID0_ZIPCODE
-                };
+                Id = VALID0_ID,
+                Name = VALID0_NAME,
+                StreetAddress = VALID0_ADDRESS,
+                City = VALID0_CITY,
+                State = VALID0_STATE,
+                ZipCode = VALID0_ZIPCODE
+            };
 
-                context.Add<Provider>(provider);
-                await context.SaveChangesAsync();
-            }
+            context.Add<Provider>(provider);
+            await context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -125,39 +120,37 @@ namespace ChocAn.ProviderRepository.Test
         /// <returns></returns>
         private static async Task Insert3ValidProvidersIntoTestDatabase(string name)
         {
-            using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext(name))
+            using ProviderDbContext context = DefaultProviderRepositoryTest.GetContext(name);
+            // Arrange
+            context.Add<Provider>(new Provider
             {
-                // Arrange
-                context.Add<Provider>(new Provider
-                {
-                    Id = VALID0_ID,
-                    Name = VALID0_NAME,
-                    StreetAddress = VALID0_ADDRESS,
-                    City = VALID0_CITY,
-                    State = VALID0_STATE,
-                    ZipCode = VALID0_ZIPCODE
-                });
-                context.Add<Provider>(new Provider
-                {
-                    Id = VALID1_ID,
-                    Name = VALID1_NAME,
-                    StreetAddress = VALID1_ADDRESS,
-                    City = VALID1_CITY,
-                    State = VALID1_STATE,
-                    ZipCode = VALID1_ZIPCODE
-                });
-                context.Add<Provider>(new Provider
-                {
-                    Id = VALID2_ID,
-                    Name = VALID2_NAME,
-                    StreetAddress = VALID2_ADDRESS,
-                    City = VALID2_CITY,
-                    State = VALID2_STATE,
-                    ZipCode = VALID2_ZIPCODE
-                });
+                Id = VALID0_ID,
+                Name = VALID0_NAME,
+                StreetAddress = VALID0_ADDRESS,
+                City = VALID0_CITY,
+                State = VALID0_STATE,
+                ZipCode = VALID0_ZIPCODE
+            });
+            context.Add<Provider>(new Provider
+            {
+                Id = VALID1_ID,
+                Name = VALID1_NAME,
+                StreetAddress = VALID1_ADDRESS,
+                City = VALID1_CITY,
+                State = VALID1_STATE,
+                ZipCode = VALID1_ZIPCODE
+            });
+            context.Add<Provider>(new Provider
+            {
+                Id = VALID2_ID,
+                Name = VALID2_NAME,
+                StreetAddress = VALID2_ADDRESS,
+                City = VALID2_CITY,
+                State = VALID2_STATE,
+                ZipCode = VALID2_ZIPCODE
+            });
 
-                await context.SaveChangesAsync();
-            }
+            await context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -209,21 +202,19 @@ namespace ChocAn.ProviderRepository.Test
             // Arrange
             await DefaultProviderRepositoryTest.InsertValidProviderIntoTestDatabase("Get");
 
-            using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Get"))
-            {
-                // Act
-                var repository = new DefaultProviderRepository(context);
-                var result = await repository.GetAsync(VALID0_ID);
+            using ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Get");
+            // Act
+            var repository = new DefaultProviderRepository(context);
+            var result = await repository.GetAsync(VALID0_ID);
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID0_NAME, result.Name);
-                Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
-                Assert.Equal(VALID0_CITY, result.City);
-                Assert.Equal(VALID0_STATE, result.State);
-                Assert.Equal(VALID0_ZIPCODE, result.ZipCode);
-            }
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(VALID0_ID, result.Id);
+            Assert.Equal(VALID0_NAME, result.Name);
+            Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
+            Assert.Equal(VALID0_CITY, result.City);
+            Assert.Equal(VALID0_STATE, result.State);
+            Assert.Equal(VALID0_ZIPCODE, result.ZipCode);
         }
 
         /// <summary>
@@ -236,15 +227,13 @@ namespace ChocAn.ProviderRepository.Test
             // Arrange
             await DefaultProviderRepositoryTest.InsertValidProviderIntoTestDatabase("ValidateGetProviderAsyncNonExistentProvider");
 
-            using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("ValidateGetProviderAsyncNonExistentProvider"))
-            {
-                // Act
-                var repository = new DefaultProviderRepository(context);
-                var result = await repository.GetAsync(NON_EXISTENT_PROVIDER_ID);
+            using ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("ValidateGetProviderAsyncNonExistentProvider");
+            // Act
+            var repository = new DefaultProviderRepository(context);
+            var result = await repository.GetAsync(NON_EXISTENT_PROVIDER_ID);
 
-                // Assert
-                Assert.Null(result);
-            }
+            // Assert
+            Assert.Null(result);
         }
 
         /// <summary>
@@ -267,32 +256,24 @@ namespace ChocAn.ProviderRepository.Test
                 ZipCode = VALID_UPDATE_ZIPCODE
             };
 
-            using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Update"))
-            {
-                // Act
-                var repository = new DefaultProviderRepository(context);
-                var result = await repository.UpdateAsync(providerChanges);
+            using ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Update");
+            // Act
+            var repository = new DefaultProviderRepository(context);
+            var result = await repository.UpdateAsync(providerChanges);
 
-                // Assert
-                // Validate return value of function call
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID_UPDATE_NAME, result.Name);
-                Assert.Equal(VALID_UPDATE_ADDRESS, result.StreetAddress);
-                Assert.Equal(VALID_UPDATE_CITY, result.City);
-                Assert.Equal(VALID_UPDATE_STATE, result.State);
-                Assert.Equal(VALID_UPDATE_ZIPCODE, result.ZipCode);
+            // Assert
+            // Validate return value of function call
+            Assert.Equal(1, result);
 
-                // Validate provider was updated in the database
-                var provider = await context.Providers.FindAsync(VALID0_ID);
-                Assert.NotNull(provider);
-                Assert.Equal(VALID0_ID, provider.Id);
-                Assert.Equal(VALID_UPDATE_NAME, provider.Name);
-                Assert.Equal(VALID_UPDATE_ADDRESS, provider.StreetAddress);
-                Assert.Equal(VALID_UPDATE_CITY, provider.City);
-                Assert.Equal(VALID_UPDATE_STATE, provider.State);
-                Assert.Equal(VALID_UPDATE_ZIPCODE, provider.ZipCode);
-            }
+            // Validate provider was updated in the database
+            var provider = await context.Providers.FindAsync(VALID0_ID);
+            Assert.NotNull(provider);
+            Assert.Equal(VALID0_ID, provider.Id);
+            Assert.Equal(VALID_UPDATE_NAME, provider.Name);
+            Assert.Equal(VALID_UPDATE_ADDRESS, provider.StreetAddress);
+            Assert.Equal(VALID_UPDATE_CITY, provider.City);
+            Assert.Equal(VALID_UPDATE_STATE, provider.State);
+            Assert.Equal(VALID_UPDATE_ZIPCODE, provider.ZipCode);
         }
 
         /// <summary>
@@ -305,23 +286,21 @@ namespace ChocAn.ProviderRepository.Test
             // Arrange
             await DefaultProviderRepositoryTest.InsertValidProviderIntoTestDatabase("Delete");
 
-            using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Delete"))
-            {
-                // Act
-                var repository = new DefaultProviderRepository(context);
-                var result = await repository.DeleteAsync(VALID0_ID);
+            using ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("Delete");
+            // Act
+            var repository = new DefaultProviderRepository(context);
+            var result = await repository.DeleteAsync(VALID0_ID);
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(VALID0_ID, result.Id);
-                Assert.Equal(VALID0_NAME, result.Name);
-                Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
-                Assert.Equal(VALID0_CITY, result.City);
-                Assert.Equal(VALID0_STATE, result.State);
-                Assert.Equal(VALID0_ZIPCODE, result.ZipCode);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(VALID0_ID, result.Id);
+            Assert.Equal(VALID0_NAME, result.Name);
+            Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
+            Assert.Equal(VALID0_CITY, result.City);
+            Assert.Equal(VALID0_STATE, result.State);
+            Assert.Equal(VALID0_ZIPCODE, result.ZipCode);
 
-                Assert.Equal(0, await context.Providers.CountAsync());
-            }
+            Assert.Equal(0, await context.Providers.CountAsync());
         }
 
         /// <summary>
@@ -338,48 +317,49 @@ namespace ChocAn.ProviderRepository.Test
             bool provider1Found = false;
             bool provider2Found = false;
 
-            using (ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("GetAllProvidersAsync"))
+            using ProviderDbContext context = DefaultProviderRepositoryTest.GetContext("GetAllProvidersAsync");
+            // Act
+            var repository = new DefaultProviderRepository(context);
+
+            // Assert
+            await foreach (Provider provider in repository.GetAllAsync(
+                new PagingOptions() { Offset = 0, Limit = 3 },
+                new SortOptions<Provider>(),
+                new SearchOptions<Provider>()))
             {
-                // Act
-                var repository = new DefaultProviderRepository(context);
-
-                // Assert
-                await foreach (Provider provider in repository.GetAllAsync())
+                if (VALID0_ID == provider.Id)
                 {
-                    if (VALID0_ID == provider.Id)
-                    {
-                        Assert.Equal(VALID0_NAME, provider.Name);
-                        Assert.Equal(VALID0_ADDRESS, provider.StreetAddress);
-                        Assert.Equal(VALID0_CITY, provider.City);
-                        Assert.Equal(VALID0_STATE, provider.State);
-                        Assert.Equal(VALID0_ZIPCODE, provider.ZipCode);
-                        provider0Found = true;
-                    }
-                    else if (VALID1_ID == provider.Id)
-                    {
-                        Assert.Equal(VALID1_NAME, provider.Name);
-                        Assert.Equal(VALID1_ADDRESS, provider.StreetAddress);
-                        Assert.Equal(VALID1_CITY, provider.City);
-                        Assert.Equal(VALID1_STATE, provider.State);
-                        Assert.Equal(VALID1_ZIPCODE, provider.ZipCode);
-                        provider1Found = true;
-                    }
-                    else if (VALID2_ID == provider.Id)
-                    {
-                        Assert.Equal(VALID2_NAME, provider.Name);
-                        Assert.Equal(VALID2_ADDRESS, provider.StreetAddress);
-                        Assert.Equal(VALID2_CITY, provider.City);
-                        Assert.Equal(VALID2_STATE, provider.State);
-                        Assert.Equal(VALID2_ZIPCODE, provider.ZipCode);
-                        provider2Found = true;
-                    }
+                    Assert.Equal(VALID0_NAME, provider.Name);
+                    Assert.Equal(VALID0_ADDRESS, provider.StreetAddress);
+                    Assert.Equal(VALID0_CITY, provider.City);
+                    Assert.Equal(VALID0_STATE, provider.State);
+                    Assert.Equal(VALID0_ZIPCODE, provider.ZipCode);
+                    provider0Found = true;
                 }
-
-                // There should be 3 providers in the database
-                Assert.True(provider0Found);
-                Assert.True(provider1Found);
-                Assert.True(provider2Found);
+                else if (VALID1_ID == provider.Id)
+                {
+                    Assert.Equal(VALID1_NAME, provider.Name);
+                    Assert.Equal(VALID1_ADDRESS, provider.StreetAddress);
+                    Assert.Equal(VALID1_CITY, provider.City);
+                    Assert.Equal(VALID1_STATE, provider.State);
+                    Assert.Equal(VALID1_ZIPCODE, provider.ZipCode);
+                    provider1Found = true;
+                }
+                else if (VALID2_ID == provider.Id)
+                {
+                    Assert.Equal(VALID2_NAME, provider.Name);
+                    Assert.Equal(VALID2_ADDRESS, provider.StreetAddress);
+                    Assert.Equal(VALID2_CITY, provider.City);
+                    Assert.Equal(VALID2_STATE, provider.State);
+                    Assert.Equal(VALID2_ZIPCODE, provider.ZipCode);
+                    provider2Found = true;
+                }
             }
+
+            // There should be 3 providers in the database
+            Assert.True(provider0Found);
+            Assert.True(provider1Found);
+            Assert.True(provider2Found);
         }
     }
 }

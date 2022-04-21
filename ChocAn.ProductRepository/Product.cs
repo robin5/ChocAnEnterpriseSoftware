@@ -31,6 +31,8 @@
 // **********************************************************************************
 
 using System.ComponentModel.DataAnnotations.Schema;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
 namespace ChocAn.ProductRepository
 {
@@ -41,7 +43,11 @@ namespace ChocAn.ProductRepository
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; init; }
+        [Sortable(Default = true)]
+        [Searchable]
         public string Name { get; init; }
+        [Sortable]
+        [Searchable]
         public decimal Cost { get; init; }
     }
 }

@@ -1,10 +1,11 @@
 ﻿// **********************************************************************************
-// * Copyright (c) 2021 Robin Murray
+// * Copyright (c) 2022 Robin Murray
 // **********************************************************************************
 // *
-// * File: IProductService.cs
+// * File: SearchableIntAttribute.cs
 // *
-// * Description: Defines service interface for Products from the Product repository 
+// * Description: Defines an attribute that when added to a model indicates
+// *     that a given int field can be used in the search query
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,12 +31,16 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.ProductRepository;
+using System;
 
-namespace ChocAn.Services
+namespace ChocAn.Repository.Search
 {
-    public interface IProductService
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class SearchableIntAttribute : SearchableAttribute
     {
-        Task<(bool isSuccess, Product? product, string? errorMessage)> GetAsync(int id);
+        public SearchableIntAttribute()
+        {
+            ExpressionProvider = new IntSearchExpressionProvider();
+        }
     }
 }
