@@ -416,13 +416,24 @@ namespace ChocAn.MemberServiceApi.Test
         {
             // * Arrange *
 
-            var (resource, _) = CreateResourceAndMember();
+            var (resource, member) = CreateResourceAndMember();
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
             var mockRepository = new Mock<IRepository<Member>>();
             mockRepository
-                .Setup(repository => repository.AddAsync(It.IsAny<Member>()));
+                .Setup(repository => repository.AddAsync(It.IsAny<Member>()))
+                .Returns(Task.FromResult(new Member
+                {
+                    Id = member.Id,
+                    Name = member.Name,
+                    Email = member.Email,
+                    StreetAddress = member.StreetAddress,
+                    City = member.City,
+                    State = member.State,
+                    ZipCode = member.ZipCode,
+                    Status = member.Status
+                }));
 
             var mockDefaultPagingOptions = new Mock<IOptions<PagingOptions>>();
             mockDefaultPagingOptions
@@ -440,7 +451,6 @@ namespace ChocAn.MemberServiceApi.Test
             mockRepository.Verify(repository => repository.AddAsync(It.IsAny<Member>()), Times.Once());
             mockRepository.Verify(repository => repository.AddAsync(It.Is<Member>(
                 m =>
-                m.Id == 0 &&
                 m.Name == resource.Name &&
                 m.Email == resource.Email &&
                 m.StreetAddress == resource.StreetAddress &&
@@ -455,15 +465,16 @@ namespace ChocAn.MemberServiceApi.Test
             var createdResult = Assert.IsType<CreatedResult>(result);
 
             // 3) Verify the returned resource is equivalent to the entered resource
-            var value = Assert.IsType<MemberResource>(createdResult.Value);
+            var value = Assert.IsType<Member>(createdResult.Value);
             Assert.NotNull(value);
-            Assert.Equal(resource.Name, value.Name);
-            Assert.Equal(resource.Email, value.Email);
-            Assert.Equal(resource.StreetAddress, value.StreetAddress);
-            Assert.Equal(resource.City, value.City);
-            Assert.Equal(resource.State, value.State);
-            Assert.Equal(resource.ZipCode, value.ZipCode);
-            Assert.Equal(resource.Status, value.Status);
+            Assert.Equal(member.Id, value.Id);
+            Assert.Equal(member.Name, value.Name);
+            Assert.Equal(member.Email, value.Email);
+            Assert.Equal(member.StreetAddress, value.StreetAddress);
+            Assert.Equal(member.City, value.City);
+            Assert.Equal(member.State, value.State);
+            Assert.Equal(member.ZipCode, value.ZipCode);
+            Assert.Equal(member.Status, value.Status);
         }
 
         /// <summary>

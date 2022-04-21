@@ -132,7 +132,7 @@ namespace ChocAn.ReportService.Controllers
         {
             try
             {
-                var report = new ProviderTransactionsReport()
+                var report = await reportRepository.AddAsync(new ProviderTransactionsReport()
                 {
                     Id = 0,
                     Name = resource.Name,
@@ -142,9 +142,8 @@ namespace ChocAn.ReportService.Controllers
                     Status = resource.Status,
                     Created = resource.Created,
                     ProviderId = resource.ProviderId
-                };
-                await reportRepository.AddAsync(report);
-                return Created("", resource);
+                });
+                return Created("", report);
             }
             catch (Exception ex)
             {

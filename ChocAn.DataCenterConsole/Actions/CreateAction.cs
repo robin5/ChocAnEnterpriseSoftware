@@ -35,8 +35,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using AutoMapper;
-using ChocAn.Services;
+using System.Reflection;
+using System.Linq;
+using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
@@ -48,45 +49,68 @@ namespace ChocAn.DataCenterConsole.Actions
         public const string ExceptionMessage = $"Exception while processing request for {nameof(TResource)}";
         public const string ErrorMessage = "Error while processing request for {nameof(TModel)}: {errorMesage}";
         public const string NotCreatedMessage = $"Item not created. Service not available.";
-        public Controller Controller { get; set; }
-        public ILogger<Controller> Logger { get; set; }
-        public IService<TResource, TModel> Service { get; set; }
-        public IMapper Mapper { get; set; }
-        public async Task<IActionResult> ActionResult(TViewModel viewModel, string indexAction)
+        public async Task<IActionResult> ActionResult(
+            DataCenterController<TResource, TModel> controller,
+            TViewModel viewModel)
         {
             try
             {
-                if (!Controller.ModelState.IsValid)
+                if (!controller.ModelState.IsValid)
                 {
                     // Render view
-                    return Controller.View(viewModel);
+                    return controller.View(viewModel);
                 }
 
-                var resource = Mapper.Map<TResource>(viewModel);
+                var resource = controller.Mapper.Map<TResource>(viewModel);
 
-                var (success, model, error) = await Service.CreateAsync(resource);
+                var (success, model, error) = await controller.Service.CreateAsync(resource);
+
+                var id = GetId(model);
+
                 if (success)
                 {
                     // TODO: Once an ID can be returned, Redirect to details page
-                    return Controller.RedirectToAction(indexAction);
+                    return controller.RedirectToAction(ActionName.Details, new { id });
                 }
                 else
                 {
                     // Record not created error
-                    Logger?.LogError(ErrorMessage, error);
+                    controller.Logger?.LogError(ErrorMessage, error);
                 }
             }
             catch (Exception ex)
             {
                 // Record exception
-                Logger?.LogError(ex, ExceptionMessage);
+                controller.Logger?.LogError(ex, ExceptionMessage);
             }
 
             // Pass error to controller via ModelState
-            Controller.ModelState.AddModelError("Error", NotCreatedMessage);
+            controller.ModelState.AddModelError("Error", NotCreatedMessage);
 
             // Pass viewModel back to controller
-            return Controller.View(viewModel);
+            return controller.View(viewModel);
+        }
+
+        /// <summary>
+        /// Searches the TModel object for an ID property and returns its value.
+        /// </summary>
+        /// <param name="model">model to search for an ID property</param>
+        /// <returns>The value of the Id property of the TModel object</returns>
+        /// <exception cref="ArgumentException">Thrown if the TModel object does not have an Id property</exception>
+        static private int GetId(TModel model)
+        {
+            Type t = model.GetType();
+            PropertyInfo[] props = t.GetProperties();
+
+            var idProp = props.FirstOrDefault(p => p.Name == "Id");
+            if ((idProp == null) || 
+                (idProp.PropertyType != typeof(int)) ||
+                (!idProp.CanRead))
+                throw new ArgumentException("Id property missing from service response");
+
+            var id = (int) idProp.GetValue(model);
+
+            return id;
         }
     }
 }

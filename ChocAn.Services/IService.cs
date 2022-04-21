@@ -8,7 +8,7 @@ namespace ChocAn.Services
         IService<TResource, TModel> OrderBy(string value);
         Task<(bool isSuccess, TModel? result, string? errorMessage)> GetAsync(int id);
         Task<(bool isSuccess, IEnumerable<TModel>? result, string? errorMessage)> GetAllAsync();
-        Task<(bool isSuccess, TResource? result, string? errorMessage)> CreateAsync(TResource entity);
+        Task<(bool isSuccess, TModel? result, string? errorMessage)> CreateAsync(TResource entity);
         Task<(bool isSuccess, string? errorMessage)> UpdateAsync(int id, TResource entity);
         Task<(bool isSuccess, TModel? result, string? errorMessage)> DeleteAsync(int id);
     }

@@ -130,14 +130,13 @@ namespace ChocAn.ProductServiceApi.Controllers
         {
             try
             {
-                var product = new Product()
+                var product = await repository.AddAsync(new Product()
                 {
                     Id = 0,
                     Name = resource.Name,
                     Cost = resource.Cost,
-                };
-                await repository.AddAsync(product);
-                return Created("", resource);
+                });
+                return Created("", product);
             }
             catch (Exception ex)
             {

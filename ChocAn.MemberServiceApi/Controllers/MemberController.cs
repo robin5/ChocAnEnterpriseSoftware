@@ -131,7 +131,7 @@ namespace ChocAn.MemberServiceApi.Controllers
         {
             try
             {
-                var member = new Member()
+                var member = await repository.AddAsync(new Member()
                 {
                     Name = resource.Name,
                     Email = resource.Email,
@@ -140,9 +140,8 @@ namespace ChocAn.MemberServiceApi.Controllers
                     State = resource.State,
                     ZipCode = resource.ZipCode,
                     Status = resource.Status
-                };
-                await repository.AddAsync(member);
-                return Created("", resource);
+                });
+                return Created("", member);
             }
             catch (Exception ex)
             {

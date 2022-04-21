@@ -64,28 +64,6 @@ namespace ChocAn.DataCenterConsole.Infrastructure
             CreateMap<MemberEditViewModel, MemberResource>();
             CreateMap<ProviderEditViewModel, ProviderResource>();
             CreateMap<ProductEditViewModel, ProductResource>();
-
-
-            /*
-
-            // IndexAction mapping from TResource to TModel
-            CreateMap<Member, MemberResource>();
-            CreateMap<MemberResource, Member>();
-            CreateMap<ProviderResource, Provider>();
-            CreateMap<ProductResource, Product>();
-
-            CreateMap<Member, MemberEditViewModel>();
-            CreateMap<Member, MemberDetailsViewModel>();
-            CreateMap<MemberEditViewModel, Member>();
-
-            CreateMap<Provider, ProviderEditViewModel>();
-            CreateMap<Provider, ProviderDetailsViewModel>();
-            CreateMap<ProviderEditViewModel, Provider>();
-
-            CreateMap<Product, ProductEditViewModel>();
-            CreateMap<Product, ProductDetailsViewModel>();
-            CreateMap<ProductEditViewModel, Product>();
-            */
         }
     }
 }

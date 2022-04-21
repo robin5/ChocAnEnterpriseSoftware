@@ -37,6 +37,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using ChocAn.Services;
+using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
@@ -48,93 +49,94 @@ namespace ChocAn.DataCenterConsole.Actions
         private const string LogExceptionTemplate = "EditAction: {ex}";
         private const string LogErrorTemplate = "EditAction: {error}";
         private const string NotFoundMessage = $"Item not found";
-        public Controller Controller { get; set; }
-        public ILogger<Controller> Logger { get; set; }
-        public IService<TResource, TModel> Service { get; set; }
-        public IMapper Mapper { get; set; }
-        public async Task<IActionResult> ActionResult(int id)
+        public async Task<IActionResult> ActionResult(
+            DataCenterController<TResource, TModel> controller,
+            int id)
         {
             string error;
 
             try
             {
                 // Get an item from the service
-                var (success, model, errorMessage) = await Service.GetAsync(id);
+                var (success, model, errorMessage) = await controller.Service.GetAsync(id);
                 if (success)
                 {
                     if (null != model)
                     {
                         // Map the item into the TViewModel
-                        var viewModel = Mapper.Map<TViewModel>(model);
+                        var viewModel = controller.Mapper.Map<TViewModel>(model);
 
                         // Render the view
-                        return Controller.View(viewModel);
+                        return controller.View(viewModel);
                     }
                     else
                     {
                         // Record not found error
                         error = NotFoundMessage;
-                        Logger?.LogError(LogErrorTemplate, error);
+                        controller.Logger?.LogError(LogErrorTemplate, error);
                     }
                 }
                 else
                 {
                     // Record service error
                     error = errorMessage;
-                    Logger?.LogError(LogErrorTemplate, error);
+                    controller.Logger?.LogError(LogErrorTemplate, error);
                 }
             }
             catch (Exception ex)
             {
                 // Record exception
-                Logger?.LogError(LogExceptionTemplate, ex);
+                controller.Logger?.LogError(LogExceptionTemplate, ex);
                 error = ex.Message;
             }
 
-            Controller.ModelState.AddModelError("Error", error);
+            controller.ModelState.AddModelError("Error", error);
 
             // Render view with error and no item
-            return Controller.View();
+            return controller.View();
         }
-        public async Task<IActionResult> ActionResult(int id, TViewModel viewModel, string detailsAction)
+        public async Task<IActionResult> ActionResult(
+            DataCenterController<TResource, TModel> controller,
+            int id, 
+            TViewModel viewModel)
         {
             string error;
 
             try
             {
-                if (!Controller.ModelState.IsValid)
+                if (!controller.ModelState.IsValid)
                 {
                     // Render view
-                    return Controller.View(viewModel);
+                    return controller.View(viewModel);
                 }
 
-                var resource = Mapper.Map<TResource>(viewModel);
+                var resource = controller.Mapper.Map<TResource>(viewModel);
 
-                var (success, errorMessage) = await Service.UpdateAsync(id, resource);
+                var (success, errorMessage) = await controller.Service.UpdateAsync(id, resource);
                 if (success)
                 {
                     // TODO: Once an ID can be returned, Redirect to details page
-                    return Controller.RedirectToAction(detailsAction, new { id });
+                    return controller.RedirectToAction(ActionName.Details, new { id });
                 }
                 else
                 {
                     // Record not created error
                     error = errorMessage;
-                    Logger?.LogError(LogErrorTemplate, error);
+                    controller.Logger?.LogError(LogErrorTemplate, error);
                 }
             }
             catch (Exception ex)
             {
                 // Record exception
-                Logger?.LogError(LogExceptionTemplate, ex);
+                controller.Logger?.LogError(LogExceptionTemplate, ex);
                 error = ex.Message;
             }
 
             // Pass error to controller via ModelState
-            Controller.ModelState.AddModelError("Error", error);
+            controller.ModelState.AddModelError("Error", error);
 
             // Pass viewModel back to controller
-            return Controller.View(viewModel);
+            return controller.View(viewModel);
         }
     }
 }
