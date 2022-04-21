@@ -132,9 +132,8 @@ namespace ChocAn.ReportService.Controllers
         {
             try
             {
-                var report = new MemberTransactionsReport()
+                var report = await repository.AddAsync(new MemberTransactionsReport()
                 {
-                    Id = 0,
                     Name = resource.Name,
                     OwnerId = resource.OwnerId,
                     StartDate = resource.StartDate,
@@ -142,9 +141,8 @@ namespace ChocAn.ReportService.Controllers
                     Status = resource.Status,
                     Created = resource.Created,
                     MemberId = resource.MemberId
-                };
-                await repository.AddAsync(report);
-                return Created("", resource);
+                });
+                return Created("", report);
             }
             catch (Exception ex)
             {

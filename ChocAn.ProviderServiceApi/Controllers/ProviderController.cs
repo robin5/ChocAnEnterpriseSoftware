@@ -130,7 +130,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
         {
             try
             {
-                var provider = new Provider()
+                var provider = await repository.AddAsync(new Provider()
                 {
                     Id = 0,
                     Name = resource.Name,
@@ -139,9 +139,8 @@ namespace ChocAn.ProviderServiceApi.Controllers
                     City = resource.City,
                     State = resource.State,
                     ZipCode = resource.ZipCode
-                };
-                await repository.AddAsync(provider);
-                return Created("", resource);
+                });
+                return Created("", provider);
             }
             catch (Exception ex)
             {

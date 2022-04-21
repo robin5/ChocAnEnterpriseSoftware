@@ -47,7 +47,7 @@ namespace ChocAn.TransactionServiceApi.Resources
 
         [Range(1, 999999, ErrorMessage = "Value out of range")]
         public int ProductId { get; init; }
-
+        public decimal ProductCost { get; set; }
         public DateTime ServiceDate { get; init; }
 
         [MaxLength(100, ErrorMessage = "Value out of range")]

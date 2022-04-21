@@ -62,9 +62,9 @@ namespace ChocAn.Repository
         /// <returns></returns>
         virtual public async Task<T> AddAsync(T entity)
         {
-            await dbSet.AddAsync(entity);
+            var result = await dbSet.AddAsync(entity);
             context.SaveChanges();
-            return entity;
+            return result.Entity;
         }
 
         /// <summary>

@@ -137,9 +137,17 @@ namespace ChocAn.TransactionServiceApi.Controllers
         {
             try
             {
-                var transaction = mapper.Map<Transaction>(transactionResource);
-                await repository.AddAsync(transaction);
-                return Created("", transactionResource);
+                var transaction = await repository.AddAsync(new Transaction
+                {
+                    ProviderId = transactionResource.ProviderId,
+                    MemberId = transactionResource.MemberId,
+                    ProductId = transactionResource.ProductId,
+                    ProductCost = transactionResource.ProductCost,
+                    ServiceDate = transactionResource.ServiceDate,
+                    ServiceComment = transactionResource.ServiceComment,
+                    Created = DateTime.UtcNow
+                });
+                return Created("", transaction);
             }
             catch (DbUpdateException ex)
             {

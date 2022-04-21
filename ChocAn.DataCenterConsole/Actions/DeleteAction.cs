@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using AutoMapper;
-using ChocAn.Services;
 using System;
+using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
@@ -14,38 +13,36 @@ namespace ChocAn.DataCenterConsole.Actions
         private const string LogExceptionTemplate = "DeleteAction: {ex}";
         private const string LogErrorTemplate = "DetailsAction: {error}";
         private const string NotFoundMessage = $"Item not found";
-        public Controller Controller { get; set; }
-        public ILogger<Controller> Logger { get; set; }
-        public IService<TResource, TModel> Service { get; set; }
-        public IMapper Mapper { get; set; }
-        public async Task<IActionResult> ActionResult(int id, string indexAction, string detailsAction)
+        public async Task<IActionResult> ActionResult(
+            DataCenterController<TResource, TModel> controller,
+            int id)
         {
             string error;
 
             try
             {
-                var (success, model, errorMessage) = await Service.DeleteAsync(id);
+                var (success, model, errorMessage) = await controller.Service.DeleteAsync(id);
                 if (success)
                 {
-                    return Controller.RedirectToAction(indexAction);
+                    return controller.RedirectToAction(ActionName.Index);
                 }
                 else
                 {
                     // Record not found error
                     error = NotFoundMessage;
-                    Logger?.LogError(LogErrorTemplate, error);
+                    controller.Logger?.LogError(LogErrorTemplate, error);
                 }
             }
             catch (Exception ex)
             {
                 // Record exception
-                Logger?.LogError(LogExceptionTemplate, ex);
+                controller.Logger?.LogError(LogExceptionTemplate, ex);
                 error = ex.Message;
             }
 
-            Controller.ModelState.AddModelError("Error", error);
+            controller.ModelState.AddModelError("Error", error);
 
-            return Controller.RedirectToAction(detailsAction);
+            return controller.RedirectToAction(ActionName.Details);
         }
     }
 }

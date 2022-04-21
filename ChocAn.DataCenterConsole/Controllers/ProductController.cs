@@ -37,18 +37,13 @@ using AutoMapper;
 using ChocAn.ProductRepository;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
-using ChocAn.Repository;
 using ChocAn.Services;
 using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : DataCenterController<ProductResource, Product>
     {
-        private readonly ILogger<ProductController> logger;
-        private readonly IMapper mapper;
-        private readonly IService<ProductResource, Product> service;
-
         private readonly IIndexAction<ProductResource, Product> indexAction;
         private readonly IDetailsAction<ProductResource, Product> detailsAction;
         private readonly ICreateAction<ProductResource, Product, ProductCreateViewModel> createAction;
@@ -75,11 +70,8 @@ namespace ChocAn.DataCenterConsole.Controllers
             ICreateAction<ProductResource, Product, ProductCreateViewModel> createAction,
             IEditAction<ProductResource, Product, ProductEditViewModel> editAction,
             IDeleteAction<ProductResource, Product> deleteAction)
+            : base(logger, mapper, service)
         {
-            this.logger = logger;
-            this.mapper = mapper;
-            this.service = service;
-
             this.indexAction = indexAction;
             this.detailsAction = detailsAction;
             this.createAction = createAction;
@@ -92,13 +84,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// </summary>
         /// <returns>Index view</returns>
         [HttpGet]
-        public async Task<IActionResult> Index(string find)
-        {
-            indexAction.Controller = this;
-            indexAction.Logger = logger;
-            indexAction.Service = service;
-            return await indexAction.ActionResult(find);
-        }
+        public async Task<IActionResult> Index(string find) =>
+            await indexAction.ActionResult(this, find);
 
         /// <summary>
         /// HttpGet endpoint for product/details/{id}
@@ -106,14 +93,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="id">ID of product</param>
         /// <returns>Details view</returns>
         [HttpGet]
-        public async Task<IActionResult> DetailsAsync(int id)
-        {
-            detailsAction.Controller = this;
-            detailsAction.Logger = logger;
-            detailsAction.Mapper = mapper;
-            detailsAction.Service = service;
-            return await detailsAction.ActionResult(id);
-        }
+        public async Task<IActionResult> DetailsAsync(int id) =>
+            await detailsAction.ActionResult(this, id);
 
         /// <summary>
         /// HttpGet endpoint for product/create
@@ -129,14 +110,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <returns>Create view or redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(ProductCreateViewModel viewModel)
-        {
-            createAction.Controller = this;
-            createAction.Logger = logger;
-            createAction.Mapper = mapper;
-            createAction.Service = service;
-            return await createAction.ActionResult(viewModel, nameof(Index));
-        }
+        public async Task<IActionResult> CreateAsync(ProductCreateViewModel viewModel) =>
+            await createAction.ActionResult(this, viewModel);
 
         /// <summary>
         /// HttpGet endpoint for product/edit/{id}
@@ -144,14 +119,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <param name="id">ID of product</param>
         /// <returns>Edit view</returns>
         [HttpGet]
-        public async Task<IActionResult> EditAsync(int id)
-        {
-            editAction.Controller = this;
-            editAction.Logger = logger;
-            editAction.Service = service;
-            editAction.Mapper = mapper;
-            return await editAction.ActionResult(id);
-        }
+        public async Task<IActionResult> EditAsync(int id) =>
+            await editAction.ActionResult(this, id);
 
         /// <summary>
         /// HttpPost endpoint for product/edit/{form-data}
@@ -160,14 +129,8 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <returns>Edit view or redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(ProductEditViewModel viewModel)
-        {
-            editAction.Controller = this;
-            editAction.Logger = logger;
-            editAction.Service = service;
-            editAction.Mapper = mapper;
-            return await editAction.ActionResult(viewModel.Id, viewModel, "Details");
-        }
+        public async Task<IActionResult> EditAsync(ProductEditViewModel viewModel) =>
+            await editAction.ActionResult(this, viewModel.Id, viewModel);
 
         /// <summary>
         /// HttpPost endpoint for product/delete/{id}
@@ -176,13 +139,7 @@ namespace ChocAn.DataCenterConsole.Controllers
         /// <returns>Redirects to Index view</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            deleteAction.Controller = this;
-            deleteAction.Logger = logger;
-            deleteAction.Service = service;
-            deleteAction.Mapper = mapper;
-            return await deleteAction.ActionResult(id, "Index", "Details");
-        }
+        public async Task<IActionResult> DCDeleteAsync(int id) =>
+            await deleteAction.ActionResult(this, id);
     }
 }

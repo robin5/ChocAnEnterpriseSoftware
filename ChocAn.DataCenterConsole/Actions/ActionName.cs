@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: ICreateAction.cs
+// * File: ActionName.cs
 // *
-// * Description: Defines the interface for the CreateAction.
+// * Description: Defines names of controller actions
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,19 +30,11 @@
 // * 
 // **********************************************************************************
 
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ChocAn.DataCenterConsole.Controllers;
-
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public interface ICreateAction<TResource, TModel, TViewModel>
-        where TResource : class
-        where TModel : class
-        where TViewModel : class
+    public static class ActionName
     {
-        public Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller,
-            TViewModel viewModel);
+        public const string Index = "Index";
+        public const string Details = "Details";
     }
 }

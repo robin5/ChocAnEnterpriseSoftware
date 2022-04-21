@@ -39,6 +39,7 @@ using Microsoft.Extensions.Logging;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.Services;
 using System.Net;
+using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
@@ -56,10 +57,9 @@ namespace ChocAn.DataCenterConsole.Actions
         #endregion
 
         public const string MemberErrorMessage = "Error while processing request for api/member/{id}";
-        public Controller Controller { get; set; }
-        public ILogger<Controller> Logger { get; set; }
-        public IService<TResource, TModel> Service { get; set; }
-        public async Task<IActionResult> ActionResult(string find)
+        public async Task<IActionResult> ActionResult(
+            DataCenterController<TResource, TModel> controller,
+            string find)
         {
             List<TModel> items = new();
 
@@ -70,7 +70,7 @@ namespace ChocAn.DataCenterConsole.Actions
                 // Short circuit test for default index view with nothing in the find box
                 if (string.IsNullOrWhiteSpace(find))
                 {
-                    return Controller.View(new TViewModel
+                    return controller.View(new TViewModel
                     {
                         Find = "",
                         Items = items
@@ -80,7 +80,7 @@ namespace ChocAn.DataCenterConsole.Actions
                 // Parse find for a model id or name
                 if (int.TryParse(find, out int id))
                 {
-                    var (success, model, errorMessage) = await Service.GetAsync(id);
+                    var (success, model, errorMessage) = await controller.Service.GetAsync(id);
                     if (success)
                     {
                         if (model != null)
@@ -91,12 +91,12 @@ namespace ChocAn.DataCenterConsole.Actions
                     else
                     {
                         error = errorMessage;
-                        Logger?.LogError(LogErrorTemplate, error);
+                        controller.Logger?.LogError(LogErrorTemplate, error);
                     }
                 }
                 else
                 {
-                    var (success, models, errorMessage) = await Service
+                    var (success, models, errorMessage) = await controller.Service
                         .AddSearch($"name eq {find}")
                         .OrderBy("name")
                         .Paginate(0, 25)
@@ -112,20 +112,20 @@ namespace ChocAn.DataCenterConsole.Actions
                     else
                     {
                         error = errorMessage;
-                        Logger?.LogError(LogErrorTemplate, error);
+                        controller.Logger?.LogError(LogErrorTemplate, error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Logger?.LogError(LogExceptionTemplate, ex);
+                controller.Logger?.LogError(LogExceptionTemplate, ex);
                 error = ex.Message;
             }
 
             if (null != error)
-                Controller.ModelState.AddModelError("Error", error);
+                controller.ModelState.AddModelError("Error", error);
 
-            return Controller.View(new TViewModel
+            return controller.View(new TViewModel
             {
                 Find = find,
                 Items = items

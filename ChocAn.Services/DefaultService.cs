@@ -155,7 +155,7 @@ namespace ChocAn.Services
         /// </summary>
         /// <param name="entity">Entity to create</param>
         /// <returns>TResource representing created entity</returns>
-        public async virtual Task<(bool isSuccess, TResource? result, string? errorMessage)> CreateAsync(TResource entity)
+        public async virtual Task<(bool isSuccess, TModel? result, string? errorMessage)> CreateAsync(TResource entity)
         {
             using var client = httpClientFactory.CreateClient(httpClientName);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -168,7 +168,7 @@ namespace ChocAn.Services
             {
                 var bytes = await response.Content.ReadAsByteArrayAsync();
                 var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                var result = JsonSerializer.Deserialize<TResource>(bytes, options);
+                var result = JsonSerializer.Deserialize<TModel>(bytes, options);
                 return (true, result, null);
             }
 
