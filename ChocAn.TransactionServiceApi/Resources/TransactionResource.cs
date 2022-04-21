@@ -39,11 +39,18 @@ namespace ChocAn.TransactionServiceApi.Resources
     /// </summary>
     public class TransactionResource
     {
+        [Range(1, 999999999, ErrorMessage = "Value out of range")]
         public int ProviderId { get; init; }
+
+        [Range(1, 999999999, ErrorMessage = "Value out of range")]
         public int MemberId { get; init; }
+
+        [Range(1, 999999, ErrorMessage = "Value out of range")]
         public int ProductId { get; init; }
-        public decimal ProductCost { get; init; }
+
         public DateTime ServiceDate { get; init; }
+
+        [MaxLength(100, ErrorMessage = "Value out of range")]
         public string? ServiceComment { get; init; }
         public DateTime Created { get; init; }
     }

@@ -97,7 +97,8 @@ builder.Services.AddScoped<IService<ProductResource, Product>, DefaultProductSer
 // Define dependencies for ITransactionService
 // -------------------------------------------
 
-builder.Services.AddHttpClient<IService<TransactionResource, Transaction>, DefaultTransactionService>(DefaultTransactionService.HttpClientName, client =>
+builder.Services.AddHttpClient<IService<TransactionResource, Transaction>, DefaultTransactionService>(
+    DefaultTransactionService.HttpClientName, client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.TransactionServiceApi"]);
     //client.DefaultRequestHeaders
@@ -109,6 +110,7 @@ builder.Services.AddHttpClient<IService<TransactionResource, Transaction>, Defau
 builder.Services.AddScoped<IService<TransactionResource, Transaction>, DefaultTransactionService>();
 
 // Add API versioning services
+
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -118,19 +120,19 @@ builder.Services.AddApiVersioning(options =>
     options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
 });
 
-// Add Cross site
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowTesting", policy => policy
-//    .AllowAnyOrigin()
-//    .AllowAnyMethod()
-//    .AllowAnyHeader());
+//Add Cross site
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowTesting", policy => policy
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
-//    options.AddPolicy("AllowProviderTerminal", policy => policy
-//    .WithOrigins("https://localhost:44380")
-//    .AllowAnyMethod()
-//    .AllowAnyHeader());
-//});
+options.AddPolicy("AllowProviderTerminal", policy => policy
+.WithOrigins("https://localhost:44380")
+.AllowAnyMethod()
+.AllowAnyHeader());
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -142,10 +144,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+    //app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
-    //app.UseCors("AllowTesting");
+    app.UseCors("AllowTesting");
 }
 
 app.UseHttpsRedirection();

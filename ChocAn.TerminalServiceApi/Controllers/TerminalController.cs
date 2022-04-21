@@ -30,16 +30,17 @@
 // * 
 // **********************************************************************************
 
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ChocAn.TransactionRepository;
-using ChocAn.Services;
-using ChocAn.TerminalServiceApi.Resources;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using ChocAn.TransactionRepository;
 using ChocAn.MemberRepository;
 using ChocAn.ProviderRepository;
 using ChocAn.ProductRepository;
+using ChocAn.TransactionServiceApi.Resources;
+using ChocAn.MemberServiceApi.Resources;
+using ChocAn.ProviderServiceApi.Resources;
+using ChocAn.ProductServiceApi.Resources;
+using ChocAn.Services;
 
 namespace ChocAn.TerminalServiceApi.Controllers
 {
@@ -122,7 +123,6 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     else
                         return Ok(new MemberResource
                         {
-                            Id = id,
                             Status = member.Status
                         });
                 }
@@ -159,7 +159,6 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     else
                         return Ok(new ProviderResource
                         {
-                            Id = provider.Id,
                             Name = provider.Name
                         });
                 }
@@ -197,7 +196,6 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     else
                         return Ok(new ProductResource
                         {
-                            Id = product.Id,
                             Name = product.Name,
                             Cost = product.Cost
                         });
