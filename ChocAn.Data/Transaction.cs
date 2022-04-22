@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: MemberResource.cs
+// * File: Transaction.cs
 // *
-// * Description: Defines an resource which describes a ChocAn member
+// * Description: Defines an entity which describes a ChocAn transaction
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,35 +30,33 @@
 // * 
 // **********************************************************************************
 
-using System.ComponentModel.DataAnnotations;
+using ChocAn.Repository.Sorting;
+using ChocAn.Repository.Search;
 
-namespace ChocAn.MemberServiceApi.Resources
+namespace ChocAn.Data
 {
     /// <summary>
-    /// Represents a resource designating a ChocAn member
+    /// Represents a  transaction between a ChocAn member and a ChocAn provider
     /// </summary>
-    public class MemberResource
+    public class Transaction
     {
-        [Required]
-        [MaxLength(25)]
-        public string Name { get; set; } = string.Empty;
-        [Required]
-        [MaxLength(256)]
-        public string Email { get; set; } = string.Empty;
-        [Required]
-        [MaxLength(25)]
-        public string StreetAddress { get; set; } = string.Empty;
-        [Required]
-        [MaxLength(14)]
-        public string City { get; set; } = string.Empty;
-        [Required]
-        [MaxLength(2)]
-        public string State { get; set; } = string.Empty;
-        [Required]
-        [Range(0, 99999)]
-        public int ZipCode { get; set; }
-        [Required]
-        [MaxLength(14)]
-        public string Status { get; set; } = string.Empty;
+        public int Id { get; set; }
+        [Sortable]
+        [Searchable]
+        public int ProviderId { get; set; }
+        [Sortable]
+        [Searchable]
+        public int MemberId { get; set; }
+        [Sortable]
+        [Searchable]
+        public int ProductId { get; set; }
+        public decimal ProductCost { get; set; }
+        [Sortable]
+        [Searchable]
+        public DateTime ServiceDate { get; set; }
+        public string ServiceComment { get; set; }
+        [Sortable(Default = true)]
+        [Searchable]
+        public DateTime Created { get; set; }
     }
 }

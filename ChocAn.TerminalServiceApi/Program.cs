@@ -33,17 +33,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using ChocAn.Data;
-using ChocAn.TerminalServiceApi.Filters;
 using ChocAn.Services;
 using ChocAn.Services.DefaultMemberService;
 using ChocAn.Services.DefaultProviderService;
 using ChocAn.Services.DefaultProductService;
 using ChocAn.Services.DefaultTransactionService;
-using ChocAn.TransactionRepository;
-using ChocAn.MemberServiceApi.Resources;
-using ChocAn.ProviderServiceApi.Resources;
-using ChocAn.ProductServiceApi.Resources;
-using ChocAn.TransactionServiceApi.Resources;
+using ChocAn.TerminalServiceApi.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,43 +52,43 @@ builder.Services.AddMvc(options =>
 // Define dependencies for IMemberService
 // --------------------------------------
 
-builder.Services.AddHttpClient<IService<MemberResource, Member>, DefaultMemberService>(
+builder.Services.AddHttpClient<IService<Member>, DefaultMemberService>(
     DefaultMemberService.HttpClientName, client =>
     {
         client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.MemberServiceApi"]);
     }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
-builder.Services.AddScoped<IService<MemberResource, Member>, DefaultMemberService>();
+builder.Services.AddScoped<IService<Member>, DefaultMemberService>();
 
 // ----------------------------------------
 // Define dependencies for IProviderService
 // ----------------------------------------
 
-builder.Services.AddHttpClient<IService<ProviderResource, Provider>, DefaultProviderService>(
+builder.Services.AddHttpClient<IService<Provider>, DefaultProviderService>(
     DefaultProviderService.HttpClientName, client =>
     {
         client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.ProviderServiceApi"]);
     }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
-builder.Services.AddScoped<IService<ProviderResource, Provider>, DefaultProviderService>();
+builder.Services.AddScoped<IService<Provider>, DefaultProviderService>();
 
 // ---------------------------------------
 // Define dependencies for IProductService
 // ---------------------------------------
 
-builder.Services.AddHttpClient<IService<ProductResource, Product>, DefaultProductService>(
+builder.Services.AddHttpClient<IService<Product>, DefaultProductService>(
     DefaultProductService.HttpClientName, client =>
     {
         client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.ProductServiceApi"]);
     }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
-builder.Services.AddScoped<IService<ProductResource, Product>, DefaultProductService>();
+builder.Services.AddScoped<IService<Product>, DefaultProductService>();
 
 // -------------------------------------------
 // Define dependencies for ITransactionService
 // -------------------------------------------
 
-builder.Services.AddHttpClient<IService<TransactionResource, Transaction>, DefaultTransactionService>(
+builder.Services.AddHttpClient<IService<Transaction>, DefaultTransactionService>(
     DefaultTransactionService.HttpClientName, client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Services:ChocAn.TransactionServiceApi"]);
@@ -103,7 +98,7 @@ builder.Services.AddHttpClient<IService<TransactionResource, Transaction>, Defau
 
 }).SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
-builder.Services.AddScoped<IService<TransactionResource, Transaction>, DefaultTransactionService>();
+builder.Services.AddScoped<IService<Transaction>, DefaultTransactionService>();
 
 // Add API versioning services
 

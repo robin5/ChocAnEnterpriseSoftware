@@ -33,12 +33,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ChocAn.Data;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
-using ChocAn.Data;
-using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.ProductServiceApi.Controllers
 {
@@ -86,10 +85,11 @@ namespace ChocAn.ProductServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAllAsync));
+                logger?.LogError(ex, nameof(GetAllAsync));
                 return Problem();
             }
         }
+        
         /// <summary>
         /// Retrieves an individual product from the Product repository.
         /// </summary>
@@ -112,7 +112,7 @@ namespace ChocAn.ProductServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAsync));
+                logger?.LogError(ex, nameof(GetAsync));
                 return Problem();
             }
         }
@@ -120,55 +120,64 @@ namespace ChocAn.ProductServiceApi.Controllers
         /// <summary>
         /// Inserts a new product into the Product repository.
         /// </summary>
-        /// <param name="resource"></param>
+        /// <param name="product"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] ProductResource resource)
+        public async Task<IActionResult> PostAsync([FromBody] Product product)
         {
             try
             {
-                var product = await repository.AddAsync(new Product()
+                // Verify product's ID = 0 to enforce good behavior
+                if (product.Id != 0)
+                    return BadRequest();
+
+                var result = await repository.AddAsync(new Product()
                 {
-                    Id = 0,
-                    Name = resource.Name,
-                    Cost = resource.Cost,
+                    Name = product.Name,
+                    Cost = product.Cost,
                 });
-                return Created("", product);
+
+                if (null == result)
+                    return BadRequest();
+
+                return Created("", result);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PostAsync));
+                logger?.LogError(ex, nameof(PostAsync));
                 return Problem();
             }
         }
-
 
         /// <summary>
         /// Updates a product in the Product repository.
         /// </summary>
         /// <param name="id">Product's identification number</param>
-        /// <param name="resource">Product updates</param>
+        /// <param name="product">Product updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] ProductResource resource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] Product product)
         {
             try
             {
-                var product = new Product()
-                {
-                    Id = id,
-                    Name = resource.Name,
-                    Cost = resource.Cost
-                };
+                // Verify product's ID and the ID of the endpoint are the same
+                if (product.Id != id)
+                    return BadRequest();
 
-                var numChanged = await repository.UpdateAsync(product);
+                var numChanged = await repository.UpdateAsync(new Product
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Cost = product.Cost
+                });
+
                 if (numChanged > 0)
                     return Ok();
                 else
@@ -176,12 +185,12 @@ namespace ChocAn.ProductServiceApi.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                logger.LogError(ex, nameof(PutAsync));
+                logger?.LogError(ex, nameof(PutAsync));
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PutAsync));
+                logger?.LogError(ex, nameof(PutAsync));
                 return Problem();
             }
         }
@@ -208,7 +217,7 @@ namespace ChocAn.ProductServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(DeleteAsync));
+                logger?.LogError(ex, nameof(DeleteAsync));
                 return Problem();
             }
         }

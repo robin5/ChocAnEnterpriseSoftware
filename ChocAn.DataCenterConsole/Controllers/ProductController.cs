@@ -38,17 +38,16 @@ using ChocAn.Data;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Services;
-using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
-    public class ProductController : DataCenterController<ProductResource, Product>
+    public class ProductController : DataCenterController<Product>
     {
-        private readonly IIndexAction<ProductResource, Product> indexAction;
-        private readonly IDetailsAction<ProductResource, Product> detailsAction;
-        private readonly ICreateAction<ProductResource, Product, ProductCreateViewModel> createAction;
-        private readonly IEditAction<ProductResource, Product, ProductEditViewModel> editAction;
-        private readonly IDeleteAction<ProductResource, Product> deleteAction;
+        private readonly IIndexAction<Product> indexAction;
+        private readonly IDetailsAction<Product> detailsAction;
+        private readonly ICreateAction<Product, ProductCreateViewModel> createAction;
+        private readonly IEditAction<Product, ProductEditViewModel> editAction;
+        private readonly IDeleteAction<Product> deleteAction;
 
         /// <summary>
         /// Constructor for ProductController
@@ -64,12 +63,12 @@ namespace ChocAn.DataCenterConsole.Controllers
         public ProductController(
             ILogger<ProductController> logger,
             IMapper mapper,
-            IService<ProductResource, Product> service,
-            IIndexAction<ProductResource, Product> indexAction,
-            IDetailsAction<ProductResource, Product> detailsAction,
-            ICreateAction<ProductResource, Product, ProductCreateViewModel> createAction,
-            IEditAction<ProductResource, Product, ProductEditViewModel> editAction,
-            IDeleteAction<ProductResource, Product> deleteAction)
+            IService<Product> service,
+            IIndexAction<Product> indexAction,
+            IDetailsAction<Product> detailsAction,
+            ICreateAction<Product, ProductCreateViewModel> createAction,
+            IEditAction<Product, ProductEditViewModel> editAction,
+            IDeleteAction<Product> deleteAction)
             : base(logger, mapper, service)
         {
             this.indexAction = indexAction;

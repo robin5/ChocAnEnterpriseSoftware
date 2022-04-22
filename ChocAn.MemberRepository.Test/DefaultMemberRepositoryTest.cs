@@ -52,6 +52,7 @@ namespace ChocAn.MemberRepository.Test
 
         private const int VALID0_ID = 999999999;
         private const string VALID0_NAME = "1234567890123456789012345";
+        private const string VALID0_EMAIL = "tester0@chocan.com";
         private const string VALID0_ADDRESS = "1234567890123456789012345";
         private const string VALID0_CITY = "12345678901234";
         private const string VALID0_STATE = "12";
@@ -60,6 +61,7 @@ namespace ChocAn.MemberRepository.Test
 
         private const int VALID1_ID = 20;
         private const string VALID1_NAME = "Name 1";
+        private const string VALID1_EMAIL = "tester1@chocan.com";
         private const string VALID1_ADDRESS = "Address 1";
         private const string VALID1_CITY = "City 1";
         private const string VALID1_STATE = "WA";
@@ -68,6 +70,7 @@ namespace ChocAn.MemberRepository.Test
 
         private const int VALID2_ID = 30;
         private const string VALID2_NAME = "Name 2";
+        private const string VALID2_EMAIL = "tester2@chocan.com";
         private const string VALID2_ADDRESS = "Address 2";
         private const string VALID2_CITY = "City 2";
         private const string VALID2_STATE = "OR";
@@ -75,6 +78,7 @@ namespace ChocAn.MemberRepository.Test
         private const string VALID2_STATUS = "Status 2";
 
         private const string VALID_UPDATE_NAME = "1234567890";
+        private const string VALID_UPDATE_EMAIL = "update@chocan.com";
         private const string VALID_UPDATE_ADDRESS = "1234567890123";
         private const string VALID_UPDATE_CITY = "1232345";
         private const string VALID_UPDATE_STATE = "CA";
@@ -108,6 +112,7 @@ namespace ChocAn.MemberRepository.Test
             {
                 Id = VALID0_ID,
                 Name = VALID0_NAME,
+                Email = VALID0_EMAIL,
                 StreetAddress = VALID0_ADDRESS,
                 City = VALID0_CITY,
                 State = VALID0_STATE,
@@ -132,6 +137,7 @@ namespace ChocAn.MemberRepository.Test
             {
                 Id = VALID0_ID,
                 Name = VALID0_NAME,
+                Email = VALID0_EMAIL,
                 StreetAddress = VALID0_ADDRESS,
                 City = VALID0_CITY,
                 State = VALID0_STATE,
@@ -142,6 +148,7 @@ namespace ChocAn.MemberRepository.Test
             {
                 Id = VALID1_ID,
                 Name = VALID1_NAME,
+                Email = VALID1_EMAIL,
                 StreetAddress = VALID1_ADDRESS,
                 City = VALID1_CITY,
                 State = VALID1_STATE,
@@ -152,6 +159,7 @@ namespace ChocAn.MemberRepository.Test
             {
                 Id = VALID2_ID,
                 Name = VALID2_NAME,
+                Email = VALID2_EMAIL,
                 StreetAddress = VALID2_ADDRESS,
                 City = VALID2_CITY,
                 State = VALID2_STATE,
@@ -173,6 +181,7 @@ namespace ChocAn.MemberRepository.Test
             {
                 Id = VALID0_ID,
                 Name = VALID0_NAME,
+                Email = VALID0_EMAIL,
                 StreetAddress = VALID0_ADDRESS,
                 City = VALID0_CITY,
                 State = VALID0_STATE,
@@ -195,6 +204,7 @@ namespace ChocAn.MemberRepository.Test
                 Assert.NotNull(result);
                 Assert.Equal(VALID0_ID, result.Id);
                 Assert.Equal(VALID0_NAME, result.Name);
+                Assert.Equal(VALID0_EMAIL, result.Email);
                 Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
                 Assert.Equal(VALID0_CITY, result.City);
                 Assert.Equal(VALID0_STATE, result.State);
@@ -222,6 +232,7 @@ namespace ChocAn.MemberRepository.Test
             Assert.NotNull(result);
             Assert.Equal(VALID0_ID, result.Id);
             Assert.Equal(VALID0_NAME, result.Name);
+            Assert.Equal(VALID0_EMAIL, result.Email);
             Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
             Assert.Equal(VALID0_CITY, result.City);
             Assert.Equal(VALID0_STATE, result.State);
@@ -262,6 +273,7 @@ namespace ChocAn.MemberRepository.Test
             {
                 Id = VALID0_ID,
                 Name = VALID_UPDATE_NAME,
+                Email = VALID_UPDATE_EMAIL,
                 StreetAddress = VALID_UPDATE_ADDRESS,
                 City = VALID_UPDATE_CITY,
                 State = VALID_UPDATE_STATE,
@@ -283,6 +295,7 @@ namespace ChocAn.MemberRepository.Test
             Assert.NotNull(member);
             Assert.Equal(VALID0_ID, member.Id);
             Assert.Equal(VALID_UPDATE_NAME, member.Name);
+            Assert.Equal(VALID_UPDATE_EMAIL, member.Email);
             Assert.Equal(VALID_UPDATE_ADDRESS, member.StreetAddress);
             Assert.Equal(VALID_UPDATE_CITY, member.City);
             Assert.Equal(VALID_UPDATE_STATE, member.State);
@@ -309,6 +322,7 @@ namespace ChocAn.MemberRepository.Test
             Assert.NotNull(result);
             Assert.Equal(VALID0_ID, result.Id);
             Assert.Equal(VALID0_NAME, result.Name);
+            Assert.Equal(VALID0_EMAIL, result.Email);
             Assert.Equal(VALID0_ADDRESS, result.StreetAddress);
             Assert.Equal(VALID0_CITY, result.City);
             Assert.Equal(VALID0_STATE, result.State);
@@ -345,6 +359,7 @@ namespace ChocAn.MemberRepository.Test
                 if (VALID0_ID == member.Id)
                 {
                     Assert.Equal(VALID0_NAME, member.Name);
+                    Assert.Equal(VALID0_EMAIL, member.Email);
                     Assert.Equal(VALID0_ADDRESS, member.StreetAddress);
                     Assert.Equal(VALID0_CITY, member.City);
                     Assert.Equal(VALID0_STATE, member.State);
@@ -355,6 +370,7 @@ namespace ChocAn.MemberRepository.Test
                 else if (VALID1_ID == member.Id)
                 {
                     Assert.Equal(VALID1_NAME, member.Name);
+                    Assert.Equal(VALID1_EMAIL, member.Email);
                     Assert.Equal(VALID1_ADDRESS, member.StreetAddress);
                     Assert.Equal(VALID1_CITY, member.City);
                     Assert.Equal(VALID1_STATE, member.State);
@@ -365,6 +381,7 @@ namespace ChocAn.MemberRepository.Test
                 else if (VALID2_ID == member.Id)
                 {
                     Assert.Equal(VALID2_NAME, member.Name);
+                    Assert.Equal(VALID2_EMAIL, member.Email);
                     Assert.Equal(VALID2_ADDRESS, member.StreetAddress);
                     Assert.Equal(VALID2_CITY, member.City);
                     Assert.Equal(VALID2_STATE, member.State);

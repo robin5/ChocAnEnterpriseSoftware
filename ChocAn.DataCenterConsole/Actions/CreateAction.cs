@@ -41,16 +41,15 @@ using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class CreateAction<TResource, TModel, TViewModel> : ICreateAction<TResource, TModel, TViewModel>
-        where TResource : class
+    public class CreateAction<TModel, TViewModel> : ICreateAction<TModel, TViewModel>
         where TModel : class
         where TViewModel : class, new()
     {
-        public const string ExceptionMessage = $"Exception while processing request for {nameof(TResource)}";
+        public const string ExceptionMessage = $"Exception while processing request for {nameof(TModel)}";
         public const string ErrorMessage = "Error while processing request for {nameof(TModel)}: {errorMesage}";
         public const string NotCreatedMessage = $"Item not created. Service not available.";
         public async Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller,
+            DataCenterController<TModel> controller,
             TViewModel viewModel)
         {
             try
@@ -61,11 +60,11 @@ namespace ChocAn.DataCenterConsole.Actions
                     return controller.View(viewModel);
                 }
 
-                var resource = controller.Mapper.Map<TResource>(viewModel);
+                var model = controller.Mapper.Map<TModel>(viewModel);
 
-                var (success, model, error) = await controller.Service.CreateAsync(resource);
+                var (success, result, error) = await controller.Service.CreateAsync(model);
 
-                var id = GetId(model);
+                var id = GetId(result);
 
                 if (success)
                 {

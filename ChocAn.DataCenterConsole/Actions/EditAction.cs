@@ -41,8 +41,7 @@ using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class EditAction<TResource, TModel, TViewModel> : IEditAction<TResource, TModel, TViewModel>
-        where TResource : class
+    public class EditAction<TModel, TViewModel> : IEditAction<TModel, TViewModel>
         where TModel : class
         where TViewModel : class, new()
     {
@@ -50,7 +49,7 @@ namespace ChocAn.DataCenterConsole.Actions
         private const string LogErrorTemplate = "EditAction: {error}";
         private const string NotFoundMessage = $"Item not found";
         public async Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller,
+            DataCenterController<TModel> controller,
             int id)
         {
             string error;
@@ -96,7 +95,7 @@ namespace ChocAn.DataCenterConsole.Actions
             return controller.View();
         }
         public async Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller,
+            DataCenterController<TModel> controller,
             int id, 
             TViewModel viewModel)
         {
@@ -110,9 +109,9 @@ namespace ChocAn.DataCenterConsole.Actions
                     return controller.View(viewModel);
                 }
 
-                var resource = controller.Mapper.Map<TResource>(viewModel);
+                var model = controller.Mapper.Map<TModel>(viewModel);
 
-                var (success, errorMessage) = await controller.Service.UpdateAsync(id, resource);
+                var (success, errorMessage) = await controller.Service.UpdateAsync(id, model);
                 if (success)
                 {
                     // TODO: Once an ID can be returned, Redirect to details page

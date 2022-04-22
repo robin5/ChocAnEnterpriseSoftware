@@ -31,11 +31,10 @@
 // **********************************************************************************
 
 using ChocAn.Data;
-using ChocAn.MemberServiceApi.Resources;
 
 namespace ChocAn.Services.DefaultMemberService
 {
-    public class DefaultMemberService : DefaultService<MemberResource, Member>
+    public class DefaultMemberService : DefaultService<Member>
     {
         public const string HttpClientName = Services.HttpClientName.MemberService;
         public const string Url = ServiceUrl.MemberService;

@@ -6,15 +6,14 @@ using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class DeleteAction<TResource, TModel> : IDeleteAction<TResource, TModel>
-        where TResource : class
+    public class DeleteAction<TModel> : IDeleteAction< TModel>
         where TModel : class
     {
         private const string LogExceptionTemplate = "DeleteAction: {ex}";
         private const string LogErrorTemplate = "DetailsAction: {error}";
         private const string NotFoundMessage = $"Item not found";
         public async Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller,
+            DataCenterController<TModel> controller,
             int id)
         {
             string error;

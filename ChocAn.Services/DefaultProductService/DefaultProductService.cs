@@ -31,11 +31,10 @@
 // **********************************************************************************
 
 using ChocAn.Data;
-using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.Services.DefaultProductService
 {
-    public class DefaultProductService : DefaultService<ProductResource, Product>
+    public class DefaultProductService : DefaultService<Product>
     {
         public const string HttpClientName = Services.HttpClientName.ProductService;
         public const string Url = ServiceUrl.ProductService;

@@ -34,6 +34,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using ChocAn.Data;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;

@@ -33,9 +33,6 @@
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.Data;
 using AutoMapper;
-using ChocAn.MemberServiceApi.Resources;
-using ChocAn.ProviderServiceApi.Resources;
-using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole.Infrastructure
 {
@@ -44,9 +41,9 @@ namespace ChocAn.DataCenterConsole.Infrastructure
         public MappingProfile()
         {
             // CreateAction mapping from TViewModel to TResource
-            CreateMap<MemberCreateViewModel, MemberResource>();
-            CreateMap<ProviderCreateViewModel, ProviderResource>();
-            CreateMap<ProductCreateViewModel, ProductResource>();
+            CreateMap<MemberCreateViewModel, Member>();
+            CreateMap<ProviderCreateViewModel, Provider>();
+            CreateMap<ProductCreateViewModel, Product>();
 
             // DetailsAction mapping from TModel to TViewModel
             CreateMap<Member, MemberDetailsViewModel>();
@@ -59,9 +56,9 @@ namespace ChocAn.DataCenterConsole.Infrastructure
             CreateMap<Product, ProductEditViewModel>();
 
             // EditAction mapping from TViewModel to TResource [Update]
-            CreateMap<MemberEditViewModel, MemberResource>();
-            CreateMap<ProviderEditViewModel, ProviderResource>();
-            CreateMap<ProductEditViewModel, ProductResource>();
+            CreateMap<MemberEditViewModel, Member>();
+            CreateMap<ProviderEditViewModel, Provider>();
+            CreateMap<ProductEditViewModel, Product>();
         }
     }
 }

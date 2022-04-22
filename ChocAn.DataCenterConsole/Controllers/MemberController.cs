@@ -38,17 +38,16 @@ using ChocAn.Data;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Services;
-using ChocAn.MemberServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
-    public class MemberController : DataCenterController<MemberResource, Member>
+    public class MemberController : DataCenterController<Member>
     {
-        private readonly IIndexAction<MemberResource, Member> indexAction;
-        private readonly IDetailsAction<MemberResource, Member> detailsAction;
-        private readonly ICreateAction<MemberResource, Member, MemberCreateViewModel> createAction;
-        private readonly IEditAction<MemberResource, Member, MemberEditViewModel> editAction;
-        private readonly IDeleteAction<MemberResource, Member> deleteAction;
+        private readonly IIndexAction<Member> indexAction;
+        private readonly IDetailsAction<Member> detailsAction;
+        private readonly ICreateAction<Member, MemberCreateViewModel> createAction;
+        private readonly IEditAction<Member, MemberEditViewModel> editAction;
+        private readonly IDeleteAction<Member> deleteAction;
 
         /// <summary>
         /// Constructor for MemberController
@@ -64,12 +63,12 @@ namespace ChocAn.DataCenterConsole.Controllers
         public MemberController(
             ILogger<MemberController> logger,
             IMapper mapper,
-            IService<MemberResource, Member> service,
-            IIndexAction<MemberResource, Member> indexAction,
-            IDetailsAction<MemberResource, Member> detailsAction,
-            ICreateAction<MemberResource, Member, MemberCreateViewModel> createAction,
-            IEditAction<MemberResource, Member, MemberEditViewModel> editAction,
-            IDeleteAction<MemberResource, Member> deleteAction)
+            IService<Member> service,
+            IIndexAction<Member> indexAction,
+            IDetailsAction<Member> detailsAction,
+            ICreateAction<Member, MemberCreateViewModel> createAction,
+            IEditAction<Member, MemberEditViewModel> editAction,
+            IDeleteAction<Member> deleteAction)
             : base(logger, mapper, service)
         {
             this.indexAction = indexAction;

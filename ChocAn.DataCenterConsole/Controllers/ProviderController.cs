@@ -38,17 +38,16 @@ using ChocAn.Data;
 using ChocAn.DataCenterConsole.Models;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.Services;
-using ChocAn.ProviderServiceApi.Resources;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
-    public class ProviderController : DataCenterController<ProviderResource, Provider>
+    public class ProviderController : DataCenterController<Provider>
     {
-        private readonly IIndexAction<ProviderResource, Provider> indexAction;
-        private readonly IDetailsAction<ProviderResource, Provider> detailsAction;
-        private readonly ICreateAction<ProviderResource, Provider, ProviderCreateViewModel> createAction;
-        private readonly IEditAction<ProviderResource, Provider, ProviderEditViewModel> editAction;
-        private readonly IDeleteAction<ProviderResource, Provider> deleteAction;
+        private readonly IIndexAction<Provider> indexAction;
+        private readonly IDetailsAction<Provider> detailsAction;
+        private readonly ICreateAction<Provider, ProviderCreateViewModel> createAction;
+        private readonly IEditAction<Provider, ProviderEditViewModel> editAction;
+        private readonly IDeleteAction<Provider> deleteAction;
 
         /// <summary>
         /// Constructor for ProviderController
@@ -64,12 +63,12 @@ namespace ChocAn.DataCenterConsole.Controllers
         public ProviderController(
             ILogger<ProviderController> logger,
             IMapper mapper,
-            IService<ProviderResource, Provider> service,
-            IIndexAction<ProviderResource, Provider> indexAction,
-            IDetailsAction<ProviderResource, Provider> detailsAction,
-            ICreateAction<ProviderResource, Provider, ProviderCreateViewModel> createAction,
-            IEditAction<ProviderResource, Provider, ProviderEditViewModel> editAction,
-            IDeleteAction<ProviderResource, Provider> deleteAction)
+            IService<Provider> service,
+            IIndexAction<Provider> indexAction,
+            IDetailsAction<Provider> detailsAction,
+            ICreateAction<Provider, ProviderCreateViewModel> createAction,
+            IEditAction<Provider, ProviderEditViewModel> editAction,
+            IDeleteAction<Provider> deleteAction)
             : base(logger, mapper, service)
         {
             this.indexAction = indexAction;

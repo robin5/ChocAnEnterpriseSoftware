@@ -36,12 +36,11 @@ using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public interface IIndexAction<TResource, TModel>
-        where TResource : class
+    public interface IIndexAction<TModel>
         where TModel : class
     {
         public Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller,
+            DataCenterController<TModel> controller,
             string find);
     }
 }

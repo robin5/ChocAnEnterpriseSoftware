@@ -40,7 +40,6 @@ using Xunit;
 using ChocAn.Repository;
 using ChocAn.Data;
 using ChocAn.MemberServiceApi.Controllers;
-using ChocAn.MemberServiceApi.Resources;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.Repository.Paging;
 using Microsoft.Extensions.Options;
@@ -56,10 +55,11 @@ namespace ChocAn.MemberServiceApi.Test
         /// </summary>
         /// <param name="id">The value to set the Id property of the instantiated Member object</param>
         /// <returns></returns>
-        private static (MemberResource, Member) CreateResourceAndMember(int id = 1)
+        private static Member CreateResourceAndMember(int id = 1)
         {
-            var resource = new MemberResource()
+            return new Member()
             {
+                Id = id,
                 Name = $"Member{id}",
                 Email = $"member{id}@chocan.com",
                 StreetAddress = $"{id} Main Street",
@@ -67,41 +67,6 @@ namespace ChocAn.MemberServiceApi.Test
                 State = "WA",
                 ZipCode = 10000 + id,
                 Status = "active"
-            };
-
-            var member = new Member()
-            {
-                Id = id,
-                Name = new string(resource.Name),
-                Email = new string(resource.Email),
-                StreetAddress = new string(resource.StreetAddress),
-                City = new string(resource.City),
-                State = new string(resource.State),
-                ZipCode = resource.ZipCode,
-                Status = new string(resource.Status)
-            };
-
-            return (resource, member);
-        }
-
-        /// <summary>
-        /// Returns a member object created from the fields of the MemberResource parameter
-        /// The ID property of the returned Member object is set to 0
-        /// </summary>
-        /// <param name="resource"></param>
-        /// <returns></returns>
-        private static Member MemberFromResource(MemberResource resource)
-        {
-            return new Member()
-            {
-                Id = 0,
-                Name = resource.Name,
-                Email = resource.Email,
-                StreetAddress = resource.StreetAddress,
-                City = resource.City,
-                State = resource.State,
-                ZipCode = resource.ZipCode,
-                Status = resource.Status
             };
         }
 
@@ -146,9 +111,9 @@ namespace ChocAn.MemberServiceApi.Test
         public async Task ValidateGetAllAsync()
         {
             // Arrange
-            var (_, member1) = CreateResourceAndMember(1);
-            var (_, member2) = CreateResourceAndMember(2);
-            var (_, member3) = CreateResourceAndMember(3);
+            var member1 = CreateResourceAndMember(1);
+            var member2 = CreateResourceAndMember(2);
+            var member3 = CreateResourceAndMember(3);
 
             var generator = new MemberGenerator(
                 new List<Member> { member1, member2, member3 });
@@ -287,7 +252,7 @@ namespace ChocAn.MemberServiceApi.Test
         {
             // * Arrange *
 
-            var (_, member) = CreateResourceAndMember();
+            var member = CreateResourceAndMember();
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
@@ -415,8 +380,9 @@ namespace ChocAn.MemberServiceApi.Test
         public async Task ValidatePostAsync()
         {
             // * Arrange *
+            int dbGeneratedId = 37;
 
-            var (resource, member) = CreateResourceAndMember();
+            var member = CreateResourceAndMember(0);
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
@@ -425,7 +391,7 @@ namespace ChocAn.MemberServiceApi.Test
                 .Setup(repository => repository.AddAsync(It.IsAny<Member>()))
                 .Returns(Task.FromResult(new Member
                 {
-                    Id = member.Id,
+                    Id = dbGeneratedId,
                     Name = member.Name,
                     Email = member.Email,
                     StreetAddress = member.StreetAddress,
@@ -443,7 +409,7 @@ namespace ChocAn.MemberServiceApi.Test
             // * Act *
 
             var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
-            var result = await controller.PostAsync(resource);
+            var result = await controller.PostAsync(member);
 
             // * Assert *
 
@@ -451,13 +417,14 @@ namespace ChocAn.MemberServiceApi.Test
             mockRepository.Verify(repository => repository.AddAsync(It.IsAny<Member>()), Times.Once());
             mockRepository.Verify(repository => repository.AddAsync(It.Is<Member>(
                 m =>
-                m.Name == resource.Name &&
-                m.Email == resource.Email &&
-                m.StreetAddress == resource.StreetAddress &&
-                m.City == resource.City &&
-                m.State == resource.State &&
-                m.ZipCode == resource.ZipCode &&
-                m.Status == resource.Status
+                m.Id == member.Id &&
+                m.Name == member.Name &&
+                m.Email == member.Email &&
+                m.StreetAddress == member.StreetAddress &&
+                m.City == member.City &&
+                m.State == member.State &&
+                m.ZipCode == member.ZipCode &&
+                m.Status == member.Status
                 )));
 
             // 2) Verify controller returned a CreatedResult
@@ -467,7 +434,7 @@ namespace ChocAn.MemberServiceApi.Test
             // 3) Verify the returned resource is equivalent to the entered resource
             var value = Assert.IsType<Member>(createdResult.Value);
             Assert.NotNull(value);
-            Assert.Equal(member.Id, value.Id);
+            Assert.Equal(dbGeneratedId, value.Id);
             Assert.Equal(member.Name, value.Name);
             Assert.Equal(member.Email, value.Email);
             Assert.Equal(member.StreetAddress, value.StreetAddress);
@@ -488,7 +455,7 @@ namespace ChocAn.MemberServiceApi.Test
         {
             // * Arrange *
 
-            var (resource, _) = CreateResourceAndMember();
+            var member = CreateResourceAndMember(0);
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
@@ -505,7 +472,7 @@ namespace ChocAn.MemberServiceApi.Test
             // * Act *
 
             var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
-            var result = await controller.PostAsync(resource);
+            var result = await controller.PostAsync(member);
 
             // * Assert *
 
@@ -514,14 +481,14 @@ namespace ChocAn.MemberServiceApi.Test
             mockRepository.Verify(repository => repository.AddAsync(It.IsAny<Member>()), Times.Once());
             mockRepository.Verify(repository => repository.AddAsync(It.Is<Member>(
                 m =>
-                m.Id == 0 &&
-                m.Name == resource.Name &&
-                m.Email == resource.Email &&
-                m.StreetAddress == resource.StreetAddress &&
-                m.City == resource.City &&
-                m.State == resource.State &&
-                m.ZipCode == resource.ZipCode &&
-                m.Status == resource.Status
+                m.Id == member.Id &&
+                m.Name == member.Name &&
+                m.Email == member.Email &&
+                m.StreetAddress == member.StreetAddress &&
+                m.City == member.City &&
+                m.State == member.State &&
+                m.ZipCode == member.ZipCode &&
+                m.Status == member.Status
                 )));
 
             // 1) Verify controller returned an ObjectResult whose status code is 500
@@ -552,7 +519,7 @@ namespace ChocAn.MemberServiceApi.Test
         {
             // * Arrange *
 
-            var (resource, member) = CreateResourceAndMember();
+            var member = CreateResourceAndMember(37);
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
@@ -569,7 +536,7 @@ namespace ChocAn.MemberServiceApi.Test
             // * Act *
 
             var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
-            var result = await controller.PutAsync(member.Id, resource);
+            var result = await controller.PutAsync(member.Id, member);
 
             // * Assert *
 
@@ -603,7 +570,7 @@ namespace ChocAn.MemberServiceApi.Test
         {
             // * Arrange *
 
-            var (resource, member) = CreateResourceAndMember();
+            var member = CreateResourceAndMember(37);
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
@@ -620,7 +587,7 @@ namespace ChocAn.MemberServiceApi.Test
             // * Act *
 
             var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
-            var result = await controller.PutAsync(member.Id, resource);
+            var result = await controller.PutAsync(member.Id, member);
 
             // * Assert *
 
@@ -652,7 +619,7 @@ namespace ChocAn.MemberServiceApi.Test
         {
             // * Arrange *
 
-            var (resource, member) = CreateResourceAndMember();
+            var member = CreateResourceAndMember(37);
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
@@ -669,7 +636,7 @@ namespace ChocAn.MemberServiceApi.Test
             // * Act *
 
             var controller = new MemberController(mockLogger.Object, mockRepository.Object, mockDefaultPagingOptions.Object);
-            var result = await controller.PutAsync(member.Id, resource);
+            var result = await controller.PutAsync(member.Id, member);
 
             // * Assert *
 
@@ -704,7 +671,7 @@ namespace ChocAn.MemberServiceApi.Test
         {
             // * Arrange *
 
-            var (_, member) = CreateResourceAndMember();
+            var member = CreateResourceAndMember();
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 
@@ -749,7 +716,7 @@ namespace ChocAn.MemberServiceApi.Test
         {
             // * Arrange *
 
-            var (_, member) = CreateResourceAndMember();
+            var member = CreateResourceAndMember();
 
             var mockLogger = new Mock<ILogger<MemberController>>();
 

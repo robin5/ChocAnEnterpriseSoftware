@@ -38,7 +38,6 @@ using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
-using ChocAn.ProviderServiceApi.Resources;
 
 namespace ChocAn.ProviderServiceApi.Controllers
 {
@@ -86,10 +85,11 @@ namespace ChocAn.ProviderServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAllAsync));
+                logger?.LogError(ex, nameof(GetAllAsync));
                 return Problem();
             }
         }
+
         /// <summary>
         /// Retrieves an individual provider from the Provider repository.
         /// </summary>
@@ -112,7 +112,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAsync));
+                logger?.LogError(ex, nameof(GetAsync));
                 return Problem();
             }
         }
@@ -120,35 +120,41 @@ namespace ChocAn.ProviderServiceApi.Controllers
         /// <summary>
         /// Inserts a new provider into the Provider repository.
         /// </summary>
-        /// <param name="resource"></param>
+        /// <param name="provider"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] ProviderResource resource)
+        public async Task<IActionResult> PostAsync([FromBody] Provider provider)
         {
             try
             {
-                var provider = await repository.AddAsync(new Provider()
+                // Verify provider's ID = 0 to enforce good behavior
+                if (provider.Id != 0)
+                    return BadRequest();
+
+                var result = await repository.AddAsync(new Provider()
                 {
-                    Id = 0,
-                    Name = resource.Name,
-                    Email = resource.Email,
-                    StreetAddress = resource.StreetAddress,
-                    City = resource.City,
-                    State = resource.State,
-                    ZipCode = resource.ZipCode
+                    Name = provider.Name,
+                    Email = provider.Email,
+                    StreetAddress = provider.StreetAddress,
+                    City = provider.City,
+                    State = provider.State,
+                    ZipCode = provider.ZipCode
                 });
-                return Created("", provider);
+
+                if (null == result)
+                    return BadRequest();
+
+                return Created("", result);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PostAsync));
+                logger?.LogError(ex, nameof(PostAsync));
                 return Problem();
             }
         }
-
 
         /// <summary>
         /// Updates a provider in the Provider repository.
@@ -161,22 +167,25 @@ namespace ChocAn.ProviderServiceApi.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] ProviderResource resource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] Provider provider)
         {
             try
             {
-                var provider = new Provider()
-                {
-                    Id = id,
-                    Name = resource.Name,
-                    Email = resource.Email,
-                    StreetAddress = resource.StreetAddress,
-                    City = resource.City,
-                    State = resource.State,
-                    ZipCode = resource.ZipCode
-                };
+                // Verify provider's ID and the ID of the endpoint are the same
+                if (provider.Id != id)
+                    return BadRequest();
 
-                var numChanged = await repository.UpdateAsync(provider);
+                var numChanged = await repository.UpdateAsync(new Provider
+                {
+                    Id = provider.Id,
+                    Name = provider.Name,
+                    Email = provider.Email,
+                    StreetAddress = provider.StreetAddress,
+                    City = provider.City,
+                    State = provider.State,
+                    ZipCode = provider.ZipCode
+                });
+
                 if (numChanged > 0)
                     return Ok();
                 else
@@ -184,12 +193,12 @@ namespace ChocAn.ProviderServiceApi.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                logger.LogError(ex, nameof(PutAsync));
+                logger?.LogError(ex, nameof(PutAsync));
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PutAsync));
+                logger?.LogError(ex, nameof(PutAsync));
                 return Problem();
             }
         }
@@ -216,7 +225,7 @@ namespace ChocAn.ProviderServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(DeleteAsync));
+                logger?.LogError(ex, nameof(DeleteAsync));
                 return Problem();
             }
         }

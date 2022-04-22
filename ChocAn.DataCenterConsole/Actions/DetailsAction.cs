@@ -39,8 +39,7 @@ using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class DetailsAction<TResource, TModel, TViewModel> : IDetailsAction<TResource, TModel>
-        where TResource : class
+    public class DetailsAction<TModel, TViewModel> : IDetailsAction<TModel>
         where TModel : class
         where TViewModel : class, new()
     {
@@ -48,7 +47,7 @@ namespace ChocAn.DataCenterConsole.Actions
         private const string LogErrorTemplate = "DetailsAction: {error}";
         private const string NotFoundMessage = $"Item not found";
         public async Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller,
+            DataCenterController<TModel> controller,
             int id)
         {
             string error;

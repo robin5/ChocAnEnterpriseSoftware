@@ -38,8 +38,6 @@ using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
-using ChocAn.MemberRepository;
-using ChocAn.MemberServiceApi.Resources;
 
 namespace ChocAn.MemberServiceApi.Controllers
 {
@@ -87,7 +85,7 @@ namespace ChocAn.MemberServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAllAsync));
+                logger?.LogError(ex, nameof(GetAllAsync));
                 return Problem();
             }
         }
@@ -114,7 +112,7 @@ namespace ChocAn.MemberServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAsync));
+                logger?.LogError(ex, nameof(GetAsync));
                 return Problem();
             }
         }
@@ -122,31 +120,39 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// <summary>
         /// Inserts a new member into the Member repository.
         /// </summary>
-        /// <param name="resource"></param>
+        /// <param name="member"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost()]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] MemberResource resource)
+        public async Task<IActionResult> PostAsync([FromBody] Member member)
         {
             try
             {
-                var member = await repository.AddAsync(new Member()
+                // Verify member's ID = 0 to enforce good behavior
+                if (member.Id != 0)
+                    return BadRequest();
+
+                var result = await repository.AddAsync(new Member()
                 {
-                    Name = resource.Name,
-                    Email = resource.Email,
-                    StreetAddress = resource.StreetAddress,
-                    City = resource.City,
-                    State = resource.State,
-                    ZipCode = resource.ZipCode,
-                    Status = resource.Status
+                    Name = member.Name,
+                    Email = member.Email,
+                    StreetAddress = member.StreetAddress,
+                    City = member.City,
+                    State = member.State,
+                    ZipCode = member.ZipCode,
+                    Status = member.Status
                 });
-                return Created("", member);
+
+                if (null == result)
+                    return BadRequest();
+
+                return Created("", result);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PostAsync));
+                logger?.LogError(ex, nameof(PostAsync));
                 return Problem();
             }
         }
@@ -155,30 +161,33 @@ namespace ChocAn.MemberServiceApi.Controllers
         /// Updates a member in the Member repository.
         /// </summary>
         /// <param name="id">Member's identification number</param>
-        /// <param name="resource">Member updates</param>
+        /// <param name="member">Member updates</param>
         /// <returns>200 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] MemberResource resource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] Member member)
         {
             try
             {
-                var member = new Member()
-                {
-                    Id = id,
-                    Name = resource.Name,
-                    Email = resource.Email,
-                    StreetAddress = resource.StreetAddress,
-                    City = resource.City,
-                    State = resource.State,
-                    ZipCode = resource.ZipCode,
-                    Status = resource.Status
-                };
+                // Verify member's ID and the ID of the endpoint are the same
+                if (member.Id != id)
+                    return BadRequest();
 
-                var numChanged = await repository.UpdateAsync(member);
+                var numChanged = await repository.UpdateAsync(new Member
+                {
+                    Id = member.Id,
+                    Name = member.Name,
+                    Email = member.Email,
+                    StreetAddress = member.StreetAddress,
+                    City = member.City,
+                    State = member.State,
+                    ZipCode = member.ZipCode,
+                    Status = member.Status
+                });
+
                 if (numChanged > 0)
                     return Ok();
                 else
@@ -186,12 +195,12 @@ namespace ChocAn.MemberServiceApi.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                logger.LogError(ex, nameof(PutAsync));
+                logger?.LogError(ex, nameof(PutAsync));
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PutAsync));
+                logger?.LogError(ex, nameof(PutAsync));
                 return Problem();
             }
         }
@@ -218,7 +227,7 @@ namespace ChocAn.MemberServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(DeleteAsync));
+                logger?.LogError(ex, nameof(DeleteAsync));
                 return Problem();
             }
         }

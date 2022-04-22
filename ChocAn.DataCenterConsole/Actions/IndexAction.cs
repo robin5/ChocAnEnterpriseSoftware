@@ -37,14 +37,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ChocAn.DataCenterConsole.Models;
-using ChocAn.Services;
-using System.Net;
 using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public class IndexAction<TResource, TModel, TViewModel> : IIndexAction<TResource, TModel>
-        where TResource : class
+    public class IndexAction<TModel, TViewModel> : IIndexAction<TModel>
         where TModel : class
         where TViewModel : IndexViewModel<TModel>, new()
     {
@@ -58,7 +55,7 @@ namespace ChocAn.DataCenterConsole.Actions
 
         public const string MemberErrorMessage = "Error while processing request for api/member/{id}";
         public async Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller,
+            DataCenterController<TModel> controller,
             string find)
         {
             List<TModel> items = new();
