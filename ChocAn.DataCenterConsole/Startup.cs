@@ -30,24 +30,20 @@
 // * 
 // **********************************************************************************
 
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProductRepository;
+using ChocAn.Data;
+using ChocAn.Services;
+using ChocAn.Services.DefaultMemberService;
+using ChocAn.Services.DefaultProviderService;
+using ChocAn.Services.DefaultProductService;
 using ChocAn.DataCenterConsole.Infrastructure;
 using ChocAn.DataCenterConsole.Actions;
 using ChocAn.DataCenterConsole.Models;
-using ChocAn.Repository;
-using ChocAn.Services;
-using ChocAn.Services.DefaultMemberService;
-using System;
-using ChocAn.Services.DefaultProviderService;
-using ChocAn.Services.DefaultProductService;
 using ChocAn.MemberServiceApi.Resources;
 using ChocAn.ProviderServiceApi.Resources;
 using ChocAn.ProductServiceApi.Resources;
@@ -66,20 +62,6 @@ namespace ChocAn.DataCenterConsole
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /*
-            services.AddDbContextPool<MemberDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultDbConnection")));
-            services.AddScoped<IRepository<Member>, DefaultMemberRepository>();
-
-            services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultDbConnection")));
-            services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
-
-            services.AddDbContextPool<ProductDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultDbConnection")));
-            services.AddScoped<IRepository<Product>, DefaultProductRepository>();
-            */
-
             services.AddControllersWithViews();
 
             // --------------------------------------

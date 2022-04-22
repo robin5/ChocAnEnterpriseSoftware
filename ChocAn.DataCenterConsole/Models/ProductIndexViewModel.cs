@@ -30,7 +30,7 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.ProductRepository;
+using ChocAn.Data;
 
 namespace ChocAn.DataCenterConsole.Models
 {

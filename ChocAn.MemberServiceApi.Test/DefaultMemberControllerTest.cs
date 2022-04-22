@@ -38,7 +38,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using ChocAn.Repository;
-using ChocAn.MemberRepository;
+using ChocAn.Data;
 using ChocAn.MemberServiceApi.Controllers;
 using ChocAn.MemberServiceApi.Resources;
 using Microsoft.EntityFrameworkCore;

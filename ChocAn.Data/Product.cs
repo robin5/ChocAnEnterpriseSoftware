@@ -34,7 +34,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
 
-namespace ChocAn.ProductRepository
+namespace ChocAn.Data
 {
     /// <summary>
     /// Represents a ChocAn product or service

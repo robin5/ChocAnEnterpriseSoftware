@@ -33,11 +33,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ChocAn.Data;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
-using ChocAn.ProviderRepository;
 using ChocAn.ProviderServiceApi.Resources;
 
 namespace ChocAn.ProviderServiceApi.Controllers

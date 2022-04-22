@@ -37,7 +37,7 @@ using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
-using ChocAn.ProviderRepository;
+using ChocAn.Data;
 
 namespace ChocAn.MockRepositories
 {

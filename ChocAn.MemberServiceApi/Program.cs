@@ -30,6 +30,7 @@
 // * 
 // **********************************************************************************using System;
 
+using ChocAn.Data;
 using ChocAn.MemberRepository;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;

@@ -36,6 +36,7 @@ using Xunit;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
+using ChocAn.Data;
 
 namespace ChocAn.MemberRepository.Test
 {

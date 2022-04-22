@@ -4,8 +4,7 @@
 // *
 // * File: DefaultProviderService.cs
 // *
-// * Description: Implememnts a class which uses an httpClientFactory object to 
-// *   access the ChocAn ProviderSevice API
+// * Description: Implememnts a class which accesses the ChocAn.ProviderSeviceApi
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -31,7 +30,7 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.ProviderRepository;
+using ChocAn.Data;
 using ChocAn.ProviderServiceApi.Resources;
 
 namespace ChocAn.Services.DefaultProviderService

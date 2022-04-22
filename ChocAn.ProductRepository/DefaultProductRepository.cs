@@ -33,6 +33,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using ChocAn.Data;
 using ChocAn.Repository;
 
 namespace ChocAn.ProductRepository

@@ -33,9 +33,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using ChocAn.TransactionRepository;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProductRepository;
+using ChocAn.Data;
 using ChocAn.TransactionServiceApi.Resources;
 using ChocAn.MemberServiceApi.Resources;
 using ChocAn.ProviderServiceApi.Resources;

@@ -31,7 +31,7 @@
 // **********************************************************************************
 
 using AutoMapper;
-using ChocAn.ProductRepository;
+using ChocAn.Data;
 using ChocAn.ProductServiceApi.Resources;
 
 namespace ChocAn.ProductServiceApi.Infrastructure

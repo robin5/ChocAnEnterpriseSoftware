@@ -31,9 +31,7 @@
 // **********************************************************************************
 
 using ChocAn.DataCenterConsole.Models;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProductRepository;
+using ChocAn.Data;
 using AutoMapper;
 using ChocAn.MemberServiceApi.Resources;
 using ChocAn.ProviderServiceApi.Resources;

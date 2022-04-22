@@ -4,8 +4,7 @@
 // *
 // * File: DefaultMemberService.cs
 // *
-// * Description: Implememnts a class which uses an httpClientFactory object to 
-// *   access the ChocAn MemberSevice API
+// * Description: Implememnts a class which accesses the ChocAn.MemberSeviceApi
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -31,7 +30,7 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.MemberRepository;
+using ChocAn.Data;
 using ChocAn.MemberServiceApi.Resources;
 
 namespace ChocAn.Services.DefaultMemberService

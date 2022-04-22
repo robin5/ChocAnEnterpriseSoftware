@@ -30,19 +30,15 @@
 // * 
 // **********************************************************************************using System;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using ChocAn.Data;
 using ChocAn.TerminalServiceApi.Filters;
 using ChocAn.Services;
 using ChocAn.Services.DefaultMemberService;
 using ChocAn.Services.DefaultProviderService;
 using ChocAn.Services.DefaultProductService;
 using ChocAn.Services.DefaultTransactionService;
-using System.Net.Http.Headers;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProductRepository;
 using ChocAn.TransactionRepository;
 using ChocAn.MemberServiceApi.Resources;
 using ChocAn.ProviderServiceApi.Resources;
