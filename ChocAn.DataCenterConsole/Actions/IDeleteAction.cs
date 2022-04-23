@@ -36,12 +36,11 @@ using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public interface IDeleteAction<TResource, TModel>
-        where TResource : class
+    public interface IDeleteAction<TModel>
         where TModel : class
     {
         public Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller, 
+            DataCenterController<TModel> controller, 
             int id);
     }
 }

@@ -5,17 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace ChocAn.DataCenterConsole.Controllers
 {
-    public class DataCenterController<TResource, TModel> : Controller
-        where TResource : class
+    public class DataCenterController<TModel> : Controller
         where TModel : class
     {
         public ILogger<Controller> Logger { get; init; }
         public IMapper Mapper { get; init; }
-        public IService<TResource, TModel> Service { get; init; }
+        public IService<TModel> Service { get; init; }
         public DataCenterController(
             ILogger<Controller> logger,
             IMapper mapper,
-            IService<TResource, TModel> service)
+            IService<TModel> service)
         {
             Logger = logger;
             Mapper = mapper;

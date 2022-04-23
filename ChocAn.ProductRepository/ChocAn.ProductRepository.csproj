@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChocAn.Data\ChocAn.Data.csproj" />
     <ProjectReference Include="..\ChocAn.Repository\ChocAn.Repository.csproj" />
   </ItemGroup>
 

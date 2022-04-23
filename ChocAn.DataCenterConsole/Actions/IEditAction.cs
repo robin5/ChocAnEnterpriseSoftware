@@ -36,16 +36,15 @@ using ChocAn.DataCenterConsole.Controllers;
 
 namespace ChocAn.DataCenterConsole.Actions
 {
-    public interface IEditAction<TResource, TModel, TViewModel>
-        where TResource : class
+    public interface IEditAction<TModel, TViewModel>
         where TModel : class
         where TViewModel : class
     {
         public Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller, 
+            DataCenterController<TModel> controller, 
             int id);
         public Task<IActionResult> ActionResult(
-            DataCenterController<TResource, TModel> controller, 
+            DataCenterController<TModel> controller, 
             int id, TViewModel viewModel);
     }
 }

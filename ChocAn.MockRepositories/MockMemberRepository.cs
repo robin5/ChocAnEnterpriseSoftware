@@ -33,11 +33,11 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using ChocAn.Data;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
-using ChocAn.MemberRepository;
 
 namespace ChocAn.MockRepositories
 {

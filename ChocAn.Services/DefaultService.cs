@@ -1,12 +1,44 @@
-﻿using System.Net;
+﻿// **********************************************************************************
+// * Copyright (c) 2022 Robin Murray
+// **********************************************************************************
+// *
+// * File: DefaultMemberService.cs
+// *
+// * Description: Implememnts a class which uses an httpClientFactory object to 
+// *   access the ChocAn Sevice APIs
+// *
+// **********************************************************************************
+// * Author: Robin Murray
+// **********************************************************************************
+// *
+// * Granting License: The MIT License (MIT)
+// * 
+// *   Permission is hereby granted, free of charge, to any person obtaining a copy
+// *   of this software and associated documentation files (the "Software"), to deal
+// *   in the Software without restriction, including without limitation the rights
+// *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// *   copies of the Software, and to permit persons to whom the Software is
+// *   furnished to do so, subject to the following conditions:
+// *   The above copyright notice and this permission notice shall be included in
+// *   all copies or substantial portions of the Software.
+// *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// *   THE SOFTWARE.
+// * 
+// **********************************************************************************
+
+using System.Net;
 using System.Text.Json;
 using System.Text;
 using System.Net.Http.Headers;
 
 namespace ChocAn.Services
 {
-    public abstract class DefaultService<TResource, TModel> : IService<TResource, TModel>
-        where TResource : class
+    public abstract class DefaultService<TModel> : IService<TModel>
         where TModel : class
     {
         private readonly string url;
@@ -46,7 +78,7 @@ namespace ChocAn.Services
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public IService<TResource, TModel> Paginate(int offset, int limit)
+        public IService<TModel> Paginate(int offset, int limit)
         {
             this.offset = offset;
             this.limit = limit;
@@ -58,7 +90,7 @@ namespace ChocAn.Services
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public IService<TResource, TModel> AddSearch(string value)
+        public IService<TModel> AddSearch(string value)
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
@@ -72,7 +104,7 @@ namespace ChocAn.Services
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public IService<TResource, TModel> OrderBy(string value)
+        public IService<TModel> OrderBy(string value)
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
@@ -154,13 +186,13 @@ namespace ChocAn.Services
         /// Creates a T entity.
         /// </summary>
         /// <param name="entity">Entity to create</param>
-        /// <returns>TResource representing created entity</returns>
-        public async virtual Task<(bool isSuccess, TModel? result, string? errorMessage)> CreateAsync(TResource entity)
+        /// <returns>TModel representing created entity</returns>
+        public async virtual Task<(bool isSuccess, TModel? result, string? errorMessage)> CreateAsync(TModel entity)
         {
             using var client = httpClientFactory.CreateClient(httpClientName);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var json = JsonSerializer.Serialize<TResource>(entity);
+            var json = JsonSerializer.Serialize<TModel>(entity);
             var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync($"{url}", content);
@@ -181,12 +213,12 @@ namespace ChocAn.Services
         /// <param name="id">ID of entity to update</param>
         /// <param name="entity">New entity values</param>
         /// <returns>Tuple representing result</returns>
-        public async Task<(bool isSuccess, string? errorMessage)> UpdateAsync(int id, TResource entity)
+        public async Task<(bool isSuccess, string? errorMessage)> UpdateAsync(int id, TModel entity)
         {
             using var client = httpClientFactory.CreateClient(httpClientName);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var json = JsonSerializer.Serialize<TResource>(entity);
+            var json = JsonSerializer.Serialize<TModel>(entity);
             var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
 
             var response = await client.PutAsync($"{url}/{id}", content);

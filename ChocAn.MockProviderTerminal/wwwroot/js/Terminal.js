@@ -333,6 +333,7 @@ function PostTransaction() {
     transaction.providerId = providerId;
     transaction.memberId = memberId;
     transaction.productId = productId;
+    transaction.productCost = productCost
     transaction.serviceDate = serviceDate;
     transaction.serviceComment = serviceComment;
 

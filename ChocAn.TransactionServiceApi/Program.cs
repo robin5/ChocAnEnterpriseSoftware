@@ -30,12 +30,12 @@
 // * 
 // **********************************************************************************using System;
 
-using ChocAn.TransactionRepository;
-using ChocAn.TransactionServiceApi.Infrastructure;
-using ChocAn.Repository;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
+using ChocAn.Data;
+using ChocAn.TransactionRepository;
+using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,13 +66,12 @@ builder.Services.AddApiVersioning(options =>
 builder.Services.AddDbContextPool<TransactionDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IRepository<ChocAn.TransactionRepository.Transaction>, DefaultTransactionRepository>();
+builder.Services.AddScoped<IRepository<Transaction>, DefaultTransactionRepository>();
 
 // -----------------------
 // Infrastructure services
 // -----------------------
 
-builder.Services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

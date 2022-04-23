@@ -4,8 +4,7 @@
 // *
 // * File: DefaultProductService.cs
 // *
-// * Description: Implememnts a class which uses an httpClientFactory object to 
-// *   access the ChocAn ProductSevice API
+// * Description: Implememnts a class which accesses the ChocAn.ProductSeviceApi
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -31,12 +30,11 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.ProductRepository;
-using ChocAn.ProductServiceApi.Resources;
+using ChocAn.Data;
 
 namespace ChocAn.Services.DefaultProductService
 {
-    public class DefaultProductService : DefaultService<ProductResource, Product>
+    public class DefaultProductService : DefaultService<Product>
     {
         public const string HttpClientName = Services.HttpClientName.ProductService;
         public const string Url = ServiceUrl.ProductService;

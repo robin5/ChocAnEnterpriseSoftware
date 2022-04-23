@@ -31,12 +31,11 @@
 // * 
 // **********************************************************************************
 
-using ChocAn.TransactionRepository;
-using ChocAn.TransactionServiceApi.Resources;
+using ChocAn.Data;
 
 namespace ChocAn.Services.DefaultTransactionService
 {
-    public class DefaultTransactionService : DefaultService<TransactionResource, Transaction>
+    public class DefaultTransactionService : DefaultService<Transaction>
     {
         public const string HttpClientName = Services.HttpClientName.TransactionService;
         public const string Url = ServiceUrl.TransactionService;

@@ -34,6 +34,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ChocAn.Repository;
+using ChocAn.Data;
 
 namespace ChocAn.MemberRepository
 {

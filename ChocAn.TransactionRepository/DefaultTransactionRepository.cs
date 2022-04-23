@@ -34,6 +34,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using ChocAn.Data;
 using ChocAn.Repository;
 using System.Threading.Tasks;
 

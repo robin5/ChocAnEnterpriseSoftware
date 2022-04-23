@@ -2,9 +2,9 @@
 // * Copyright (c) 2021 Robin Murray
 // **********************************************************************************
 // *
-// * File: Product.cs
+// * File: Transaction.cs
 // *
-// * Description: Defines an entity which describes a product or service given by a Provider
+// * Description: Defines an entity which describes a ChocAn transaction
 // *
 // **********************************************************************************
 // * Author: Robin Murray
@@ -30,24 +30,33 @@
 // * 
 // **********************************************************************************
 
-using System.ComponentModel.DataAnnotations.Schema;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
 
-namespace ChocAn.ProductRepository
+namespace ChocAn.Data
 {
     /// <summary>
-    /// Represents a ChocAn product or service
+    /// Represents a  transaction between a ChocAn member and a ChocAn provider
     /// </summary>
-    public class Product
+    public class Transaction
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; init; }
-        [Sortable(Default = true)]
-        [Searchable]
-        public string Name { get; init; }
+        public int Id { get; set; }
         [Sortable]
         [Searchable]
-        public decimal Cost { get; init; }
+        public int ProviderId { get; set; }
+        [Sortable]
+        [Searchable]
+        public int MemberId { get; set; }
+        [Sortable]
+        [Searchable]
+        public int ProductId { get; set; }
+        public decimal ProductCost { get; set; }
+        [Sortable]
+        [Searchable]
+        public DateTime ServiceDate { get; set; }
+        public string ServiceComment { get; set; }
+        [Sortable(Default = true)]
+        [Searchable]
+        public DateTime Created { get; set; }
     }
 }

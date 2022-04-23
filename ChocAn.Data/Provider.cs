@@ -35,7 +35,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
 
-namespace ChocAn.ProviderRepository
+namespace ChocAn.Data
 {
     /// <summary>
     /// Represents a ChocAn provider

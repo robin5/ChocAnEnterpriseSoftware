@@ -32,14 +32,7 @@
 
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using ChocAn.TransactionRepository;
-using ChocAn.MemberRepository;
-using ChocAn.ProviderRepository;
-using ChocAn.ProductRepository;
-using ChocAn.TransactionServiceApi.Resources;
-using ChocAn.MemberServiceApi.Resources;
-using ChocAn.ProviderServiceApi.Resources;
-using ChocAn.ProductServiceApi.Resources;
+using ChocAn.Data;
 using ChocAn.Services;
 
 namespace ChocAn.TerminalServiceApi.Controllers
@@ -69,14 +62,16 @@ namespace ChocAn.TerminalServiceApi.Controllers
         public const string TransactionProviderNotFoundMessage = $"Provider not found while processing request for {nameof(Transaction)}";
         public const string TransactionMemberNotFoundMessage = $"Member not found while processing request for {nameof(Transaction)}";
         public const string TransactionProductNotFoundMessage = $"Product not found while processing request for {nameof(Transaction)}";
+        public const string TransactionNotFoundMessage = $"Transaction not found while processing request for {nameof(Transaction)}";
+        public const string TransactionCostNotValid = $"Transaction does not agree with product cost {nameof(Transaction)}";
         #endregion
 
         // Private members
         private readonly ILogger<TerminalController> logger;
-        private readonly IService<MemberResource, Member> memberService;
-        private readonly IService<ProviderResource, Provider> providerService;
-        private readonly IService<ProductResource, Product> productService;
-        private readonly IService<TransactionResource, Transaction> transactionService;
+        private readonly IService<Member> memberService;
+        private readonly IService<Provider> providerService;
+        private readonly IService<Product> productService;
+        private readonly IService<Transaction> transactionService;
 
         /// <summary>
         /// TerminalController constructor
@@ -88,10 +83,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
         /// <param name="transactionService">Transaction service</param>
         public TerminalController(
             ILogger<TerminalController> logger,
-            IService<MemberResource, Member> memberService,
-            IService<ProviderResource, Provider> providerService,
-            IService<ProductResource, Product> productService,
-            IService<TransactionResource, Transaction> transactionService
+            IService<Member> memberService,
+            IService<Provider> providerService,
+            IService<Product> productService,
+            IService<Transaction> transactionService
             )
         {
             this.logger = logger;
@@ -121,9 +116,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     if (member == null)
                         return NotFound();
                     else
-                        return Ok(new MemberResource
+                        return Ok(new
                         {
-                            Status = member.Status
+                            member.Id,
+                            member.Status
                         });
                 }
 
@@ -157,9 +153,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     if (provider == null)
                         return NotFound();
                     else
-                        return Ok(new ProviderResource
+                        return Ok(new
                         {
-                            Name = provider.Name
+                            provider.Id,
+                            provider.Name
                         });
                 }
 
@@ -194,10 +191,11 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     if (product == null)
                         return NotFound();
                     else
-                        return Ok(new ProductResource
+                        return Ok(new
                         {
-                            Name = product.Name,
-                            Cost = product.Cost
+                            product.Id,
+                            product.Name,
+                            product.Cost
                         });
                 }
 
@@ -214,19 +212,20 @@ namespace ChocAn.TerminalServiceApi.Controllers
         /// <summary>
         /// Inserts a transaction
         /// </summary>
-        /// <param name="transactionResource">Transaction's values</param>
+        /// <param name="transaction">Transaction's values</param>
         /// <returns></returns>
         [HttpPost("transaction", Name = nameof(Transaction))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         [ProducesResponseType(503)]
-        public async Task<IActionResult> Transaction([FromBody] TransactionResource transactionResource)
+        public async Task<IActionResult> Transaction([FromBody] Transaction transaction)
         {
             try
             {
                 // Verify provider exists
-                var (providerSuccess, provider, providerError) = await providerService.GetAsync(transactionResource.ProviderId);
+                var (providerSuccess, provider, providerError) = await providerService.GetAsync(transaction.ProviderId);
                 if (!providerSuccess)
                 {
                     logger?.LogError(TransactionProviderErrorMessage, providerError);
@@ -239,7 +238,7 @@ namespace ChocAn.TerminalServiceApi.Controllers
                 }
 
                 // Verify member exists
-                var (memberSuccess, member, memberError) = await memberService.GetAsync(transactionResource.MemberId);
+                var (memberSuccess, member, memberError) = await memberService.GetAsync(transaction.MemberId);
                 if (!memberSuccess)
                 {
                     logger?.LogError(TransactionMemberErrorMessage, memberError);
@@ -247,12 +246,12 @@ namespace ChocAn.TerminalServiceApi.Controllers
                 }
                 else if (member == null)
                 {
-                    logger?.LogInformation(TransactionMemberNotFoundMessage);
+                    logger?.LogError(TransactionMemberNotFoundMessage);
                     return BadRequest();
                 }
 
                 // Verify product exists
-                var (productSuccess, product, productError) = await productService.GetAsync(transactionResource.ProductId);
+                var (productSuccess, product, productError) = await productService.GetAsync(transaction.ProductId);
                 if (!productSuccess)
                 {
                     logger?.LogError(TransactionProductErrorMessage, productError);
@@ -260,18 +259,25 @@ namespace ChocAn.TerminalServiceApi.Controllers
                 }
                 else if (product == null)
                 {
-                    logger?.LogInformation(TransactionProductNotFoundMessage);
+                    logger?.LogError(TransactionProductNotFoundMessage);
+                    return BadRequest();
+                }
+
+                if (transaction.ProductCost != product.Cost)
+                {
+                    logger?.LogError(TransactionCostNotValid);
                     return BadRequest();
                 }
 
                 // Execute transaction
-                var (transactionSuccess, transaction, transactionError) = await transactionService.CreateAsync(new TransactionResource
+                var (transactionSuccess, result, transactionError) = await transactionService.CreateAsync(new Transaction
                 {
                     ProviderId = provider.Id,
                     MemberId = member.Id,
                     ProductId = product.Id,
-                    ServiceDate = transactionResource.ServiceDate,
-                    ServiceComment = transactionResource.ServiceComment
+                    ProductCost = product.Cost,
+                    ServiceDate = transaction.ServiceDate,
+                    ServiceComment = transaction.ServiceComment
                 });
 
                 if (!transactionSuccess)
@@ -280,12 +286,18 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     return StatusCode(ServiceUnavailable);
                 }
 
+                if (result == null)
+                {
+                    logger?.LogError(TransactionNotFoundMessage);
+                    return NotFound();
+                }
+
                 // Report transaction accepted
-                return Created(string.Empty, transaction);
+                return Created(string.Empty, new { result.Id });
             }
             catch (Exception ex)
             {
-                logger?.LogError(ex, TransactionExceptionMessage, transactionResource);
+                logger?.LogError(ex, TransactionExceptionMessage, transaction);
                 return StatusCode(InternalServerError);
             }
         }

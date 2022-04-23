@@ -32,6 +32,7 @@
 // * 
 // **********************************************************************************using System;
 
+using ChocAn.Data;
 using ChocAn.ProviderRepository;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;
@@ -49,7 +50,7 @@ builder.Services.Configure<PagingOptions>(builder.Configuration.GetSection("Defa
 builder.Services.AddDbContextPool<ProviderDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IRepository<ChocAn.ProviderRepository.Provider>, DefaultProviderRepository>();
+builder.Services.AddScoped<IRepository<Provider>, DefaultProviderRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

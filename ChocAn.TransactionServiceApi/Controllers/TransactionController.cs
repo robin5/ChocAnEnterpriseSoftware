@@ -33,13 +33,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using AutoMapper;
+using ChocAn.Data;
 using ChocAn.Repository;
 using ChocAn.Repository.Paging;
 using ChocAn.Repository.Sorting;
 using ChocAn.Repository.Search;
-using ChocAn.TransactionRepository;
-using ChocAn.TransactionServiceApi.Resources;
 
 namespace ChocAn.TransactionServiceApi.Controllers
 {
@@ -48,17 +46,14 @@ namespace ChocAn.TransactionServiceApi.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ILogger<TransactionController> logger;
-        private readonly IMapper mapper;
         private readonly IRepository<Transaction> repository;
         private readonly PagingOptions defaultPagingOptions;
         public TransactionController(
             ILogger<TransactionController> logger,
-            IMapper mapper,
-            IRepository<TransactionRepository.Transaction> repository,
+            IRepository<Transaction> repository,
             IOptions<PagingOptions> defaultPagingOptions)
         {
             this.logger = logger;
-            this.mapper = mapper;
             this.repository = repository;
             this.defaultPagingOptions = defaultPagingOptions.Value;
         }
@@ -91,7 +86,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAllAsync));
+                logger?.LogError(ex, nameof(GetAllAsync));
                 return Problem();
             }
         }
@@ -119,7 +114,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(GetAsync));
+                logger?.LogError(ex, nameof(GetAsync));
                 return Problem();
             }
         }
@@ -127,37 +122,45 @@ namespace ChocAn.TransactionServiceApi.Controllers
         /// <summary>
         /// Inserts a new transaction into the Transaction repository.
         /// </summary>
-        /// <param name="transactionResource"></param>
+        /// <param name="transaction"></param>
         /// <returns>201 on success. 400 on validation errors. 500 on exception</returns>
         [HttpPost(Name = nameof(PostAsync))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PostAsync([FromBody] TransactionResource transactionResource)
+        public async Task<IActionResult> PostAsync([FromBody] Transaction transaction)
         {
             try
             {
-                var transaction = await repository.AddAsync(new Transaction
+                // Verify transaction's ID = 0 to enforce good behavior
+                if (transaction.Id != 0)
+                    return BadRequest();
+
+                var result = await repository.AddAsync(new Transaction
                 {
-                    ProviderId = transactionResource.ProviderId,
-                    MemberId = transactionResource.MemberId,
-                    ProductId = transactionResource.ProductId,
-                    ProductCost = transactionResource.ProductCost,
-                    ServiceDate = transactionResource.ServiceDate,
-                    ServiceComment = transactionResource.ServiceComment,
+                    ProviderId = transaction.ProviderId,
+                    MemberId = transaction.MemberId,
+                    ProductId = transaction.ProductId,
+                    ProductCost = transaction.ProductCost,
+                    ServiceDate = transaction.ServiceDate,
+                    ServiceComment = transaction.ServiceComment,
                     Created = DateTime.UtcNow
                 });
-                return Created("", transaction);
+
+                if (null == result)
+                    return BadRequest();
+
+                return Created("", result);
             }
             catch (DbUpdateException ex)
             {
-                logger.LogError(ex, nameof(PostAsync));
+                logger?.LogError(ex, nameof(PostAsync));
                 return BadRequest();
             }
             catch (Exception ex)
             {
 
-                logger.LogError(ex, nameof(PostAsync));
+                logger?.LogError(ex, nameof(PostAsync));
                 return Problem();
             }
         }
@@ -174,27 +177,43 @@ namespace ChocAn.TransactionServiceApi.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] TransactionResource transactionResource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] Transaction transaction)
         {
             try
             {
-                var transaction = mapper.Map<Transaction>(transactionResource);
-                transaction.Id = id;
+                // Verify product's ID and the ID of the endpoint are the same
+                if (transaction.Id != id)
+                    return BadRequest();
 
-                var numChanged = await repository.UpdateAsync(transaction);
+                var oldTransaction = await repository.GetAsync(transaction.Id);
+                if (null == oldTransaction)
+                    return NotFound();
+
+                var numChanged = await repository.UpdateAsync(new Transaction
+                {
+                    Id = transaction.Id,
+                    ProviderId = transaction.ProviderId,
+                    MemberId = transaction.MemberId,
+                    ProductId = transaction.ProductId,
+                    ProductCost = transaction.ProductCost,
+                    ServiceDate = transaction.ServiceDate,
+                    ServiceComment = transaction.ServiceComment,
+                    Created = oldTransaction.Created
+                });
+
                 if (numChanged > 0)
-                    return Ok(transactionResource);
+                    return Ok();
                 else
                     return NotFound();
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                logger.LogError(ex, nameof(PutAsync));
+                logger?.LogError(ex, nameof(PutAsync));
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(PutAsync));
+                logger?.LogError(ex, nameof(PutAsync));
                 return Problem();
             }
         }
@@ -221,7 +240,7 @@ namespace ChocAn.TransactionServiceApi.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, nameof(DeleteAsync));
+                logger?.LogError(ex, nameof(DeleteAsync));
                 return Problem();
             }
         }

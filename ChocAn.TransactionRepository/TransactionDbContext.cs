@@ -32,6 +32,7 @@
 // **********************************************************************************
 
 using Microsoft.EntityFrameworkCore;
+using ChocAn.Data;
 
 namespace ChocAn.TransactionRepository
 {
