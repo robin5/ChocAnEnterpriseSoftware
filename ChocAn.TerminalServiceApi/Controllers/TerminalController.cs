@@ -62,6 +62,8 @@ namespace ChocAn.TerminalServiceApi.Controllers
         public const string TransactionProviderNotFoundMessage = $"Provider not found while processing request for {nameof(Transaction)}";
         public const string TransactionMemberNotFoundMessage = $"Member not found while processing request for {nameof(Transaction)}";
         public const string TransactionProductNotFoundMessage = $"Product not found while processing request for {nameof(Transaction)}";
+        public const string TransactionNotFoundMessage = $"Transaction not found while processing request for {nameof(Transaction)}";
+        public const string TransactionCostNotValid = $"Transaction does not agree with product cost {nameof(Transaction)}";
         #endregion
 
         // Private members
@@ -114,9 +116,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     if (member == null)
                         return NotFound();
                     else
-                        return Ok(new Member
+                        return Ok(new
                         {
-                            Status = member.Status
+                            member.Id,
+                            member.Status
                         });
                 }
 
@@ -150,9 +153,10 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     if (provider == null)
                         return NotFound();
                     else
-                        return Ok(new Provider
+                        return Ok(new
                         {
-                            Name = provider.Name
+                            provider.Id,
+                            provider.Name
                         });
                 }
 
@@ -187,10 +191,11 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     if (product == null)
                         return NotFound();
                     else
-                        return Ok(new Product
+                        return Ok(new
                         {
-                            Name = product.Name,
-                            Cost = product.Cost
+                            product.Id,
+                            product.Name,
+                            product.Cost
                         });
                 }
 
@@ -212,6 +217,7 @@ namespace ChocAn.TerminalServiceApi.Controllers
         [HttpPost("transaction", Name = nameof(Transaction))]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         [ProducesResponseType(503)]
         public async Task<IActionResult> Transaction([FromBody] Transaction transaction)
@@ -240,7 +246,7 @@ namespace ChocAn.TerminalServiceApi.Controllers
                 }
                 else if (member == null)
                 {
-                    logger?.LogInformation(TransactionMemberNotFoundMessage);
+                    logger?.LogError(TransactionMemberNotFoundMessage);
                     return BadRequest();
                 }
 
@@ -253,7 +259,13 @@ namespace ChocAn.TerminalServiceApi.Controllers
                 }
                 else if (product == null)
                 {
-                    logger?.LogInformation(TransactionProductNotFoundMessage);
+                    logger?.LogError(TransactionProductNotFoundMessage);
+                    return BadRequest();
+                }
+
+                if (transaction.ProductCost != product.Cost)
+                {
+                    logger?.LogError(TransactionCostNotValid);
                     return BadRequest();
                 }
 
@@ -263,6 +275,7 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     ProviderId = provider.Id,
                     MemberId = member.Id,
                     ProductId = product.Id,
+                    ProductCost = product.Cost,
                     ServiceDate = transaction.ServiceDate,
                     ServiceComment = transaction.ServiceComment
                 });
@@ -273,8 +286,14 @@ namespace ChocAn.TerminalServiceApi.Controllers
                     return StatusCode(ServiceUnavailable);
                 }
 
+                if (result == null)
+                {
+                    logger?.LogError(TransactionNotFoundMessage);
+                    return NotFound();
+                }
+
                 // Report transaction accepted
-                return Created(string.Empty, result);
+                return Created(string.Empty, new { result.Id });
             }
             catch (Exception ex)
             {
